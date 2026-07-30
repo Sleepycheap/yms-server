@@ -1,4 +1,6 @@
 import { Pool } from "pg";
+import oracledb from "oracledb";
+import "dotenv/config";
 
 export const pool = new Pool({
   host: "localhost",

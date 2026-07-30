@@ -1,5 +1,11 @@
 import express from "express";
-import { getAllItems, getItemsByTruckID, addItem } from "../../db/queries.js";
+import {
+  getAllItems,
+  getOneItem,
+  addItem,
+  deleteItem,
+} from "../../db/queries.js";
+import { json } from "body-parser";
 
 const itemRouter = express.Router();
 
@@ -9,39 +15,49 @@ itemRouter.get("/", async (req, res) => {
   res.json(response);
 });
 
-itemRouter.get("/:truckid", async (req, res) => {
-  const truckid = req.params.truckid;
-  const response = await getItemsByTruckID(truckid);
-  if (response.length === 0) res.json("There are no Items with that Truck ID!");
-  res.json(response);
+itemRouter.get("/:part_number", async (req, res) => {
+  const { part_number } = req.params;
+  try {
+    const response = await getOneItem(part_number);
+    console.log(response);
+    if (response.length === 0)
+      res.json("There are no Items with that Truck ID!");
+    res.json(response);
+  } catch (err) {
+    console.log("error", err);
+    res.json({ "there was an error": err.message }).status(400);
+  }
 });
 
 itemRouter.post("/", async (req, res) => {
-  const {
-    container,
-    description,
-    gross_qty,
-    gross_wgt,
-    shipping_ins,
-    truckid,
-  } = req.body;
+  const { part_number, description, part_mark } = req.body;
 
   const newItem = {
-    container,
+    part_number,
     description,
-    gross_qty,
-    gross_wgt,
-    shipping_ins,
-    truckid,
+    part_mark,
   };
 
   try {
     await addItem(newItem);
     res.json({ newItem: newItem }).status(201);
   } catch (err) {
-    console.log("there was an error", err.message);
     const msg = err.message;
+    console.log("there was an error", err.message);
     res.json({ "there was an error": msg }).status(400);
+  }
+});
+
+itemRouter.delete("/:part_number", async (req, res) => {
+  const { part_number } = req.params;
+  try {
+    const response = await deleteItem(part_number);
+    console.log(response);
+    const sMsg = `Item ${part_number} successfully deleted!`;
+    res.json(sMsg).status(200);
+  } catch (err) {
+    console.log("there was an error deleting item", err.message);
+    res.json({ "There was an error": err.message }).status(400);
   }
 });
 

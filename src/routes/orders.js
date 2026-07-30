@@ -1,9 +1,10 @@
 import express from "express";
 import {
-  getOrderByID,
   getObjectById,
   getAllOrders,
+  getOrderByOrderNumber,
   addOrder,
+  deleteOrder,
 } from "../../db/queries.js";
 import axios from "axios";
 
@@ -15,14 +16,19 @@ orderRouter.get("/", async (req, res) => {
   res.json(response);
 });
 
+orderRouter.get("/:order_number", async (req, res) => {
+  const { order_number } = req.params;
+  const response = await getOrderByOrderNumber(order_number);
+  res.json(response);
+});
+
 orderRouter.post("/", async (req, res) => {
-  const { orderid, truckid, customer } = req.body;
+  const { order_number, customer } = req.body;
 
   // const data = req.body;
 
   const newOrder = {
-    orderid,
-    truckid,
+    order_number,
     customer,
   };
 
@@ -36,10 +42,16 @@ orderRouter.post("/", async (req, res) => {
   }
 });
 
-orderRouter.get("/:orderid", async (req, res) => {
-  const orderid = req.params.orderid;
-  const response = await getOrderByID(orderid);
-  res.json(response);
+orderRouter.delete("/:order_number", async (req, res) => {
+  const { order_number } = req.params;
+  try {
+    const response = await deleteOrder(order_number);
+    const sMsg = `Order ${order_number} successfully deleted!`;
+    res.json(sMsg).status(200);
+  } catch (err) {
+    console.log("There was an error deleting item", err.message);
+    res.json({ "There was an error": err.message }).status(400);
+  }
 });
 
 export default orderRouter;
