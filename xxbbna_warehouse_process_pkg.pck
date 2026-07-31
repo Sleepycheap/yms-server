@@ -232,10 +232,10 @@ FUNCTION AfterReport RETURN BOOLEAN;
     TYPE g_loaded_truck_details_tbl IS TABLE OF g_loaded_truck_details_rec
         INDEX BY BINARY_INTEGER;
 
-    TYPE g_truck_manifest_tbl IS TABLE OF g_truck_manifest_rec
+  TYPE g_truck_manifest_tbl IS TABLE OF g_truck_manifest_rec
         INDEX BY BINARY_INTEGER;
 
-    TYPE truckimgtable IS TABLE OF g_truck_img_record
+ /  TYPE truckimgtable IS TABLE OF g_truck_img_record
         INDEX BY BINARY_INTEGER;
 
     /*TYPE questions_table IS TABLE OF g_questions_record
@@ -243,6 +243,7 @@ FUNCTION AfterReport RETURN BOOLEAN;
 
     TYPE answers_table IS TABLE OF g_answers_record
         INDEX BY BINARY_INTEGER;*/
+        
 TYPE product_type_table IS TABLE OF g_product_type_record
         INDEX BY BINARY_INTEGER;
 
@@ -290,6 +291,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
 --      Functions: This Function returns the org id for the particuler org code
 --
 ----------------------------------------------------------------------------------------------------------------------
+--These functions populate the tables(?)
     FUNCTION xxbbna_get_operating_unit_id(p_org_code VARCHAR2)
         RETURN NUMBER;
 ----------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import express from "express";
-import { getTable, testConnection } from "../../db/queries.js";
+import { getTable, testConnection } from "../db/queries.js";
 
 const oracleRouter = express.Router();
 

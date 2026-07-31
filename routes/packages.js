@@ -6,7 +6,7 @@ import {
   getPackageDetailsByOrderNumber,
   getPackageDetailsByPackageName,
   deletePackage,
-} from "../../db/queries.js";
+} from "../db/queries.js";
 
 const packageRouter = express.Router();
 

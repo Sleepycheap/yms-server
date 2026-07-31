@@ -1,5 +1,7 @@
 CREATE OR REPLACE VIEW APPS_RO.XXBM_PICK_STATUS_REPORT_VW AS
-SELECT wdd.source_Header_number order_number,
+SELECT 
+--wdd might be WSH_DELIVERY_DETAILS
+wdd.source_Header_number order_number,
         wdd.last_update_date,
         wdd.delivery_detail_id,
         wdd.released_status,
@@ -16,16 +18,20 @@ SELECT wdd.source_Header_number order_number,
         xc.ship_from_org_code cont_org,
         xc.cont_qty,
         wdd.requested_quantity,
+        --IF THEN ELSE statement. IF wdd.released_status === C, then do the nested logic, ELSE return N
         DECODE(wdd.released_status,
                         'C',
+                        --IF oe_interfaced_flag IS NULL THEN return wnd.name, ELSE go to next 
                         DECODE(wdd.oe_interfaced_flag,
                                        NULL,
                                        wnd.name,
+                                       --IF X then NULL else if Y then NULL else return wnd.name
                                        DECODE(wdd.inv_interfaced_flag,
                                                       'X',
                                                       NULL,
                                                       'Y',
                                                       NULL,
+                                                      --wnd might be wsh_new_deliveries
                                                       wnd.name)),
                        'N') interface_trip_stop_delivery,
         --

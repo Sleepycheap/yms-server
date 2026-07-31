@@ -1,10 +1,5 @@
 import express from "express";
-import {
-  getAllItems,
-  getOneItem,
-  addItem,
-  deleteItem,
-} from "../../db/queries.js";
+import { getAllItems, getOneItem, addItem, deleteItem } from "../db/queries.js";
 import { json } from "body-parser";
 
 const itemRouter = express.Router();
