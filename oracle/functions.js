@@ -1,4 +1,6 @@
 import * as type from "./types.js";
+import { DatabaseSync } from "node:sqlite";
+const db = new DatabaseSync(":memory:");
 
 // Global table type declaration for different output
 /*
@@ -45,11 +47,14 @@ function updateScacTable({ scac_code: scac_code, carrier_name: carrier_name }) {
 */
 ///
 // Creates scactable
-function scactableFactory(scacRecords) {
-  const scactable = scacRecords.map((record) =>
-    type.g_scac_recordFactory(record.scac_code, record.carrier_name),
-  );
+export function createScacTable() {
+  const scactable = `CREATE TABLE scactable(scac_code TEXT PRIMARY KEY, carrier_name TEXT) STRICT`;
   return scactable;
+}
+
+export function insertScacTable(scac_record) {
+  const scacTableIns = `INSERT INTO scactable (scac_code, carrier_name) VALUES (?, ?)`;
+  return scacTableIns;
 }
 
 function orgtableFactory(orgRecords) {
@@ -229,16 +234,16 @@ function truckimgtableFactory(truckImages) {
   return truckimgtable;
 }
 
-function truckimgtableFactory(truckImages) {
-  const truckimgtable = truckimages.map((record) =>
-    type.g_truck_img_recordFactory(
-      record.truck_id,
-      record.user_id,
-      record.truck_image,
-    ),
-  );
-  return truckimgtable;
-}
+// function truckimgtableFactory(truckImages) {
+//   const truckimgtable = truckimages.map((record) =>
+//     type.g_truck_img_recordFactory(
+//       record.truck_id,
+//       record.user_id,
+//       record.truck_image,
+//     ),
+//   );
+//   return truckimgtable;
+// }
 
 function questions_tableFactory(questions) {
   const questions_table = questions.map((question) =>

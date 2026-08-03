@@ -1,0 +1,1285 @@
+{
+  "value": [
+    {
+      "@odata.etag": "\"2\"",
+      "ItemInternalId": "1237",
+      "ID": 1237,
+      "Title": "Purlin Line – Operator / Front End",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx",
+      "Revision_x0020_Date": "2026-07-08",
+      "Revision_x0020_Level": 4,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+        "DisplayName": "Frerichs, Joel",
+        "Email": "JFrerichs@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=JFrerichs@bsbna.com",
+        "Department": "BBNA EVA Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager I"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass2E3D7DE807E3462C8B678D657CE1FB38\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><span style=\"font-size&#58;10.0pt;font-family&#58;&quot;Calibri&quot;,sans-serif;color&#58;black;\">Added inspection on movable die.</span><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-08",
+      "Modified": "2026-07-08T19:09:50Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-08T19:09:51Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1237_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1237&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Purlin Line – Operator / Front End",
+      "{FilenameWithExtension}": "Purlin Line – Operator / Front End",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1237_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": true,
+      "{VersionNumber}": "2.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"2\"",
+      "ItemInternalId": "1238",
+      "ID": 1238,
+      "Title": "Purlin Line - Inspection and Unload",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx",
+      "Revision_x0020_Date": "2026-07-08",
+      "Revision_x0020_Level": 3,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+        "DisplayName": "Frerichs, Joel",
+        "Email": "JFrerichs@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=JFrerichs@bsbna.com",
+        "Department": "BBNA EVA Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager I"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass2609A0DA73514BC28ED2F7CA543D38D7\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><span style=\"font-size&#58;9.0pt;font-family&#58;&quot;Arial Narrow&quot;,sans-serif;\">Various\nwording revisions and clean-up.</span><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-08",
+      "Modified": "2026-07-08T19:13:25Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-08T19:13:25Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1238_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1238&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Purlin Line - Inspection and Unload",
+      "{FilenameWithExtension}": "Purlin Line - Inspection and Unload",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1238_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": true,
+      "{VersionNumber}": "2.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1239",
+      "ID": 1239,
+      "Title": "SLRII / VSRII Panel",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0326-JAC.docx",
+      "Revision_x0020_Date": "2026-07-09",
+      "Revision_x0020_Level": 7,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|michele.bates@bsbna.com",
+        "DisplayName": "Bates, Michele",
+        "Email": "michele.bates@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=michele.bates@bsbna.com",
+        "Department": "BBNA JAC Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager I"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|michele.bates@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass997E298221C04767AAB9B00D28C3CCF3\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">Added Go/No Go reference templates to Section VII. Reference SWAT #7586.</div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-09",
+      "Modified": "2026-07-09T17:21:25Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-09T17:21:25Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1239_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1239&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "SLRII / VSRII Panel",
+      "{FilenameWithExtension}": "SLRII / VSRII Panel",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1239_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1240",
+      "ID": 1240,
+      "Title": "Plasma",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc",
+      "Revision_x0020_Date": "2026-07-07",
+      "Revision_x0020_Level": 2,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass77E6985E29534BEA932A12122F3EE6C2\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><span>1.- Clarificar que Plasma son Messer 1, 2 y 3. (Clarify Plasma are Messer 1, 2, and 3)<br></span><div>2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that “Control de Producción” is also called PC/IC)<br></div><div>3.- Se actualiza como PC/IC provee de los programas de Nesteo, antes iban directamente a la máquina, ahora entregan una USB al operador, líder y/o supervisor. (Update how PC/IC provides the Nesting Programs, before they went directly to the Messer’s, now they give an USB to the operator, leader, and/or supervisor)<br></div><div>4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN. (Changed the term “folio” for MTR’s to “tracking number”, TN)<br></div><div>5.- Dimensión de 24” cambió a 30” para el manejo del sobrante. (24” dimension change to 30” for how to handle the drop)<br></div><div>6.- Se describe como el operador debe de llenar los reportes, que debe de llenar, como verifica el nesteo, frecuencia y toma de decisiones. (Describing how the operator needs to fill the reports, what information is needed, how to verify the nesting, frequency of checking and how to take decisions)<br></div><div>7.- Se agrega la figura del Kerf para mostrar al operador como quedaría si ajusta correctamente. (Adding the Kerf figure to show the operator how it could be the shape if adjustments are correct)<br></div><div>8.- Se agrega como el operador debe de identificar la almas. (Adding how operator must identify the WEB’s)<br></div><div>9.- En el punto 6.0 que el operador debe ser calificado antes de aplicar soldadura, para operar el plasma puede estar bajo supervisión, pero soldadura no por AWS D1.1 (On item 6.0 operator must be qualified for welding application, to work on burn center it is possible under the supervision of the current operator, but welding can’t, this is per AWS D1.1)<br></div><div>10.- En el punto 7.0 se cambió de FSD’s a MSD’s. (On item 7.0 change from FSD’s to MSD’s)<br></div><div><br></div><div>Las revisiones anteriores se pueden encontrar en la lista de cambios del control de documentos del sistema de calidad (QS).<br></div><span></span><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-09",
+      "Modified": "2026-07-09T18:02:03Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-09T18:02:03Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1240_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1240&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Plasma",
+      "{FilenameWithExtension}": "Plasma",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1240_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1241",
+      "ID": 1241,
+      "Title": "Batch Color",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0602-MTY.pdf",
+      "Revision_x0020_Date": "2026-07-07",
+      "Revision_x0020_Level": 1,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClassC4D041300C3848D9AF38D8DFA14F0475\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><p style=\"margin&#58;0in;font-size&#58;12pt;font-family&#58;Aptos, sans-serif;\">Restructuring.&#160;<span style=\"font-size&#58;12pt;background-color&#58;transparent;\">Examples, use batch number, stack and sequence, nesting,\nsort, dimensions like width, thk, length, tracking number for the MTR instead\nfolio, how many plates used, R or V identification color, for USA or Mexican\nMaterial, because of the new taxes regulation, it is needed, welding material\nwhen required used the folio of the MTR, here folio is kept, because the app\nfor MTR is only for plates and flat bars to get the tracking number, Scrap, all\nthese were added. Also, no revision was there in the form, only ID and other\ninformation.</span></p><p style=\"margin&#58;0in;font-size&#58;12pt;font-family&#58;Aptos, sans-serif;\">&#160;</p><p style=\"margin&#58;0in;font-size&#58;12pt;font-family&#58;Aptos, sans-serif;\">Removed&#58; turno (shift), nombre del cliente (customer name),\norden (order number), parte (part ID), 1a pieza insp. (1<sup>st</sup> piece\ncheck) and CAM #.</p><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-09",
+      "Modified": "2026-07-09T18:26:09Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-09T18:26:09Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1241_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1241&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Batch Color",
+      "{FilenameWithExtension}": "Batch Color",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1241_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1242",
+      "ID": 1242,
+      "Title": "SLR/VSR II In-Process Check Log",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/15%20Quality%20Control/Forms/Jackson/FMMF1505-JAC.xlsx",
+      "Revision_x0020_Date": "2026-07-09",
+      "Revision_x0020_Level": 7,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lacey.oneal@bsbna.com",
+        "DisplayName": "O'Neal, Lacey",
+        "Email": "Lacey.Oneal@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Lacey.Oneal@bsbna.com",
+        "Department": "BBNA JAC Mfg Hourly - Plant Office",
+        "JobTitle": "Quality Inspector"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|lacey.oneal@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass2DE2A3BDD9D24AB5AD4AB881BB170E3E\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">Added vebage for Go/NoGo Templates Refer SWAT#7586<br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-09",
+      "Modified": "2026-07-09T20:35:11Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-09T20:35:11Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1242_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1242&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "SLR/VSR II In-Process Check Log",
+      "{FilenameWithExtension}": "SLR/VSR II In-Process Check Log",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1242_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1243",
+      "ID": 1243,
+      "Title": "Crushed Slag Procurement, Processing, and Utilization in SAW Processes",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Procedure/PRMF0701.docx",
+      "Revision_x0020_Date": "2026-06-29",
+      "Revision_x0020_Level": 3,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass8982322AD91D41599C75F236FE7847ED\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><table width=\"672\" style=\"width&#58;7.0in;margin-left&#58;2.15pt;border-collapse&#58;collapse;border&#58;none;\">\n <tbody><tr style=\"\">\n  <td width=\"486\" style=\"width&#58;364.5pt;border&#58;solid windowtext 1.0pt;padding&#58;0in 2.15pt 0in 2.15pt;\">\n  <p style=\"margin&#58;0in;text-align&#58;justify;font-size&#58;10pt;font-family&#58;Arial, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span style=\"font-size&#58;9.0pt;font-family&#58;&quot;Arial Narrow&quot;,sans-serif;\">Add\n  details of Titus’ bins per load pick up abilities. Updated reference to\n  current editions. See QS Doc Control Changes for previous revisions. </span></p>\n  </td>\n </tr></tbody></table><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-06-29",
+      "Modified": "2026-07-10T14:02:55Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-10T14:02:55Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1243_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1243&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Crushed Slag Procurement, Processing, and Utilization in SAW Processes",
+      "{FilenameWithExtension}": "Crushed Slag Procurement, Processing, and Utilization in SAW Processes",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1243_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1244",
+      "ID": 1244,
+      "Title": "Light Panels - 560641 & 560354",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0358-JAC.docx",
+      "Revision_x0020_Date": "2026-07-13",
+      "Revision_x0020_Level": 0,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|michele.bates@bsbna.com",
+        "DisplayName": "Bates, Michele",
+        "Email": "michele.bates@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=michele.bates@bsbna.com",
+        "Department": "BBNA JAC Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager I"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|michele.bates@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClassC266D63C75E44FE3A67384795C2D0B63\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">New document.&#160;</div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 1,
+        "Value": "New"
+      },
+      "Action#Id": 1,
+      "Action_x0020_Date": "2026-07-15",
+      "Modified": "2026-07-15T14:16:26Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-15T14:16:26Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1244_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1244&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Light Panels - 560641 & 560354",
+      "{FilenameWithExtension}": "Light Panels - 560641 & 560354",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1244_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1245",
+      "ID": 1245,
+      "Title": "Plasma",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc",
+      "Revision_x0020_Date": "2026-07-20",
+      "Revision_x0020_Level": 3,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClassB8C04126D545492BB44D1ACC7A2F338C\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><ol style=\"margin-bottom&#58;0in;\"><li><span style=\"color&#58;black;\">Se agregan diferencias\npara Messer 1 y 2 y Messer 3 <b>(Add Messer 1, 2, and 3 to have the difference\nbetween processes).</b></span></li><li><span lang=\"ES-MX\" style=\"color&#58;black;\">Se agrega formato de control de materiales para Messer 3, FMMF0603-MTY <b>(Add\nform FMMF0603-MTY for Messer 3).</b></span></li></ol><span lang=\"ES-MX\" style=\"font-size&#58;10.0pt;font-family&#58;&quot;Arial&quot;,sans-serif;color&#58;black;\">Se agrega la frecuencia de\nverificación de los espesores de materiales utilizados en Messer 1, 2 y 3 <b>(Add\nTHK verification frequency for Messer 1, 2, and 3).</b></span><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-20",
+      "Modified": "2026-07-20T21:18:08Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-20T21:18:08Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1245_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1245&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Plasma",
+      "{FilenameWithExtension}": "Plasma",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1245_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1246",
+      "ID": 1246,
+      "Title": "Batch Color",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0603-MTY.pdf",
+      "Revision_x0020_Date": "2026-07-20",
+      "Revision_x0020_Level": 0,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass7B7D40B83A294341895199E680F03521\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">New form.&#160;</div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 1,
+        "Value": "New"
+      },
+      "Action#Id": 1,
+      "Action_x0020_Date": "2026-07-20",
+      "Modified": "2026-07-20T21:20:53Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-20T21:20:53Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1246_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1246&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Batch Color",
+      "{FilenameWithExtension}": "Batch Color",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1246_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1247",
+      "ID": 1247,
+      "Title": "Linea de Patines y Empatadora",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Work%20Instructions/Monterrey/WIMF0701-MTY.doc",
+      "Revision_x0020_Date": "2026-07-20",
+      "Revision_x0020_Level": 2,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass4F4AA8685BFB409C967CCDB7F8CCCB64\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"><table width=\"671\" style=\"width&#58;503.0pt;margin-left&#58;2.15pt;border-collapse&#58;collapse;\">\n <tbody><tr style=\"\">\n  <td width=\"409\" style=\"width&#58;306.8pt;border-top&#58;none;border-left&#58;none;border-bottom&#58;solid black 1.0pt;border-right&#58;solid black 1.0pt;padding&#58;.25pt 2.65pt .5pt 2.4pt;\">\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">1.- Reestructuración general de la instrucción de trabajo (General\n  restructuring of the work instruction)</span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">2.- Agregar que “Control de Producción” también se conocer como PC/IC.\n  </span><b><span style=\"color&#58;black;\">(Add that “Control de Producción” is also\n  called PC/IC)</span></b><span style=\"color&#58;black;\"></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">3.- Se actualiza como PC/IC provee de los programas de Patines, antes\n  iban directamente a la máquina, ahora entregan una USB al operador y/o\n  supervisor. </span><b><span style=\"color&#58;black;\">(Update how PC/IC provides\n  the Flange programs, before they went directly to the flange, now they give\n  an USB to the operator, leader, and/or supervisor)</span></b><span style=\"color&#58;black;\"></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">4.- Se cambio el término “folio” para los MTR’s por el de “tracking\n  number”, TN. </span><span style=\"color&#58;black;\">(<b>Changed the term “folio”\n  for MTR’s to “tracking number”, TN)</b></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">5.- Ahora se incluye en la instrucción de trabajo la empatadora. </span><b><span style=\"color&#58;black;\">(Segment line is included on this work instruction)</span></b><span style=\"color&#58;black;\"></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span style=\"color&#58;black;\">6.- Se agrega como debe el\n  operador llenar los reportes <b>(Add how operators fill the forms)</b></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">7.- Se agrega como el operador debe de identificar los patines. </span><span style=\"color&#58;black;\">(Adding how operator must identify the flanges)</span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span style=\"color&#58;black;\">8.- En el punto 6.0, el\n  operador debe ser calificado antes de aplicar soldadura por AWS D1.1 y/o CWB\n  W47.1 <b>(On item 6.0, operator must be qualified for welding application per\n  AWS D1.1 and/or CWB W47.1 prior welding application)</b></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"color&#58;black;\">9.- En el punto 7.0 cambios generales. <b>(On item 7.0 general changes)</b></span></p>\n  <p style=\"margin&#58;0in;line-height&#58;115%;font-size&#58;11pt;font-family&#58;Calibri, sans-serif;margin-top&#58;2.0pt;margin-right&#58;0in;margin-bottom&#58;2.0pt;margin-left&#58;0in;\"><span lang=\"ES-MX\" style=\"font-family&#58;&quot;Arial&quot;,sans-serif;color&#58;black;\"><br>\n  Las revisiones anteriores se pueden encontrar en la lista de cambios del\n  control de documentos del sistema de calidad (QS).</span></p>\n  </td>\n </tr></tbody></table><br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-20",
+      "Modified": "2026-07-20T21:27:16Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-20T21:27:16Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1247_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1247&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Linea de Patines y Empatadora",
+      "{FilenameWithExtension}": "Linea de Patines y Empatadora",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1247_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"1\"",
+      "ItemInternalId": "1248",
+      "ID": 1248,
+      "Title": "Batch Color",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/01%20General/Forms/Monterrey/FMMF0101-MTY.pdf",
+      "Revision_x0020_Date": "2026-07-20",
+      "Revision_x0020_Level": 0,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+        "DisplayName": "De La Cruz, Carlos",
+        "Email": "Carlos.Delacruz@butlermfg.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=Carlos.Delacruz@butlermfg.com",
+        "Department": "BBNA MEX Mfg Hourly - Plant Office",
+        "JobTitle": "Mfg Quality Manager II"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|carlos.delacruz@butlermfg.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass070EDD2B5CC4422CACC82C676B052DE7\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">New form.&#160;</div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 1,
+        "Value": "New"
+      },
+      "Action#Id": 1,
+      "Action_x0020_Date": "2026-07-20",
+      "Modified": "2026-07-20T21:29:53Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-20T21:29:53Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+        "DisplayName": "Dempsey, Jessica",
+        "Email": "maryjessica.dempsey@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=maryjessica.dempsey@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|maryjessica.dempsey@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1248_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1248&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Batch Color",
+      "{FilenameWithExtension}": "Batch Color",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1248_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": false,
+      "{VersionNumber}": "1.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    },
+    {
+      "@odata.etag": "\"2\"",
+      "ItemInternalId": "1249",
+      "ID": 1249,
+      "Title": "Training Requirements Chart for Designer/Engineer",
+      "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Engineering%20Services/Forms/FMEN0603.xlsx",
+      "Revision_x0020_Date": "2026-07-24",
+      "Revision_x0020_Level": 6,
+      "Revised_x0020_By": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lisa.lemke-martin@bsbna.com",
+        "DisplayName": "Legler, Lisa",
+        "Email": "lisa.lemke-martin@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lisa.lemke-martin@bsbna.com",
+        "Department": "BBNA Engineering Excellence - Engineering Excellence Scheduling",
+        "JobTitle": "Engineering Scheduler"
+      },
+      "Revised_x0020_By#Claims": "i:0#.f|membership|lisa.lemke-martin@bsbna.com",
+      "Revision_x0020_Comment": "<div class=\"ExternalClass41FA9A971BB145D9A443EAFFC70BCC6C\"><div style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\">Corrected BarJoist to Mezz Design only<br></div></div>",
+      "Action": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+        "Id": 0,
+        "Value": "Revised"
+      },
+      "Action#Id": 0,
+      "Action_x0020_Date": "2026-07-24",
+      "Modified": "2026-07-24T15:24:37Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Editor#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "OData__ApprovalAssignedTo": [],
+      "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalAssignedTo#Claims": [],
+      "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+      "OData__ApprovalRespondedBy": [],
+      "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+      "OData__ApprovalRespondedBy#Claims": [],
+      "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+      "Created": "2026-07-24T15:24:37Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+        "DisplayName": "Herring, David",
+        "Email": "DHerring2@bsbna.com",
+        "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+        "Department": "BBNA - Scheduling",
+        "JobTitle": "Quality Process Improvement Coordinator"
+      },
+      "Author#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1249_.000",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": null,
+        "Medium": null,
+        "Small": null
+      },
+      "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1249&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{Name}": "Training Requirements Chart for Designer/Engineer",
+      "{FilenameWithExtension}": "Training Requirements Chart for Designer/Engineer",
+      "{Path}": "QS Doc. Control Changes/",
+      "{FullPath}": "QS Doc. Control Changes/1249_.000",
+      "{ContentType}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+        "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+        "Name": "Item"
+      },
+      "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "{HasAttachments}": true,
+      "{VersionNumber}": "2.0",
+      "{ApprovalStatus}": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+        "Value": 0,
+        "Label": "Not submitted"
+      },
+      "{ApprovalStatus}#Value": 0
+    }
+  ]
+}
+
+[
+  "",
+  "div class=\"ExternalClass2E3D7DE807E3462C8B678D657CE1FB38\"",
+  "",
+  "div style=\"font-family&#58;Calibri",
+  " Arial",
+  " Helvetica",
+  " sans-serif;font-size&#58;11pt;color&#58;rgb(51",
+  " 51",
+  " 51);background-color&#58;transparent;\"",
+  "",
+  "span style=\"font-size&#58;10.0pt;font-family&#58;&quot;Calibri&quot;",
+  "sans-serif;color&#58;black;\"",
+  "Added inspection on movable die.",
+  "/span",
+  "",
+  "br",
+  "",
+  "/div",
+  "",
+  "/div",
+  ""
+]
+
+{
+  "Title": "Purlin Line – Operator / Front End",
+  "Link": null,
+  "Change Type": "Revised",
+  "Level": 4,
+  "By": "Frerichs, Joel",
+  "Comments": "Added inspection on movable die.\n\n\n"
+}
+
+Control_x0020_Number
+
+{
+  "Title": "Purlin Line – Operator / Front End",
+  "Link": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx",
+  "Change Type": "Revised",
+  "Level": 4,
+  "By": "Frerichs, Joel",
+  "Comments": "Added inspection on movable die.\n\n\n"
+},
+"value": [
+  {
+    "@odata.etag": "\"2\"",
+    "ItemInternalId": "1237",
+    "ID": 1237,
+    "Title": "Purlin Line – Operator / Front End",
+    "Control_x0020_Number": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx",
+    "Revision_x0020_Date": "2026-07-08",
+    "Revision_x0020_Level": 4,
+    "Revised_x0020_By": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+      "Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+      "DisplayName": "Frerichs, Joel",
+      "Email": "JFrerichs@bsbna.com",
+      "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=JFrerichs@bsbna.com",
+      "Department": "BBNA EVA Mfg Hourly - Plant Office",
+      "JobTitle": "Mfg Quality Manager I"
+    },
+    "Revised_x0020_By#Claims": "i:0#.f|membership|jfrerichs@bsbna.com",
+    "Revision_x0020_Comment": "\u003Cdiv class=\"ExternalClass2E3D7DE807E3462C8B678D657CE1FB38\"\u003E\u003Cdiv style=\"font-family&#58;Calibri, Arial, Helvetica, sans-serif;font-size&#58;11pt;color&#58;rgb(51, 51, 51);background-color&#58;transparent;\"\u003E\u003Cspan style=\"font-size&#58;10.0pt;font-family&#58;&quot;Calibri&quot;,sans-serif;color&#58;black;\"\u003EAdded inspection on movable die.\u003C/span\u003E\u003Cbr\u003E\u003C/div\u003E\u003C/div\u003E",
+    "Action": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+      "Id": 0,
+      "Value": "Revised"
+    },
+    "Action#Id": 0,
+    "Action_x0020_Date": "2026-07-08",
+    "Modified": "2026-07-08T19:09:50Z",
+    "Editor": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+      "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "DisplayName": "Herring, David",
+      "Email": "DHerring2@bsbna.com",
+      "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+      "Department": "BBNA - Scheduling",
+      "JobTitle": "Quality Process Improvement Coordinator"
+    },
+    "Editor#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+    "OData__ApprovalAssignedTo": [],
+    "OData__ApprovalAssignedTo@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+    "OData__ApprovalAssignedTo#Claims": [],
+    "OData__ApprovalAssignedTo#Claims@odata.type": "#Collection(String)",
+    "OData__ApprovalRespondedBy": [],
+    "OData__ApprovalRespondedBy@odata.type": "#Collection(Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser)",
+    "OData__ApprovalRespondedBy#Claims": [],
+    "OData__ApprovalRespondedBy#Claims@odata.type": "#Collection(String)",
+    "Created": "2026-07-08T19:09:51Z",
+    "Author": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+      "Claims": "i:0#.f|membership|dherring2@bsbna.com",
+      "DisplayName": "Herring, David",
+      "Email": "DHerring2@bsbna.com",
+      "Picture": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/UserPhoto.aspx?Size=L&AccountName=DHerring2@bsbna.com",
+      "Department": "BBNA - Scheduling",
+      "JobTitle": "Quality Process Improvement Coordinator"
+    },
+    "Author#Claims": "i:0#.f|membership|dherring2@bsbna.com",
+    "{Identifier}": "QS%2bDoc.%2bControl%2bChanges%252f1237_.000",
+    "{IsFolder}": false,
+    "{Thumbnail}": {
+      "Large": null,
+      "Medium": null,
+      "Small": null
+    },
+    "{Link}": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/_layouts/15/listform.aspx?PageType=4&ListId=af570f06%2D0e42%2D40df%2Da20c%2D98e256d699c1&ID=1237&ContentTypeID=0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+    "{Name}": "Purlin Line – Operator / Front End",
+    "{FilenameWithExtension}": "Purlin Line – Operator / Front End",
+    "{Path}": "QS Doc. Control Changes/",
+    "{FullPath}": "QS Doc. Control Changes/1237_.000",
+    "{ContentType}": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedContentType",
+      "Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+      "Name": "Item"
+    },
+    "{ContentType}#Id": "0x0100468DD395F575914292D63218F91786F4008B78620F7E9BEF4E8A350EB175DA2C02",
+    "{HasAttachments}": true,
+    "{VersionNumber}": "2.0",
+    "{ApprovalStatus}": {
+      "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedApprovalStatus",
+      "Value": 0,
+      "Label": "Not submitted"
+    },
+    "{ApprovalStatus}#Value": 0
+  },
+<a href="example.com">test</a>
+// working
+  {
+    "Title": "Purlin Line - Inspection and Unload",
+    "Link": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx",
+    "Change Type": "Revised",
+    "Level": 3,
+    "By": "Frerichs, Joel",
+    "Comments": "Various wording revisions and clean-up.\n\n\n"
+  },
+  // incorrect/Invalid Template
+  {
+    "from": [
+      "{\"Title\": Purlin Line – Operator / Front End, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :4, \n\"By\": Frerichs, Joel, \n\"Comments\": Added inspection on movable die.\n\n\n}>",
+      "{\"Title\": Purlin Line - Inspection and Unload, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": Frerichs, Joel, \n\"Comments\": Various wording revisions and clean-up.\n\n\n}>",
+      "{\"Title\": SLRII / VSRII Panel, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0326-JAC.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :7, \n\"By\": Bates, Michele, \n\"Comments\": Added Go/No Go reference templates to Section VII. Reference SWAT #7586.\n\n}>",
+      "{\"Title\": Plasma, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :2, \n\"By\": De La Cruz, Carlos, \n\"Comments\": 1.- Clarificar que Plasma son Messer 1, 2 y 3. (Clarify Plasma are Messer 1, 2,\nand 3)\n\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\n“Control de Producción” is also called PC/IC)\n\n3.- Se actualiza como PC/IC provee de los programas de Nesteo, antes iban\ndirectamente a la máquina, ahora entregan una USB al operador, líder y/o\nsupervisor. (Update how PC/IC provides the Nesting Programs, before they went\ndirectly to the Messer’s, now they give an USB to the operator, leader, and/or\nsupervisor)\n\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\n\n5.- Dimensión de 24” cambió a 30” para el manejo del sobrante. (24” dimension\nchange to 30” for how to handle the drop)\n\n6.- Se describe como el operador debe de llenar los reportes, que debe de\nllenar, como verifica el nesteo, frecuencia y toma de decisiones. (Describing\nhow the operator needs to fill the reports, what information is needed, how to\nverify the nesting, frequency of checking and how to take decisions)\n\n7.- Se agrega la figura del Kerf para mostrar al operador como quedaría si\najusta correctamente. (Adding the Kerf figure to show the operator how it could\nbe the shape if adjustments are correct)\n\n8.- Se agrega como el operador debe de identificar la almas. (Adding how\noperator must identify the WEB’s)\n\n9.- En el punto 6.0 que el operador debe ser calificado antes de aplicar\nsoldadura, para operar el plasma puede estar bajo supervisión, pero soldadura no\npor AWS D1.1 (On item 6.0 operator must be qualified for welding application, to\nwork on burn center it is possible under the supervision of the current\noperator, but welding can’t, this is per AWS D1.1)\n\n10.- En el punto 7.0 se cambió de FSD’s a MSD’s. (On item 7.0 change from FSD’s\nto MSD’s)\n\n\n\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\nde documentos del sistema de calidad (QS).\n\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0602-MTY.pdf>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :1, \n\"By\": De La Cruz, Carlos, \n\"Comments\": Restructuring. Examples, use batch number, stack and sequence, nesting, sort,\ndimensions like width, thk, length, tracking number for the MTR instead folio,\nhow many plates used, R or V identification color, for USA or Mexican Material,\nbecause of the new taxes regulation, it is needed, welding material when\nrequired used the folio of the MTR, here folio is kept, because the app for MTR\nis only for plates and flat bars to get the tracking number, Scrap, all these\nwere added. Also, no revision was there in the form, only ID and other\ninformation.\n\n \n\nRemoved: turno (shift), nombre del cliente (customer name), orden (order\nnumber), parte (part ID), 1a pieza insp. (1st piece check) and CAM #.\n\n\n}>",
+      "{\"Title\": SLR/VSR II In-Process Check Log, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/15%20Quality%20Control/Forms/Jackson/FMMF1505-JAC.xlsx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :7, \n\"By\": O'Neal, Lacey, \n\"Comments\": Added vebage for Go/NoGo Templates Refer SWAT#7586\n\n\n}>",
+      "{\"Title\": Crushed Slag Procurement, Processing, and Utilization in SAW Processes, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Procedure/PRMF0701.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": Dempsey, Jessica, \n\"Comments\": Add details of Titus’ bins per load pick up abilities. Updated reference to\ncurrent editions. See QS Doc Control Changes for previous revisions.\n\n\n}>",
+      "{\"Title\": Light Panels - 560641 & 560354, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0358-JAC.docx>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": Bates, Michele, \n\"Comments\": New document. \n\n}>",
+      "{\"Title\": Plasma, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": De La Cruz, Carlos, \n\"Comments\":  1. Se agregan diferencias para Messer 1 y 2 y Messer 3 (Add Messer 1, 2, and 3\n    to have the difference between processes).\n 2. Se agrega formato de control de materiales para Messer 3, FMMF0603-MTY (Add\n    form FMMF0603-MTY for Messer 3).\n\nSe agrega la frecuencia de verificación de los espesores de materiales\nutilizados en Messer 1, 2 y 3 (Add THK verification frequency for Messer 1, 2,\nand 3).\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0603-MTY.pdf>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": De La Cruz, Carlos, \n\"Comments\": New form. \n\n}>",
+      "{\"Title\": Linea de Patines y Empatadora, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Work%20Instructions/Monterrey/WIMF0701-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :2, \n\"By\": De La Cruz, Carlos, \n\"Comments\": 1.- Reestructuración general de la instrucción de trabajo (General restructuring\nof the work instruction)\n\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\n“Control de Producción” is also called PC/IC)\n\n3.- Se actualiza como PC/IC provee de los programas de Patines, antes iban\ndirectamente a la máquina, ahora entregan una USB al operador y/o supervisor.\n(Update how PC/IC provides the Flange programs, before they went directly to the\nflange, now they give an USB to the operator, leader, and/or supervisor)\n\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\n\n5.- Ahora se incluye en la instrucción de trabajo la empatadora. (Segment line\nis included on this work instruction)\n\n6.- Se agrega como debe el operador llenar los reportes (Add how operators fill\nthe forms)\n\n7.- Se agrega como el operador debe de identificar los patines. (Adding how\noperator must identify the flanges)\n\n8.- En el punto 6.0, el operador debe ser calificado antes de aplicar soldadura\npor AWS D1.1 y/o CWB W47.1 (On item 6.0, operator must be qualified for welding\napplication per AWS D1.1 and/or CWB W47.1 prior welding application)\n\n9.- En el punto 7.0 cambios generales. (On item 7.0 general changes)\n\n\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\nde documentos del sistema de calidad (QS).\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/01%20General/Forms/Monterrey/FMMF0101-MTY.pdf>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": De La Cruz, Carlos, \n\"Comments\": New form. \n\n}>",
+      "{\"Title\": Training Requirements Chart for Designer/Engineer, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Engineering%20Services/Forms/FMEN0603.xlsx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :6, \n\"By\": Legler, Lisa, \n\"Comments\": Corrected BarJoist to Mezz Design only\n\n\n}>"
+    ],
+    "format": "Html"
+  }
+  // correct
+  "from": [
+    {
+      "Title": "Purlin Line – Operator / Front End",
+      "Link": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx",
+      "Change Type": "Revised",
+      "Level": 4,
+      "By": "Frerichs, Joel",
+      "Comments": "Added inspection on movable die.\n\n\n"
+    },
+    {
+      "Title": "Purlin Line - Inspection and Unload",
+      "Link": "https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx",
+      "Change Type": "Revised",
+      "Level": 3,
+      "By": "Frerichs, Joel",
+      "Comments": "Various wording revisions and clean-up.\n\n\n"
+    },
+  ]
+
+
+{
+    "from": [
+      "{\"Title\": Purlin Line – Operator / Front End, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :4, \n\"By\": Frerichs, Joel, \n\"Comments\": Added inspection on movable die.\n\n\n}>",
+      "{\"Title\": Purlin Line - Inspection and Unload, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": Frerichs, Joel, \n\"Comments\": Various wording revisions and clean-up.\n\n\n}>",
+      "{\"Title\": SLRII / VSRII Panel, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0326-JAC.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :7, \n\"By\": Bates, Michele, \n\"Comments\": Added Go/No Go reference templates to Section VII. Reference SWAT #7586.\n\n}>",
+      "{\"Title\": Plasma, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :2, \n\"By\": De La Cruz, Carlos, \n\"Comments\": 1.- Clarificar que Plasma son Messer 1, 2 y 3. (Clarify Plasma are Messer 1, 2,\nand 3)\n\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\n“Control de Producción” is also called PC/IC)\n\n3.- Se actualiza como PC/IC provee de los programas de Nesteo, antes iban\ndirectamente a la máquina, ahora entregan una USB al operador, líder y/o\nsupervisor. (Update how PC/IC provides the Nesting Programs, before they went\ndirectly to the Messer’s, now they give an USB to the operator, leader, and/or\nsupervisor)\n\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\n\n5.- Dimensión de 24” cambió a 30” para el manejo del sobrante. (24” dimension\nchange to 30” for how to handle the drop)\n\n6.- Se describe como el operador debe de llenar los reportes, que debe de\nllenar, como verifica el nesteo, frecuencia y toma de decisiones. (Describing\nhow the operator needs to fill the reports, what information is needed, how to\nverify the nesting, frequency of checking and how to take decisions)\n\n7.- Se agrega la figura del Kerf para mostrar al operador como quedaría si\najusta correctamente. (Adding the Kerf figure to show the operator how it could\nbe the shape if adjustments are correct)\n\n8.- Se agrega como el operador debe de identificar la almas. (Adding how\noperator must identify the WEB’s)\n\n9.- En el punto 6.0 que el operador debe ser calificado antes de aplicar\nsoldadura, para operar el plasma puede estar bajo supervisión, pero soldadura no\npor AWS D1.1 (On item 6.0 operator must be qualified for welding application, to\nwork on burn center it is possible under the supervision of the current\noperator, but welding can’t, this is per AWS D1.1)\n\n10.- En el punto 7.0 se cambió de FSD’s a MSD’s. (On item 7.0 change from FSD’s\nto MSD’s)\n\n\n\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\nde documentos del sistema de calidad (QS).\n\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0602-MTY.pdf>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :1, \n\"By\": De La Cruz, Carlos, \n\"Comments\": Restructuring. Examples, use batch number, stack and sequence, nesting, sort,\ndimensions like width, thk, length, tracking number for the MTR instead folio,\nhow many plates used, R or V identification color, for USA or Mexican Material,\nbecause of the new taxes regulation, it is needed, welding material when\nrequired used the folio of the MTR, here folio is kept, because the app for MTR\nis only for plates and flat bars to get the tracking number, Scrap, all these\nwere added. Also, no revision was there in the form, only ID and other\ninformation.\n\n \n\nRemoved: turno (shift), nombre del cliente (customer name), orden (order\nnumber), parte (part ID), 1a pieza insp. (1st piece check) and CAM #.\n\n\n}>",
+      "{\"Title\": SLR/VSR II In-Process Check Log, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/15%20Quality%20Control/Forms/Jackson/FMMF1505-JAC.xlsx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :7, \n\"By\": O'Neal, Lacey, \n\"Comments\": Added vebage for Go/NoGo Templates Refer SWAT#7586\n\n\n}>",
+      "{\"Title\": Crushed Slag Procurement, Processing, and Utilization in SAW Processes, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Procedure/PRMF0701.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": Dempsey, Jessica, \n\"Comments\": Add details of Titus’ bins per load pick up abilities. Updated reference to\ncurrent editions. See QS Doc Control Changes for previous revisions.\n\n\n}>",
+      "{\"Title\": Light Panels - 560641 & 560354, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0358-JAC.docx>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": Bates, Michele, \n\"Comments\": New document. \n\n}>",
+      "{\"Title\": Plasma, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :3, \n\"By\": De La Cruz, Carlos, \n\"Comments\":  1. Se agregan diferencias para Messer 1 y 2 y Messer 3 (Add Messer 1, 2, and 3\n    to have the difference between processes).\n 2. Se agrega formato de control de materiales para Messer 3, FMMF0603-MTY (Add\n    form FMMF0603-MTY for Messer 3).\n\nSe agrega la frecuencia de verificación de los espesores de materiales\nutilizados en Messer 1, 2 y 3 (Add THK verification frequency for Messer 1, 2,\nand 3).\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0603-MTY.pdf>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": De La Cruz, Carlos, \n\"Comments\": New form. \n\n}>",
+      "{\"Title\": Linea de Patines y Empatadora, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Work%20Instructions/Monterrey/WIMF0701-MTY.doc>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :2, \n\"By\": De La Cruz, Carlos, \n\"Comments\": 1.- Reestructuración general de la instrucción de trabajo (General restructuring\nof the work instruction)\n\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\n“Control de Producción” is also called PC/IC)\n\n3.- Se actualiza como PC/IC provee de los programas de Patines, antes iban\ndirectamente a la máquina, ahora entregan una USB al operador y/o supervisor.\n(Update how PC/IC provides the Flange programs, before they went directly to the\nflange, now they give an USB to the operator, leader, and/or supervisor)\n\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\n\n5.- Ahora se incluye en la instrucción de trabajo la empatadora. (Segment line\nis included on this work instruction)\n\n6.- Se agrega como debe el operador llenar los reportes (Add how operators fill\nthe forms)\n\n7.- Se agrega como el operador debe de identificar los patines. (Adding how\noperator must identify the flanges)\n\n8.- En el punto 6.0, el operador debe ser calificado antes de aplicar soldadura\npor AWS D1.1 y/o CWB W47.1 (On item 6.0, operator must be qualified for welding\napplication per AWS D1.1 and/or CWB W47.1 prior welding application)\n\n9.- En el punto 7.0 cambios generales. (On item 7.0 general changes)\n\n\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\nde documentos del sistema de calidad (QS).\n\n\n}>",
+      "{\"Title\": Batch Color, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/01%20General/Forms/Monterrey/FMMF0101-MTY.pdf>Open Link</a>\n\"Change Type\": New, \n\"Level\" :0, \n\"By\": De La Cruz, Carlos, \n\"Comments\": New form. \n\n}>",
+      "{\"Title\": Training Requirements Chart for Designer/Engineer, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Engineering%20Services/Forms/FMEN0603.xlsx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :6, \n\"By\": Legler, Lisa, \n\"Comments\": Corrected BarJoist to Mezz Design only\n\n\n}>"
+    ],
+    "format": "Html"
+  }
+
+{
+    "Title": "",
+  }
+
+  "variables([\"{\\\"Title\\\": Purlin Line – Operator / Front End, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :4, \\n\\\"By\\\": Frerichs, Joel, \\n\\\"Comments\\\": Added inspection on movable die.\\n\\n\\n}>\",\"{\\\"Title\\\": Purlin Line - Inspection and Unload, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0415-EVA.docx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :3, \\n\\\"By\\\": Frerichs, Joel, \\n\\\"Comments\\\": Various wording revisions and clean-up.\\n\\n\\n}>\",\"{\\\"Title\\\": SLRII / VSRII Panel, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0326-JAC.docx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :7, \\n\\\"By\\\": Bates, Michele, \\n\\\"Comments\\\": Added Go/No Go reference templates to Section VII. Reference SWAT #7586.\\n\\n}>\",\"{\\\"Title\\\": Plasma, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :2, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\": 1.- Clarificar que Plasma son Messer 1, 2 y 3. (Clarify Plasma are Messer 1, 2,\\nand 3)\\n\\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\\n“Control de Producción” is also called PC/IC)\\n\\n3.- Se actualiza como PC/IC provee de los programas de Nesteo, antes iban\\ndirectamente a la máquina, ahora entregan una USB al operador, líder y/o\\nsupervisor. (Update how PC/IC provides the Nesting Programs, before they went\\ndirectly to the Messer’s, now they give an USB to the operator, leader, and/or\\nsupervisor)\\n\\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\\n\\n5.- Dimensión de 24” cambió a 30” para el manejo del sobrante. (24” dimension\\nchange to 30” for how to handle the drop)\\n\\n6.- Se describe como el operador debe de llenar los reportes, que debe de\\nllenar, como verifica el nesteo, frecuencia y toma de decisiones. (Describing\\nhow the operator needs to fill the reports, what information is needed, how to\\nverify the nesting, frequency of checking and how to take decisions)\\n\\n7.- Se agrega la figura del Kerf para mostrar al operador como quedaría si\\najusta correctamente. (Adding the Kerf figure to show the operator how it could\\nbe the shape if adjustments are correct)\\n\\n8.- Se agrega como el operador debe de identificar la almas. (Adding how\\noperator must identify the WEB’s)\\n\\n9.- En el punto 6.0 que el operador debe ser calificado antes de aplicar\\nsoldadura, para operar el plasma puede estar bajo supervisión, pero soldadura no\\npor AWS D1.1 (On item 6.0 operator must be qualified for welding application, to\\nwork on burn center it is possible under the supervision of the current\\noperator, but welding can’t, this is per AWS D1.1)\\n\\n10.- En el punto 7.0 se cambió de FSD’s a MSD’s. (On item 7.0 change from FSD’s\\nto MSD’s)\\n\\n\\n\\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\\nde documentos del sistema de calidad (QS).\\n\\n\\n\\n}>\",\"{\\\"Title\\\": Batch Color, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0602-MTY.pdf>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :1, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\": Restructuring. Examples, use batch number, stack and sequence, nesting, sort,\\ndimensions like width, thk, length, tracking number for the MTR instead folio,\\nhow many plates used, R or V identification color, for USA or Mexican Material,\\nbecause of the new taxes regulation, it is needed, welding material when\\nrequired used the folio of the MTR, here folio is kept, because the app for MTR\\nis only for plates and flat bars to get the tracking number, Scrap, all these\\nwere added. Also, no revision was there in the form, only ID and other\\ninformation.\\n\\n \\n\\nRemoved: turno (shift), nombre del cliente (customer name), orden (order\\nnumber), parte (part ID), 1a pieza insp. (1st piece check) and CAM #.\\n\\n\\n}>\",\"{\\\"Title\\\": SLR/VSR II In-Process Check Log, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/15%20Quality%20Control/Forms/Jackson/FMMF1505-JAC.xlsx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :7, \\n\\\"By\\\": O'Neal, Lacey, \\n\\\"Comments\\\": Added vebage for Go/NoGo Templates Refer SWAT#7586\\n\\n\\n}>\",\"{\\\"Title\\\": Crushed Slag Procurement, Processing, and Utilization in SAW Processes, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Procedure/PRMF0701.docx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :3, \\n\\\"By\\\": Dempsey, Jessica, \\n\\\"Comments\\\": Add details of Titus’ bins per load pick up abilities. Updated reference to\\ncurrent editions. See QS Doc Control Changes for previous revisions.\\n\\n\\n}>\",\"{\\\"Title\\\": Light Panels - 560641 & 560354, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/03%20Panel%20and%20Trim/Work%20Instructions/Jackson/WIMF0358-JAC.docx>Open Link</a>\\n\\\"Change Type\\\": New, \\n\\\"Level\\\" :0, \\n\\\"By\\\": Bates, Michele, \\n\\\"Comments\\\": New document. \\n\\n}>\",\"{\\\"Title\\\": Plasma, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Work%20Instructions/Monterrey/WIMF0601-MTY.doc>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :3, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\":  1. Se agregan diferencias para Messer 1 y 2 y Messer 3 (Add Messer 1, 2, and 3\\n    to have the difference between processes).\\n 2. Se agrega formato de control de materiales para Messer 3, FMMF0603-MTY (Add\\n    form FMMF0603-MTY for Messer 3).\\n\\nSe agrega la frecuencia de verificación de los espesores de materiales\\nutilizados en Messer 1, 2 y 3 (Add THK verification frequency for Messer 1, 2,\\nand 3).\\n\\n\\n}>\",\"{\\\"Title\\\": Batch Color, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/06%20Plasma%20-%20Burn%20Center/Forms/Monterrey/FMMF0603-MTY.pdf>Open Link</a>\\n\\\"Change Type\\\": New, \\n\\\"Level\\\" :0, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\": New form. \\n\\n}>\",\"{\\\"Title\\\": Linea de Patines y Empatadora, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/07%20Conrac%20-%20Flange/Work%20Instructions/Monterrey/WIMF0701-MTY.doc>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :2, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\": 1.- Reestructuración general de la instrucción de trabajo (General restructuring\\nof the work instruction)\\n\\n2.- Agregar que “Control de Producción” también se conocer como PC/IC. (Add that\\n“Control de Producción” is also called PC/IC)\\n\\n3.- Se actualiza como PC/IC provee de los programas de Patines, antes iban\\ndirectamente a la máquina, ahora entregan una USB al operador y/o supervisor.\\n(Update how PC/IC provides the Flange programs, before they went directly to the\\nflange, now they give an USB to the operator, leader, and/or supervisor)\\n\\n4.- Se cambio el término “folio” para los MTR’s por el de “tracking number”, TN.\\n(Changed the term “folio” for MTR’s to “tracking number”, TN)\\n\\n5.- Ahora se incluye en la instrucción de trabajo la empatadora. (Segment line\\nis included on this work instruction)\\n\\n6.- Se agrega como debe el operador llenar los reportes (Add how operators fill\\nthe forms)\\n\\n7.- Se agrega como el operador debe de identificar los patines. (Adding how\\noperator must identify the flanges)\\n\\n8.- En el punto 6.0, el operador debe ser calificado antes de aplicar soldadura\\npor AWS D1.1 y/o CWB W47.1 (On item 6.0, operator must be qualified for welding\\napplication per AWS D1.1 and/or CWB W47.1 prior welding application)\\n\\n9.- En el punto 7.0 cambios generales. (On item 7.0 general changes)\\n\\n\\nLas revisiones anteriores se pueden encontrar en la lista de cambios del control\\nde documentos del sistema de calidad (QS).\\n\\n\\n}>\",\"{\\\"Title\\\": Batch Color, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Manufacturing/01%20General/Forms/Monterrey/FMMF0101-MTY.pdf>Open Link</a>\\n\\\"Change Type\\\": New, \\n\\\"Level\\\" :0, \\n\\\"By\\\": De La Cruz, Carlos, \\n\\\"Comments\\\": New form. \\n\\n}>\",\"{\\\"Title\\\": Training Requirements Chart for Designer/Engineer, \\n\\\"Link\\\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS%20Documentation/Engineering%20Services/Forms/FMEN0603.xlsx>Open Link</a>\\n\\\"Change Type\\\": Revised, \\n\\\"Level\\\" :6, \\n\\\"By\\\": Legler, Lisa, \\n\\\"Comments\\\": Corrected BarJoist to Mezz Design only\\n\\n\\n}>\"])""{\"Title\": Purlin Line – Operator / Front End, \n\"Link\" :  <a href=https://bluescopeltd.sharepoint.com/sites/bbna_quality/QS Documentation/Manufacturing/04 Roll Form Gage/Work Instructions/Evansville/WIMF0414-EVA.docx>Open Link</a>\n\"Change Type\": Revised, \n\"Level\" :4, \n\"By\": Frerichs, Joel, \n\"Comments\": Added inspection on movable die.\n\n\n}>",
