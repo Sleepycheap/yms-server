@@ -2,22 +2,24 @@ import express from "express";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import oracledb from "oracledb";
+import { DatabaseSync } from "node:sqlite";
+import * as types from "./oracle/types.js";
+import { createScacTable, insertScacTable } from "./oracle/functions.js";
 import "dotenv/config";
-// import { getAllOrders, getCarriers} from "./db/queries.js";
+
 import userRouter from "./routes/users.js";
 import truckRouter from "./routes/trucks.js";
 import itemRouter from "./routes/items.js";
 import orderRouter from "./routes/orders.js";
 import packageRouter from "./routes/packages.js";
-// import oracleRouter from "./src/routes/oracle.js";
 import bodyParser from "body-parser";
 import cors from "cors";
-// import { pool } from "./db/pool.js";
 
+const db = new DatabaseSync(":memory:");
+const { g_scac_recordFactory } = types;
 oracledb.initOracleClient();
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");
-// const bodyParser = bodyParser.json();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const app = express();
 
