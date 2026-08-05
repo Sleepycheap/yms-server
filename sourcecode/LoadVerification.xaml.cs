@@ -136,8 +136,11 @@ namespace ButlerWarehouseApp
                 restDt.OrgCode = qString.OrgCode;
 
                 YardManagementSystem_BPELClient webRequestClient = new YardManagementSystem_BPELClient();
+
                 webRequestClient.Endpoint.Address = new System.ServiceModel.EndpointAddress(CommonUtility.getIPAddress() + "/soa-infra/services/BBNA_Butler/YardManagementSystem/YardManagementSystem_ep");
+
                 GetLOADFORMTXNDETAILDataResponse serviceResponse = (GetLOADFORMTXNDETAILDataResponse)webRequestClient.GetLOADFORMTXNDETAILDataAsync(restDt).Result;
+
                 LOADFORMTXNDETAILResp fResponse = (LOADFORMTXNDETAILResp)serviceResponse.LOADFORMTXNDETAILResp;
                 dataExists = fResponse.DataExists;
                 if (dataExists.Equals("N"))

@@ -10,6 +10,88 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
+/*
+		public void RunInTransaction (Action action)
+		{
+			try {
+				var savePoint = SaveTransactionPoint ();
+				action ();
+				Release (savePoint);
+			} catch (Exception) {
+				Rollback ();
+				throw;
+			}
+		}
+
+
+		public string SaveTransactionPoint ()
+		{
+			int depth = Interlocked.Increment (ref _transactionDepth) - 1;
+			string retVal = "S" + _rand.Next (short.MaxValue) + "D" + depth;
+
+			try {
+				Execute ("savepoint " + retVal);
+			} catch (Exception ex) {
+				var sqlExp = ex as SQLiteException;
+				if (sqlExp != null) {
+					// It is recommended that applications respond to the errors listed below 
+					//    by explicitly issuing a ROLLBACK command.
+					// TODO: This rollback failsafe should be localized to all throw sites.
+					switch (sqlExp.Result) {
+					case SQLite3.Result.IOError:
+					case SQLite3.Result.Full:
+					case SQLite3.Result.Busy:
+					case SQLite3.Result.NoMem:
+					case SQLite3.Result.Interrupt:
+						RollbackTo (null, true);
+						break;
+					}
+				} else {
+					Interlocked.Decrement (ref _transactionDepth);
+				}
+
+				throw;
+			}
+
+			return retVal;
+		}
+
+
+    		public void RollbackTo (string savepoint)
+		{
+			RollbackTo (savepoint, false);
+		}
+
+
+
+	void RollbackTo (string savepoint, bool noThrow)
+		{
+			// Rolling back without a TO clause rolls backs all transactions 
+			//    and leaves the transaction stack empty.   
+			try {
+				if (String.IsNullOrEmpty (savepoint)) {
+					if (Interlocked.Exchange (ref _transactionDepth, 0) > 0) {
+						Execute ("rollback");
+					}
+				} else {
+					DoSavePointExecute (savepoint, "rollback to ");
+				}   
+			} catch (SQLiteException) {
+				if (!noThrow)
+					throw;
+            
+			}
+			// No need to rollback if there are no transactions open.
+		}
+
+
+
+
+
+*/
+
+
 namespace ButlerWarehouseApp.DataModel
 {
     /// <summary>
