@@ -1,6 +1,12 @@
 // import { db } from "./db/handler.js";
 
-import { dropTable } from "./db/handler.js";
+import * as db from "./db/handler.js";
+
+import { ProductTypeAnswers } from "./models/ProductTypeAnswers.js";
+
+import { ProductTypeQuestions } from "./models/ProductTypeQuestions.js";
+
+import { ProductType } from "./models/ProductType.js";
 
 // main();
 
@@ -136,23 +142,23 @@ This returns
 ]
   */
 
-function tableTest() {
-  const del = db.prepare(`DROP TABLE IF EXISTS scactable`);
-  del.run();
-  try {
-    const result = db.exec(
-      `CREATE TABLE scactable(scac_code TEXT PRIMARY KEY, carrier_name TEXT) STRICT`,
-    );
-    const query = db.prepare("SELECT * FROM scactable");
-    console.log(query.all());
-  } catch (err) {
-    console.log("err", err.message);
-  }
-}
+// function tableTest() {
+//   const del = db.prepare(`DROP TABLE IF EXISTS scactable`);
+//   del.run();
+//   try {
+//     const result = db.exec(
+//       `CREATE TABLE scactable(scac_code TEXT PRIMARY KEY, carrier_name TEXT) STRICT`,
+//     );
+//     const query = db.prepare("SELECT * FROM scactable");
+//     console.log(query.all());
+//   } catch (err) {
+//     console.log("err", err.message);
+//   }
+// }
 
 // tableTest();
 
-const test = dropTable("test");
+// const test = dropTable("test");
 
 // const insert = db.prepare(
 //   `INSERT INTO scactable (scac_code, ca`rrier_name) VALUES (?, ?)`,
@@ -163,3 +169,68 @@ const test = dropTable("test");
 // const query = db.prepare("SELECT * FROM scactable");
 
 // console.log(query.all());
+
+// export class ProductType {
+//   constructor(ProductTypeID, ProductTypeName) {
+//     this.ProductTypeID = ProductTypeID;
+//     this.ProductTypeName = ProductTypeName;
+//   }
+
+//   pk() {
+//     return "ProductTypeID";
+//   }
+// }
+
+// const obj = new ProductType();
+
+// db.createTable();
+
+// obj.ProductTypeID = 1;
+// obj.ProductTypeName = "Rafter";
+// db.insertIntoTable();
+
+// console.log(obj.name);
+
+// const test = new ProductTypeQuestions();
+
+// console.log(test.ProductTypeQuestions());
+// console.log(db.getColumnNames("scactable"));
+
+// db.createTable(test.name(), test.columns());
+
+// db.insertIntoTable('ProductType', "('obj.ProductTypeID', 'obj.ProductTypeName')"))
+
+// const test = new ProductType();
+
+const list = [
+  {
+    ProductTypeID: 1,
+    ProductTypeName: "Rafters",
+  },
+  {
+    ProductTypeID: 2,
+    ProductTypeName: "Beams",
+  },
+];
+
+// console.log(list[0]);
+
+// const table = new ProductType();
+// console.log(table.name());
+// db.createTable(table.name(), table.columns());
+db.deleteFromTable("ProductType");
+
+for (let i = 0; i < list.length; i++) {
+  try {
+    const obj = new ProductType();
+    obj.ProductTypeID = list[i].ProductTypeID;
+    obj.ProductTypeName = list[i].ProductTypeName;
+    // const values = `('${obj.ProductTypeID}','${obj.ProductTypeName}')`;
+    db.insertIntoTable(
+      obj.name(),
+      `('${obj.ProductTypeID}','${obj.ProductTypeName}')`,
+    );
+  } catch (err) {
+    console.log("err", err.message);
+  }
+}
