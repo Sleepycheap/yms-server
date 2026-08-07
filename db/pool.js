@@ -26,7 +26,7 @@ const mypw = ... // the hr schema password
 async function(run){
     await using pool = await oracledb.createPool({
         user : "hr",
-        password: mypw,
+        password: process.env.PW,
         connectString : "localhost/FREEPDB1",
         poolMin: 1,
         poolMax: 5
