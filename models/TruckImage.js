@@ -1,27 +1,20 @@
-export class TruckImage {
-  constructor(ID, TruckID, IsSelected, TruckImg, IsUploaded) {
-    this.ID = ID;
-    this.TruckID = TruckID;
-    this.IsSelected = IsSelected;
-    this.TruckImg = TruckImg;
-    this.IsUploaded = IsUploaded;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
-
-  columns() {
-    return [
+export function TruckImage() {
+  return {
+    name: "TruckImage",
+    columns: [
       "ID INT",
       "TruckID TEXT",
       "IsSelected INTEGER",
       "TruckImg BLOB",
       "IsUploaded TEXT",
-    ];
-  }
+    ],
+    pk: "ID",
 
-  name() {
-    return "TruckImage";
-  }
+    create: createTable(
+      "TruckImage",
+      "ID INT, TruckID TEXT, IsSelected INTEGER, TruckImg BLOB, IsUploaded TEXT",
+    ),
+  };
 }

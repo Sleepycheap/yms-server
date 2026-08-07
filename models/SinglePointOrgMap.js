@@ -1,19 +1,14 @@
-export class SinglePointOrgMap {
-  constructor(ID, singlePointOrg, baseOrg) {
-    this.ID = ID;
-    this.singlePointOrg = singlePointOrg;
-    this.baseOrg = baseOrg;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
+export function SinglePointOrgMap() {
+  return {
+    name: "SinglePointOrgMap",
+    columns: ["Id INT", "singlePointOrg TEXT", "baseOrg TEXT"],
+    pk: "ID",
 
-  columns() {
-    return ["Id INT", "singlePointOrg TEXT", "baseOrg TEXT"];
-  }
-
-  name() {
-    return "SinglePointOrgMap";
-  }
+    create: createTable(
+      "SinglePointOrgMap",
+      "Id INT, singlePointOrg TEXT, baseOrg TEXT",
+    ),
+  };
 }

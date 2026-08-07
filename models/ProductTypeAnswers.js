@@ -1,25 +1,19 @@
-export class ProductTypeAnswers {
-  constructor(ProductTypeAnswerID, ProductTypeQuestionID, Answer, IsSelected) {
-    this.ProductTypeAnswerID = ProductTypeAnswerID;
-    this.ProductTypeQuestionID = ProductTypeQuestionID;
-    this.Answer = Answer;
-    this.IsSelected = IsSelected;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ProductTypeAnswerID";
-  }
-
-  columns() {
-    return [
+export function ProductTypeAnswers() {
+  return {
+    name: "ProductTypeAnswers",
+    columns: [
       "ProductTypeAnswerID INTEGER",
       "ProductTypeQuestionID INTEGER",
       "Answer TEXT",
       "IsSelected INTEGER",
-    ];
-  }
+    ],
+    pk: "ProductTypeAnswerID",
 
-  name() {
-    return "ProductTypeAnswers";
-  }
+    create: createTable(
+      "ProductTypeAnswers",
+      "ProductTypeAnswerID INTEGER, ProductTypeQuestionID INTEGER, Answer TEXT, IsSelected INTEGER",
+    ),
+  };
 }

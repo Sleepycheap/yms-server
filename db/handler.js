@@ -129,27 +129,26 @@ export class TableMapping {
 //const map = new TableMapping(ProductTypeAnswers);
 //map.tableName returns TableName of table model passed into tablemapping function
 
-export async function getUserDetails() {
-  return {
-    FirstName: await getFirstName(),
-    LastName: await getLastName(),
-    PrincipalName: await getPrincipalName(),
-    domainName = await getDomainName()
-  }
-}
+// export async function getUserDetails() {
+//   return {
+//     FirstName: await getFirstName(),
+//     LastName: await getLastName(),
+//     PrincipalName: await getPrincipalName(),
+//     domainName = await getDomainName()
+//   }
+// }
 
-export async function populateOrg() {
-  const organizationCodeList = [];
-  const orgResponse = await GetOrgResponse();
-  for (let i = 0; i < orgResponse.length; i++) {
-    const org_code = [i].orgCode;
-    organizationCodeList.push(org_code)
-  }
-  organizationCodeList.splice(0, 0, org_code)
+// export async function populateOrg() {
+//   const organizationCodeList = [];
+//   const orgResponse = await GetOrgResponse();
+//   for (let i = 0; i < orgResponse.length; i++) {
+//     const org_code = [i].orgCode;
+//     organizationCodeList.push(org_code)
+//   }
+//   organizationCodeList.splice(0, 0, org_code)
 
-  /* 
-  Implement some function to get computer name of device. If device name matches Org Code, set that Org Code as default
-  */
- 
+//   /*
+//   Implement some function to get computer name of device. If device name matches Org Code, set that Org Code as default
+//   */
 
-}
+// }

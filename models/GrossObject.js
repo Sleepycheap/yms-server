@@ -1,20 +1,19 @@
-export class GrossObject {
-  constructor(ID, truckID, totalWeight, totalQuantity) {
-    this.ID = ID;
-    this.truckID = truckID;
-    this.totalWeight = totalWeight;
-    this.totalQuantity = totalQuantity;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
+export function GrossObject() {
+  return {
+    name: "GrossObject",
+    columns: [
+      "ID INT",
+      "truckID TEXT",
+      "totalWeight REAL",
+      "totalQuantity REAL",
+    ],
+    pk: "ID",
 
-  columns() {
-    return ["ID INT", "truckID TEXT", "totalWeight REAL", "totalQuantity REAL"];
-  }
-
-  name() {
-    return "GrossObject";
-  }
+    create: createTable(
+      "GrossObject",
+      "ID INT, truckID TEXT, totalWeight REAL, totalQuantity REAL",
+    ),
+  };
 }

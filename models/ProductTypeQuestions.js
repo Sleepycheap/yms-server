@@ -1,34 +1,23 @@
 import { ProductTypeAnswers } from "./ProductTypeAnswers.js";
+import { createTable } from "../db/handler.js";
 
-export class ProductTypeQuestions {
-  constructor(ProductTypeQuestionID, ProductTypeID, Question, ProductTypeName) {
-    this.ProductTypeQuestionID = ProductTypeQuestionID;
-    this.ProductTypeID = ProductTypeID;
-    this.Question = Question;
-    this.ProductTypeName = ProductTypeName;
-  }
-
-  pk() {
-    return "ProductTypeQuestionID";
-  }
-
-  columns() {
-    return [
+export function ProductTypeQuestions() {
+  return {
+    name: "ProductTypeQuestions",
+    columns: [
       "ProductTypeQuestionID INTEGER",
       "ProductTypeID INTEGER",
       "Question TEXT",
       "ProductTypeName TEXT",
-    ];
-  }
+    ],
+    pk: "ProductTypeQuestionID",
 
-  name() {
-    return "ProductTypeQuestions";
-  }
+    create: createTable(
+      "ProductTypeQuestions",
+      "ProductTypeQuestionID INTEGER, ProductTypeID INTEGER, Question TEXT, ProductTypeName TEXT",
+    ),
 
-  ProductTypeQuestions() {
-    const Answers = new ProductTypeAnswers();
-    return {
-      Answers,
-    };
-  }
+    answers: ProductTypeAnswers(),
+  };
 }
+console.log(ProductTypeQuestions.answers);

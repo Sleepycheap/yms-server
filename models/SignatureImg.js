@@ -1,19 +1,14 @@
-export class SignatureImg {
-  constructor(ID, TruckID, SignatureImage) {
-    this.ID = ID;
-    this.TruckID = TruckID;
-    this.SignatureImage = SignatureImage;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
+export function SignatureImg() {
+  return {
+    name: "SignatureImg",
+    columns: ["ID INT", "TruckID TEXT", "SignatureImg BLOB"],
+    pk: "ID",
 
-  columns() {
-    return ["ID INT", "TruckID TEXT", "SignatureImg BLOB"];
-  }
-
-  name() {
-    return "SignatureImg";
-  }
+    create: createTable(
+      "SignatureImg",
+      "ID INT, TruckID TEXT, SignatureImg BLOB",
+    ),
+  };
 }

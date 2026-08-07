@@ -1,17 +1,11 @@
-export class IsPhotoTaken {
-  constructor(totalCount) {
-    this.totalCount = totalCount;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "totalCount";
-  }
+export function IsPhotoTaken() {
+  return {
+    name: "IsPhotoTaken",
+    columns: ["totalCount INT"],
+    pk: "ID",
 
-  columns() {
-    return ["totalCount INT"];
-  }
-
-  name() {
-    return "IsPhotoTaken";
-  }
+    create: createTable("IsPhotoTaken", "totalCount INT"),
+  };
 }

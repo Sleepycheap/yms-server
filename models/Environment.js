@@ -1,19 +1,15 @@
-export class Environment {
-  constructor(ID, instanceName, instanceIP) {
-    this.ID = ID;
-    this.instanceName = instanceName;
-    this.instanceIP = instanceIP;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
+export function Environment() {
+  return {
+    name: "Environment",
+    columns: ["ID INTEGER", "instanceName TEXT", "instanceIP TEXT"],
 
-  columns() {
-    return ["ID INTEGER", "instanceName TEXT", "instanceIP TEXT"];
-  }
+    pk: "ID",
 
-  name() {
-    return "Environment";
-  }
+    create: createTable(
+      "Environment",
+      "ID INTEGER, instanceName TEXT, instanceIP TEXT",
+    ),
+  };
 }

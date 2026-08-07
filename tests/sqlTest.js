@@ -1,7 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
-import * as types from "./oracle/types.js";
-import { populate } from "./db/populateSQL.js";
-import { createScacTable, insertScacTable } from "./oracle/functions.js";
+import * as types from "../oracle/types.js";
+import { populate } from "../db/populateSQL.js";
+import { createScacTable, insertScacTable } from "../oracle/functions.js";
 import { TypeOverrides } from "pg";
 // import { CategoryProductRel } from "./models/CategoryProductRel.js";
 const db = new DatabaseSync(":memory:");

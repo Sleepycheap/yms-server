@@ -1,18 +1,14 @@
-export class ProductType {
-  constructor(ProductTypeID, ProductTypeName) {
-    this.ProductTypeID = ProductTypeID;
-    this.ProductTypeName = ProductTypeName;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ProductTypeID";
-  }
+export function ProductType() {
+  return {
+    name: "ProductType",
+    columns: ["ProductTypeID INTEGER", "ProductTypeName TEXT"],
+    pk: "ProductTypeID",
 
-  columns() {
-    return ["ProductTypeID INTEGER", "ProductTypeName TEXT"];
-  }
-
-  name() {
-    return "ProductType";
-  }
+    create: createTable(
+      "ProductType",
+      "ProductTypeID INTEGER, ProductTypeName TEXT",
+    ),
+  };
 }

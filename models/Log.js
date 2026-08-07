@@ -1,30 +1,11 @@
-export class Log {
-  constructor(ID, LogMessage, TimeStamp) {
-    this.ID = ID;
-    this.LogMessage = LogMessage;
-    this.TimeStamp = TimeStamp;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
+export function Log() {
+  return {
+    name: "Log",
+    columns: ["ID INT", "LogMessage TEXT", "TimeStamp TEXT"],
+    pk: "ID",
 
-  columns() {
-    return [
-      "Id INT",
-      "LogMessage TEXT",
-      "TimeStamp TEXT"
-    ];
-  }
-
-  name() {
-    return "Log";
-  }
-
-  Log() {
-    return {
-      timeStamp = this.LogMessage,
-      TimeStamp = new Date().toLocaleString()
-    }
-  }
+    create: createTable("Log", "ID INT, LogMessage TEXT, TimeStamp TEXT"),
+  };
 }

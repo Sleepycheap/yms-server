@@ -1,23 +1,18 @@
-export class CategoryProductRel {
-  constructor(categoryProductRelID, category, productTypeId) {
-    this.categoryProductRelID = categoryProductRelID;
-    this.category = category;
-    this.productTypeId = productTypeId;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "categoryProductRelID";
-  }
-
-  columns() {
-    return [
+export function CategoryProductRel() {
+  return {
+    name: "CategoryProductRel",
+    columns: [
       "categoryProductRelID INTEGER",
       "category TEXT",
       "productTypeID INTEGER",
-    ];
-  }
+    ],
+    pk: "categoryProductRelID",
 
-  name() {
-    return "CategoryProductRel";
-  }
+    create: createTable(
+      "CategoryProductRel",
+      "categoryProductRelID INTEGER, category TEXT, productTypeID INTEGER",
+    ),
+  };
 }

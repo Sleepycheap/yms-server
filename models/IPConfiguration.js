@@ -1,33 +1,19 @@
-export class IPConfiguration {
-  constructor(ID, InstanceName, HostAddress, PortNumber) {
-    this.ID = ID;
-    this.InstanceName = InstanceName;
-    this.HostAddress = HostAddress;
-    this.PortNumber = PortNumber;
-  }
+import { createTable } from "../db/handler.js";
 
-  pk() {
-    return "ID";
-  }
-
-  columns() {
-    return [
-      "Id INT",
+export function IPConfiguration() {
+  return {
+    name: "IPConfiguration",
+    columns: [
+      "ID INT",
       "InstanceName TEXT",
       "HostAddress TEXT",
       "PortNumber TEXT",
-    ];
-  }
+    ],
+    pk: "ID",
 
-  name() {
-    return "IPConfiguration";
-  }
-
-  IPConfiguration() {
-    return {
-      instanceName = this.InstanceName,
-      hostAddress = this.HostAddress,
-      portNumber = this.PortNumber
-    }
-  }
+    create: createTable(
+      "IPConfiguration",
+      "ID INT, InstanceName TEXT, HostAddress TEXT, PortNumber TEXT",
+    ),
+  };
 }
