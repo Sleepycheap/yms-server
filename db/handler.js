@@ -27,6 +27,18 @@ export function createTable(table, columns) {
 }
 // createTable("testtable", "name TEXT, address TEXT");
 
+export function createProductType() {
+  try {
+    const create = db.prepare(
+      `CREATE TABLE IF NOT EXISTS 'ProductType' (ProductTypeID INTEGER, ProductTypeName TEXT) STRICT `,
+    );
+    const result = create.run();
+    console.log(`ProductType table created successfully`);
+  } catch (err) {
+    console.log("PTcreate error", err.message);
+  }
+}
+
 // dropTable("scactable")
 export function dropTable(table) {
   try {
@@ -62,7 +74,7 @@ export function insertIntoTable(table, values) {
     const result = insert.run();
     console.log(`Successfully Updated ${table}! Changes: ${result.changes}`);
   } catch (error) {
-    console.log("error", error.message);
+    console.log("Insert Error", error.message);
   }
 }
 

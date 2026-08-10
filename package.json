@@ -11,6 +11,7 @@
     "dev": "echo \"Server starting with nodemon\" && nodemon index.js"
   },
   "dependencies": {
+    "async": "^3.2.6",
     "axios": "^1.18.1",
     "better-sqlite3": "^13.0.3",
     "body-parser": "^2.3.0",

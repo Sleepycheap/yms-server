@@ -14,6 +14,7 @@ import { CategoryProductRel } from "../models/CategoryProductRel.js";
 import { ProductTypeQuestions } from "../models/ProductTypeQuestions.js";
 import { Log } from "../models/Log.js";
 import { GetTruckResponseTruck } from "../models/GetTruckResponseTruck.js";
+import { PopulateCategoryProductRel, PopulateProductType } from "../oracle/oracleQueries.js";
 
 // This item is a collection in source code. This may need to be converted into a Proxy object later
 
@@ -37,44 +38,11 @@ export async function populateCategoryQuestionAnswer() {
       "ProductTypeAnswers",
     ]);
 
-    const res = await getProductQuestionaireResponse();
+    const res = await GetProductQuestionaireResponse();
 
-    const list = await getProductTypeResponse();
+    PopulateProductType();
 
-    for (let i = 0; i < list.length; i++) {
-      try {
-        const obj = new ProductType();
-        obj.ProductTypeID = list[i].ProductTypeID;
-        obj.ProductTypeName = list[i].ProductTypeName;
-        db.transaction(() => {
-          db.insertIntoTable(
-            obj.name(),
-            `('${obj.ProductTypeID}','${obj.ProductTypeName}')`,
-          );
-        });
-      } catch (err) {
-        console.log("err", err.message);
-      }
-    }
-
-    const relRes = await getCatePrdTypeRelDataResponse();
-
-    for (let i = 0; i < relTypeList.length; i++) {
-      try {
-        const obj = new CategoryProductRel();
-        obj.categoryProductRelID = relTypeList[i].categoryProductRelID;
-        obj.category = relTypeList[i].category;
-        obj.productTypeId = relTypeList[i].productTypeID;
-        db.transaction(() => {
-          db.insertIntoTable(
-            obj.name(),
-            `('${obj.categoryProductRelID}','${obj.category}', '${obj.productTypeId}')`,
-          );
-        });
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
+    PopulateCategoryProductRel();
 
     const questionList = await getPrdQuestionaireDataAsync();
 

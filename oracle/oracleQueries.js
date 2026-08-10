@@ -2,45 +2,132 @@ import oracledb from "oracledb";
 import { pool } from "../db/pool.js";
 import fs from "node:fs";
 import { json } from "body-parser";
+import * as proc from "./procedures.js";
+import { ProductType } from "../models/ProductType.js";
+import {
+  createProductType,
+  createTable,
+  dropTable,
+  insertIntoTable,
+} from "../db/handler.js";
+import { getConnectionPool } from "node-oracledb/src/oracle.lib.js";
+import { CategoryProductRel } from "../models/CategoryProductRel.js";
+import { monitorEventLoopDelay } from "node:perf_hooks";
 
 export async function testConnection() {
   try {
     const connection = await pool.getConnection();
-    // oracledb.initOracleClient();
+    console.log(connection);
     const result = await connection.isHealthy();
     const name = await connection.dbName;
-    const instance = await connection.getSodaDatabase();
-    console.log(instance.getCollectionNames());
+    const health = `Connection to ${name} is ${result}`;
     await connection.close();
-    return result;
+    return health;
   } catch (err) {
-    // console.log("there was an error", err);
     return err;
   }
 }
-
 // testConnection();
 
+export async function GetProductQuestionaireResponse() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetProductTypeQuestions();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("there was an error", err.message);
+  }
+}
+
+export async function GetProductTypeResponse() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetProductTypes();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("there was an error", err.message);
+  }
+}
+
+// console.log(GetProductTypeResponse());
+
+export async function PopulateProductType() {
+  const list = await GetProductTypeResponse();
+  let changes = 0;
+  dropTable("ProductType");
+  createProductType();
+  try {
+    for (const item of list) {
+      try {
+        const values = `('${item[0]}', '${item[1]}')`;
+        const result = insertIntoTable("ProductType", values);
+        changes++;
+      } catch (err) {
+        console.log("list error", err.message);
+      }
+    }
+  } catch (err) {
+    console.log("FN Error", err.message);
+  }
+
+  console.log(`Updated ProductType with ${changes} total changes`);
+}
+//PopulateProductType();
+
+export async function GetCatProdTypeRel() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetCatProdTypeRel();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("catproderror", err.message);
+  }
+}
+
+// console.log(await GetCatProdTypeRel());
+
+export async function PopulateCategoryProductRel() {
+  const list = await GetCatProdTypeRel();
+  // createTable(
+  //   "CategoryProductRel",
+  //   "categoryProductRelID INTEGER, category TEXT, productTypeID INTEGER",
+  // );
+  let changes = 0;
+  try {
+    for (const item of list) {
+      try {
+        const values = `('${item[0]}', '${item[1]}', '${item[2]}')`;
+        const result = insertIntoTable("CategoryProductRel", values);
+        changes++;
+      } catch (err) {
+        // throw new Error("There was an issue with CategoryProductRel List");
+        console.log(err.message);
+      }
+    }
+  } catch (err) {
+    console.log("There was an error with CatProd FN", err.message);
+  }
+
+  console.log(`Updated CategoryProductRel with ${changes} total changes`);
+}
+
+PopulateCategoryProductRel();
+
 // this works
-
-// `SELECT mp.organization_code
-//     BULK   COLLECT
-//     INTO   l_org_code
-//     FROM   mtl_parameters mp
-//     WHERE  mp.organization_code IN ('ANN', 'EVA', 'STJ', 'VIS', 'JAC', 'MTY', 'RAI');
-//     x_org_table := l_org_code;
-//   EXCEPTION
-//     WHEN others THEN
-//       dbms_output.put_line('Exception ------ ' || sqlerrm);`;
-
 async function mtl() {
   try {
     const connection = await pool.getConnection();
-    const result = await connection.execute(
+    const result = await connection
+      .execute
       // "SELECT *  FROM mtl_parameters",
       // "SELECT * FROM APPS.WSH_CARRIERS_V OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY",
-
-    );
+      ();
 
     // let columnData = [];
     // for (let i = 0; i < data.length; i++) {
@@ -63,7 +150,7 @@ async function mtl() {
     console.error("err", err.message);
   }
 }
-mtl();
+// mtl();
 
 /*
 
@@ -79,7 +166,7 @@ This returns each row indivually, and notates which row you are on
 
     */
 
-const xxbbna_warehouse_org_code =       `SELECT truck_id
+const xxbbna_warehouse_org_code = `SELECT truck_id
     FROM   (SELECT xts.truck_id
             FROM   xxwsh_truck_shipment xts
             WHERE  xts.ship_date IS NULL
@@ -129,4 +216,20 @@ const xxbbna_warehouse_org_code =       `SELECT truck_id
                     AND    xc.cont_name = xcl.cont_name
                     AND    xc.ship_set_name IS NULL
                     AND    wdd.delivery_detail_id = xc.delivery_detail_id
-                    AND    wdd.released_status = 'Y'))`,
+                    AND    wdd.released_status = 'Y'))`;
+
+// const getScacCodes = `SELECT scac_code, carrier_name
+//     FROM   (SELECT scac_code,
+//                    carrier_name,
+//                    CASE
+//                      WHEN c.scac_code IN
+//                           ('PSTO', 'SQCH', 'TFEJ', 'MAV1', 'MTLA', 'WSXI', 'WSXI', 'TMCD', 'PRIJ', 'SWIT', 'MTBC') THEN
+//                       1
+//                      ELSE
+//                       2
+//                    END name_order
+//             FROM   apps.wsh_carriers_v C
+//             WHERE  c.active = 'A'
+//             AND    c.scac_code IS NOT NULL
+//             --and
+//             ORDER  BY 3, 2 ASC) x`,
