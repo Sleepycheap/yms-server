@@ -8,10 +8,14 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { createTable, dropManyTables } from "./db/handler.js";
 import { CreateTables } from "./db/populateSQL.js";
+import truckSelectionRouter from "./routes/truckSelectionRouter.js";
+import ejs from "ejs";
 oracledb.initOracleClient();
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");
+const viewpath = join(dirname, "views");
+
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const app = express();
 
@@ -20,6 +24,8 @@ app.use(express.static(dbPath));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+app.set("views", viewpath);
+app.set("view engine", "ejs");
 
 const tables = [
   "CategoryProductRel",
@@ -67,5 +73,7 @@ app.listen(port, (err) => {
 });
 
 app.get("/", (req, res) => {
-  res.json("you are connected to YMS server");
+  res.render("index");
 });
+
+app.use("/truckselection", truckSelectionRouter);

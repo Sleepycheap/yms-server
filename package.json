@@ -16,9 +16,11 @@
     "better-sqlite3": "^13.0.3",
     "body-parser": "^2.3.0",
     "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
     "express": "^5.2.1",
     "node-oracledb": "^1.0.2",
     "oracledb": "^7.0.0",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "sql-template-tag": "^5.2.1"
   }
 }

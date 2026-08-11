@@ -1,6 +1,7 @@
 import oracledb from "oracledb";
 import { pool } from "../db/pool.js";
 import fs from "node:fs";
+import sql from "sql-template-tag";
 import { json } from "body-parser";
 import * as proc from "./procedures.js";
 import { ProductType } from "../models/ProductType.js";
@@ -13,6 +14,8 @@ import {
 import { getConnectionPool } from "node-oracledb/src/oracle.lib.js";
 import { CategoryProductRel } from "../models/CategoryProductRel.js";
 import { monitorEventLoopDelay } from "node:perf_hooks";
+import { Pool } from "pg";
+import { connect } from "node:http2";
 
 export async function testConnection() {
   try {
@@ -29,6 +32,47 @@ export async function testConnection() {
 }
 // testConnection();
 
+export async function GetOrgCode() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetOrgCode();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("there was an error", err.message);
+  }
+}
+
+// console.log(await GetOrgCode());
+
+export async function GetScac() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetScacCode();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("error", err.message);
+  }
+}
+
+export async function GetTrucks(orgCode) {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetTruckID(orgCode);
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("error", err.message);
+  }
+}
+
+// const orgCodes = await GetOrgCode();
+// console.log(orgCodes);
+
 export async function GetProductQuestionaireResponse() {
   try {
     const connection = await pool.getConnection();
@@ -40,6 +84,67 @@ export async function GetProductQuestionaireResponse() {
     console.log("there was an error", err.message);
   }
 }
+
+//console.log(await GetProductQuestionaireResponse());
+
+export async function PopulateProductQuestions() {
+  const list = await GetProductQuestionaireResponse();
+  let changes = 0;
+  createTable(
+    "ProductTypeQuestions",
+    "ProductTypeQuestionID INTEGER, ProductTypeID INTEGER, Question TEXT, ProductTypeName TEXT",
+  );
+  try {
+    for (const item of list) {
+      try {
+        const values = `('${item[0]}', '${item[1]}', '${item[2]}', '')`;
+        const result = insertIntoTable("ProductTypeQuestions", values);
+        changes++;
+      } catch (err) {
+        console.log("Prod Questions list error", err.message);
+      }
+    }
+  } catch (err) {
+    console.log("Prod Question fn error", err.message);
+  }
+  console.log(`Updated ProductTypeQuestions with ${changes} total changes`);
+}
+
+export async function GetProductAnswersResponse() {
+  try {
+    const connection = await pool.getConnection();
+    const query = proc.GetProductTypeAnswers();
+    const { rows } = await connection.execute(query);
+    return rows;
+    await connection.close();
+  } catch (err) {
+    console.log("There was an error", err.message);
+  }
+}
+
+export async function PopulateProductAnswers() {
+  const list = await GetProductAnswersResponse();
+  let changes = 0;
+  createTable(
+    "ProductTypeAnswers",
+    "ProductTypeAnswerID INTEGER, ProductTypeQuestionID INTEGER, Answer TEXT, IsSelected INTEGER",
+  );
+  try {
+    for (const item of list) {
+      try {
+        const values = `('${item[0]}', '${item[1]}', '${item[2]}', '0')`;
+        const result = insertIntoTable("ProductTypeAnswers", values);
+        changes++;
+      } catch (err) {
+        console.log("Prod Answers list error", err.message);
+      }
+    }
+  } catch (err) {
+    console.log("Prod Answer fn error", err.message);
+  }
+  console.log(`Updated ProductTypeAnswers with ${changes} total changes`);
+}
+//PopulateProductAnswers();
 
 export async function GetProductTypeResponse() {
   try {
@@ -58,7 +163,7 @@ export async function GetProductTypeResponse() {
 export async function PopulateProductType() {
   const list = await GetProductTypeResponse();
   let changes = 0;
-  dropTable("ProductType");
+  // dropTable("ProductType");
   createProductType();
   try {
     for (const item of list) {
@@ -94,10 +199,10 @@ export async function GetCatProdTypeRel() {
 
 export async function PopulateCategoryProductRel() {
   const list = await GetCatProdTypeRel();
-  // createTable(
-  //   "CategoryProductRel",
-  //   "categoryProductRelID INTEGER, category TEXT, productTypeID INTEGER",
-  // );
+  createTable(
+    "CategoryProductRel",
+    "categoryProductRelID INTEGER, category TEXT, productTypeID INTEGER",
+  );
   let changes = 0;
   try {
     for (const item of list) {
@@ -117,7 +222,7 @@ export async function PopulateCategoryProductRel() {
   console.log(`Updated CategoryProductRel with ${changes} total changes`);
 }
 
-PopulateCategoryProductRel();
+// PopulateCategoryProductRel();
 
 // this works
 async function mtl() {

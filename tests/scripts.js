@@ -1,4 +1,5 @@
 // import { db } from "./db/handler.js";
+import os from "node:os";
 
 import * as db from "../db/handler.js";
 
@@ -10,6 +11,8 @@ import { ProductType } from "../models/ProductType.js";
 
 import { GrossObject } from "../models/GrossObject.js";
 
+import { truckSelectionTest } from "../controllers/TruckSelection.js";
+
 const list = [
   {
     ProductTypeID: 1,
@@ -20,6 +23,9 @@ const list = [
     ProductTypeName: "Beams",
   },
 ];
+
+// const computerName = os.hostname();
+// console.log("computer name", computerName.startsWith("KC"));
 
 // console.log(list[0]);
 
@@ -46,8 +52,8 @@ const list = [
 // db.dropTable("GrossObject");
 // GrossObject().create;
 
-const test = db.createProductType();
-console.log(test);
+// const test = db.createProductType();
+// console.log(test);
 /*
 const oracledb = require('oracledb');
 
@@ -84,3 +90,10 @@ async function(run){
 }
 run();
 */
+// console.log(await truckSelectionTest("ANN"));
+
+const { orgCodes } = await truckSelectionTest("ANN");
+
+for (let i = 0; i < orgCodes.length; i++) {
+  console.log(orgCodes[i]);
+}

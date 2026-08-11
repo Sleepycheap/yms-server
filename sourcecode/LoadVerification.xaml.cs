@@ -136,11 +136,8 @@ namespace ButlerWarehouseApp
                 restDt.OrgCode = qString.OrgCode;
 
                 YardManagementSystem_BPELClient webRequestClient = new YardManagementSystem_BPELClient();
-
                 webRequestClient.Endpoint.Address = new System.ServiceModel.EndpointAddress(CommonUtility.getIPAddress() + "/soa-infra/services/BBNA_Butler/YardManagementSystem/YardManagementSystem_ep");
-
                 GetLOADFORMTXNDETAILDataResponse serviceResponse = (GetLOADFORMTXNDETAILDataResponse)webRequestClient.GetLOADFORMTXNDETAILDataAsync(restDt).Result;
-
                 LOADFORMTXNDETAILResp fResponse = (LOADFORMTXNDETAILResp)serviceResponse.LOADFORMTXNDETAILResp;
                 dataExists = fResponse.DataExists;
                 if (dataExists.Equals("N"))
@@ -250,7 +247,6 @@ namespace ButlerWarehouseApp
                     /**
                      * Once bind the DB data check wheather user opened new order or not 
                      *  If new order opened again sync the question and answer based on the new category
-                     
                      */
                     ObservableCollection<ProductTypeQuestions> updatedList = null;
                     //Calling the DB method to get all the questions and updating the questionList ObservableCollection
