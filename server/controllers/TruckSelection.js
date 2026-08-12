@@ -79,7 +79,7 @@ export async function gotoTruckSelection(req, res) {
   res.json(object);
 }
 
-export async function getOrgCode() {
+export async function getOrgCode(req, res) {
   const orgCode = await populateOrg();
   res.json(orgCode);
 }
@@ -94,7 +94,7 @@ export async function truckSelectionTest(orgCode) {
   };
 }
 
-export async function getScacList() {
+export async function getScacList(req, res) {
   const result = await populateSCACCode();
   return result;
 }

@@ -17,22 +17,24 @@ import { monitorEventLoopDelay } from "node:perf_hooks";
 import { Pool } from "pg";
 import { connect } from "node:http2";
 
-export async function testConnection() {
+export async function testConnection(req, res) {
   try {
     const connection = await pool.getConnection();
-    console.log(connection);
     const result = await connection.isHealthy();
     const name = await connection.dbName;
-    const health = `Connection to ${name} is ${result}`;
+    if (result) {
+      res.status(200);
+    } else {
+      res.status(500);
+    }
     await connection.close();
-    return health;
   } catch (err) {
     return err;
   }
 }
 // testConnection();
 
-export async function GetOrgCode() {
+export async function GetOrgCode(req, res) {
   try {
     const connection = await pool.getConnection();
     const query = proc.GetOrgCode();
@@ -40,7 +42,7 @@ export async function GetOrgCode() {
     return rows;
     await connection.close();
   } catch (err) {
-    console.log("there was an error", err.message);
+    res.send({ error: err.message });
   }
 }
 
@@ -54,7 +56,7 @@ export async function GetScac() {
     return rows;
     await connection.close();
   } catch (err) {
-    console.log("error", err.message);
+    return err;
   }
 }
 
@@ -163,7 +165,7 @@ export async function GetProductTypeResponse() {
 export async function PopulateProductType() {
   const list = await GetProductTypeResponse();
   let changes = 0;
-  // dropTable("ProductType");
+  dropTable("ProductType");
   createProductType();
   try {
     for (const item of list) {
