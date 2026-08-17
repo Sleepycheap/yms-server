@@ -46,7 +46,28 @@ export async function GetOrgCode(req, res) {
   }
 }
 
-// console.log(await GetOrgCode());
+export async function PopulateOrgCode() {
+  const list = await GetOrgCode();
+  let changes = 0;
+  dropTable("OrgCodes");
+  createTable("OrgCodes", "organization_code TEXT");
+  try {
+    for (const item of list) {
+      try {
+        const values = `('${item}')`;
+        const jsonString = JSON.stringify(values)
+        const result = insertIntoTable("OrgCodes", jsonString);
+        changes++;
+      } catch (err) {
+        console.log("Org Codes list error", err.message);
+      }
+    }
+  } catch (err) {
+    console.log("Org Codes fn error", err.message);
+  }
+  console.log(`Updated OrgCodes with ${changes} total changes`);
+}
+PopulateOrgCode();
 
 export async function GetScac() {
   try {

@@ -6,12 +6,12 @@ function AppLayout() {
   // const isLoading = navigation.state === 'loading'
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+    <div >
       
       <Header />
 
       <div >
-        <main className="mx-auto max-w-3xl">
+        <main >
           <Outlet />
         </main>
       </div>
@@ -21,3 +21,6 @@ function AppLayout() {
 }
 
 export default AppLayout
+
+
+

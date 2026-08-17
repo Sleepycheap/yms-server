@@ -1,28 +1,28 @@
 // import { db } from "./db/handler.js";
-import os from "node:os";
+// import os from "node:os";
 
-import * as db from "../db/handler.js";
+// import * as db from "../db/handler.js";
 
-import { ProductTypeAnswers } from "../models/ProductTypeAnswers.js";
+// import { ProductTypeAnswers } from "../models/ProductTypeAnswers.js";
 
-import { ProductTypeQuestions } from "../models/ProductTypeQuestions.js";
+// import { ProductTypeQuestions } from "../models/ProductTypeQuestions.js";
 
-import { ProductType } from "../models/ProductType.js";
+// import { ProductType } from "../models/ProductType.js";
 
-import { GrossObject } from "../models/GrossObject.js";
+// import { GrossObject } from "../models/GrossObject.js";
 
-import { truckSelectionTest } from "../controllers/TruckSelection.js";
+// import { truckSelectionTest } from "../controllers/TruckSelection.js";
 
-const list = [
-  {
-    ProductTypeID: 1,
-    ProductTypeName: "Rafters",
-  },
-  {
-    ProductTypeID: 2,
-    ProductTypeName: "Beams",
-  },
-];
+// const list = [
+//   {
+//     ProductTypeID: 1,
+//     ProductTypeName: "Rafters",
+//   },
+//   {
+//     ProductTypeID: 2,
+//     ProductTypeName: "Beams",
+//   },
+// ];
 
 // const computerName = os.hostname();
 // console.log("computer name", computerName.startsWith("KC"));
@@ -92,8 +92,25 @@ run();
 */
 // console.log(await truckSelectionTest("ANN"));
 
-const { orgCodes } = await truckSelectionTest("ANN");
+// const { orgCodes } = await truckSelectionTest("ANN");
 
-for (let i = 0; i < orgCodes.length; i++) {
-  console.log(orgCodes[i]);
-}
+// for (let i = 0; i < orgCodes.length; i++) {
+//   console.log(orgCodes[i]);
+// }
+
+// import { getProductTypes } from "../server/db/handler.js";
+
+// console.log(await getProductTypes());
+
+// import { dropTable } from "../server/db/handler.js";
+
+// function testDrop(table) {
+//   try {
+//     const result = dropTable(table);
+//     console.log(result);
+//   } catch (err) {
+//     console.log("there was an error deleting", err.message);
+//   }
+// }
+
+// testDrop("testtable");

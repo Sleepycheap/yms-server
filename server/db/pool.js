@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import oracledb from "oracledb";
-import "dotenv/config";
-
+import dotenv from "dotenv";
+dotenv.config({ path: "../server/.env" });
 // export const pool = new Pool({
 //   host: "localhost",
 //   user: "avauthier",

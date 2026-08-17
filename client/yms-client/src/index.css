@@ -69,6 +69,12 @@ button:focus-visible {
 @import 'tailwindcss';
 
 body {
-  margin: 0
+  margin: 0;
+  background-color: rgb(231 229 228);
+  width: 100%
+}
+
+.header {
+  width: 100vw;
 }
 

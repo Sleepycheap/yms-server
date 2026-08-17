@@ -13,6 +13,30 @@ DELETE leaves columns but removes records from the columns. DELETE only needs ta
 
 */
 
+export async function getProductTypes() {
+  try {
+    const query = db.prepare("SELECT * FROM ProductType");
+    query.raw(true);
+    const result = query.all();
+    return result;
+  } catch (err) {
+    console.log("error", err.message);
+  }
+}
+
+export async function getOrgCodes() {
+  try {
+    const query = db.prepare("SELECT * FROM OrgCodes");
+    query.raw(true);
+    const result = query.all();
+    return result;
+  } catch (err) {
+    console.log("error", err.message);
+  }
+}
+
+// console.log(await getProductTypes());
+
 // syntax: createTable("scactable", "scac_code TEXT, carrier_name TEXT");
 export function createTable(table, columns) {
   try {
@@ -21,11 +45,12 @@ export function createTable(table, columns) {
     );
     const result = create.run();
     console.log(`Table ${table} created successfully`);
+    console.log(result);
   } catch (err) {
     console.error("Error creating table", err.message);
   }
 }
-// createTable("testtable", "name TEXT, address TEXT");
+// createTable("testtable2", "name TEXT, address TEXT");
 
 export function createProductType() {
   try {
@@ -44,7 +69,9 @@ export function dropTable(table) {
   try {
     const q = db.prepare(`DROP TABLE IF EXISTS ${table}`);
     const result = q.run();
+    const r = `Successfully dropped ${table}`;
     console.log(`Successfully dropped ${table}`, result.changes);
+    return result;
   } catch (err) {
     console.error("Error", err.message);
   }

@@ -4,6 +4,7 @@ The database path is a env variable for security, and an easier connection proce
 */
 
 import Database from "better-sqlite3";
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: "../server/.env" });
 
 export const db = new Database(process.env.SQL_DATABASE);

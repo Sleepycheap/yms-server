@@ -1,12 +1,14 @@
 import {Link, useNavigation} from 'react-router-dom'
 
-function LinkButton() {
-  const navigate = useNavigate();
+function LinkButton({children, to}) {
+  const navigate = useNavigation();
   const className = 'text-sm text-blue-500 hover:text-blue-600 hover:underline'
+
+
 
   if (to === -1) 
     return (
-      <button className={className} onClick={() => navigate(-1)}>{children}</button>
+      <button className={className} onClick={() => navigate('-1')}>{children}</button>
     )
 
   return (
