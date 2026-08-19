@@ -10,7 +10,8 @@ import { CreateTables } from "./db/populateSQL.js";
 import truckSelectionRouter from "./routes/truckSelectionRouter.js";
 import oracleRouter from "./routes/oracle.js";
 import apiRouter from "./routes/apiRouter.js";
-oracledb.initOracleClient();
+import { PopulateOrgCode } from "./oracle/oracleQueries.js";
+// oracledb.initOracleClient();
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");
@@ -19,7 +20,7 @@ const corsOptions = {
   origin: ["http://localhost:5173"],
 };
 
-oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+// oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const app = express();
 
 app.use(cors(corsOptions));
@@ -47,10 +48,19 @@ const tables = [
   "SinglePointOrgMap",
   "TruckImage",
 ];
+dropManyTables(tables);
+CreateTables();
+PopulateOrgCode();
+
+// function init(tables) {
+//   try {
+//   } catch (err) {
+//     console.log("there was an error starting the app", err.message);
+//   }
+// }
+// init();
 
 const port = 8080;
-
-// initOracle();
 
 app.listen(port, (err) => {
   if (err) {

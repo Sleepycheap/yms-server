@@ -13,9 +13,8 @@ import {
 } from "../db/handler.js";
 import { getConnectionPool } from "node-oracledb/src/oracle.lib.js";
 import { CategoryProductRel } from "../models/CategoryProductRel.js";
-import { monitorEventLoopDelay } from "node:perf_hooks";
-import { Pool } from "pg";
-import { connect } from "node:http2";
+
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
 export async function testConnection(req, res) {
   try {
@@ -52,11 +51,10 @@ export async function PopulateOrgCode() {
   dropTable("OrgCodes");
   createTable("OrgCodes", "organization_code TEXT");
   try {
-    for (const item of list) {
+    for (let i = 0; i < list.length; i++) {
       try {
-        const values = `('${item}')`;
-        const jsonString = JSON.stringify(values)
-        const result = insertIntoTable("OrgCodes", jsonString);
+        const { ORGANIZATION_CODE } = list[i];
+        const result = insertIntoTable("OrgCodes", `('${ORGANIZATION_CODE}')`);
         changes++;
       } catch (err) {
         console.log("Org Codes list error", err.message);
@@ -67,7 +65,7 @@ export async function PopulateOrgCode() {
   }
   console.log(`Updated OrgCodes with ${changes} total changes`);
 }
-PopulateOrgCode();
+// PopulateOrgCode();
 
 export async function GetScac() {
   try {
@@ -93,8 +91,8 @@ export async function GetTrucks(orgCode) {
   }
 }
 
-// const orgCodes = await GetOrgCode();
-// console.log(orgCodes);
+// const trucks = await GetTrucks("ANN");
+// console.log(trucks);
 
 export async function GetProductQuestionaireResponse() {
   try {

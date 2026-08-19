@@ -8,7 +8,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "echo \"Server starting with nodemon\" && nodemon index.js"
+    "server": "nodemon index.js",
+    "client": "cd ../client/yms-client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "async": "^3.2.6",

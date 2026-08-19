@@ -1,5 +1,8 @@
 import { pool } from "./pool.js";
 
+
+
+
 export async function getTruck() {
   const { rows } = await pool.query(
     "SELECT truck_id, org_code FROM shippable_trucks",

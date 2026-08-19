@@ -1,4 +1,5 @@
 import { createScacTable } from "../oracle/functions.js";
+import { GetTrucks } from "../oracle/oracleQueries.js";
 import { db } from "./database.js";
 
 /*
@@ -25,13 +26,33 @@ export async function getProductTypes() {
 }
 
 export async function getOrgCodes() {
+  let codes = [];
   try {
     const query = db.prepare("SELECT * FROM OrgCodes");
-    query.raw(true);
+    // query.raw(true);
     const result = query.all();
-    return result;
+    // console.log("result", result);
+    for (let i = 0; i < result.length; i++) {
+      const { organization_code } = result[i];
+      codes.push(organization_code);
+    }
+    return codes;
   } catch (err) {
     console.log("error", err.message);
+  }
+}
+
+export async function getTruckList(orgcode) {
+  let trucks = [];
+  try {
+    const list = await GetTrucks(orgcode);
+    for (let i = 0; i < list.length; i++) {
+      const { TRUCK_ID } = list[i];
+      trucks.push(TRUCK_ID);
+    }
+    return trucks;
+  } catch (err) {
+    console.log("truck error", err.message);
   }
 }
 
@@ -94,6 +115,7 @@ export function dropManyTables(tables) {
 // insertIntoTable("scactable", values);
 export function insertIntoTable(table, values) {
   const columns = getColumnNames(table);
+  console.log("columns", columns);
   try {
     const insert = db.prepare(
       `INSERT INTO ${table} (${columns}) VALUES ` + values,

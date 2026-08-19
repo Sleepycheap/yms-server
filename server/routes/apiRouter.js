@@ -1,5 +1,5 @@
 import express from "express";
-import { getOrgCodes, getProductTypes } from "../db/handler.js";
+import { getOrgCodes, getProductTypes, getTruckList } from "../db/handler.js";
 
 const apiRouter = express.Router();
 
@@ -11,6 +11,16 @@ apiRouter.get("/orgcodes", async (req, res) => {
   try {
     const codes = await getOrgCodes();
     res.json(codes);
+  } catch (err) {
+    res.json(err.message);
+  }
+});
+
+apiRouter.get("/trucks", async (req, res) => {
+  const { org_code } = req.query;
+  try {
+    const list = await getTruckList(org_code);
+    res.json(list);
   } catch (err) {
     res.json(err.message);
   }
