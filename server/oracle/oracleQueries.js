@@ -10,6 +10,7 @@ import {
   createTable,
   dropTable,
   insertIntoTable,
+  getOrgCodes,
 } from "../db/handler.js";
 import { getConnectionPool } from "node-oracledb/src/oracle.lib.js";
 import { CategoryProductRel } from "../models/CategoryProductRel.js";
@@ -91,8 +92,40 @@ export async function GetTrucks(orgCode) {
   }
 }
 
-// const trucks = await GetTrucks("ANN");
-// console.log(trucks);
+async function getTrucksPre(orgcode) {
+  try {
+    let trucks = [];
+    console.log(`getting trucks for ${orgcode}`);
+    const list = await GetTrucks(orgcode);
+    for (let i = 0; i < list.length; i++) {
+      const { TRUCK_ID } = list[i];
+      trucks.push(TRUCK_ID);
+    }
+    return trucks;
+  } catch (err) {
+    console.log("err", err.message);
+  }
+}
+
+export async function PopulateTrucks() {
+  try {
+    const orgCodes = ["STJ", "RAI", "EVA"];
+    console.log("orgcodes", orgCodes);
+    console.log("starting populate");
+    const obj = { org: "", truckid: "" };
+    for (let i = 0; i < orgCodes.length; i++) {
+      const trucks = await getTrucksPre(orgCodes[i]);
+      const org = orgCodes[i];
+      for (let i = 0; i < trucks.length; i++) {
+        const newObj = { ...obj, org: org, truckid: trucks[i] };
+        const values = `('${newObj.truckid}', '${newObj.org}')`;
+        insertIntoTable("Trucks", values);
+      }
+    }
+  } catch (err) {
+    console.log("error populating trucks", err.message);
+  }
+}
 
 export async function GetProductQuestionaireResponse() {
   try {

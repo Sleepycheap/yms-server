@@ -10,7 +10,7 @@ import { CreateTables } from "./db/populateSQL.js";
 import truckSelectionRouter from "./routes/truckSelectionRouter.js";
 import oracleRouter from "./routes/oracle.js";
 import apiRouter from "./routes/apiRouter.js";
-import { PopulateOrgCode } from "./oracle/oracleQueries.js";
+import { PopulateOrgCode, PopulateTrucks } from "./oracle/oracleQueries.js";
 // oracledb.initOracleClient();
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -47,10 +47,12 @@ const tables = [
   "SignatureImg",
   "SinglePointOrgMap",
   "TruckImage",
+  // "Trucks"
 ];
 dropManyTables(tables);
 CreateTables();
-PopulateOrgCode();
+// PopulateOrgCode();
+// PopulateTrucks()
 
 // function init(tables) {
 //   try {

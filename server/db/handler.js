@@ -43,16 +43,12 @@ export async function getOrgCodes() {
 }
 
 export async function getTruckList(orgcode) {
-  let trucks = [];
   try {
-    const list = await GetTrucks(orgcode);
-    for (let i = 0; i < list.length; i++) {
-      const { TRUCK_ID } = list[i];
-      trucks.push(TRUCK_ID);
-    }
-    return trucks;
+    const query = db.prepare(`SELECT * FROM Trucks WHERE OrgCode = ?`);
+    const result = query.all(orgcode);
+    return result;
   } catch (err) {
-    console.log("truck error", err.message);
+    console.log("error getting truck list", err.message);
   }
 }
 
