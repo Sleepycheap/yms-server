@@ -4,37 +4,43 @@ import svgLogo from '../assets/BSL.AX.svg'
 import whiteLogo from '../assets/logo_white.png'
 import {getContext} from '@microsoft/power-apps/app'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import user from '../assets/react.svg'
+import { updateName } from '../features/user/userSlice'
+import { useDispatch } from 'react-redux'
+import Username from '../features/user/Username'
 
 function Header() {
-  const [username, setUsername] = useState('')
-  const [name, setName] = useState('')
+  // const [user, setUser] = useState('')
+  // const username = useSelector((state) => state.user.username);
 
-  // async function context() {
-  //   const ctx = await getContext();
-  //   return ctx;
+  // const dispatch = useDispatch();
+
+  // if (username === '') {
+  //   setUser('LOGIN')
+  // } else {
+  //   setUser(username)
   // }
+  // useEffect(() => {
+  //   async function getUser() {
+  //     const ctx = await getContext();
+  //     const {userPrincipalName} = ctx.user;
+  //     const username = userPrincipalName.split('@')[0].split('.').join(' ');
+  //     dispatch(updateName(username))
+  //   }
 
-  useEffect(() => {
-    async function contextGet() {
-      const ctx = await getContext();
-      setUsername(ctx.user.userPrincipalName)
-      setName(ctx.user.fullName)
-    }
-
-    contextGet()
-  }, [])
-
+  //   getUser();
+  // }, [])
 
 
   return (
-    <header className="bg-blue-700 px-4 py-3 h-20 sm:px-6 uppercase flex justify-between items-center">
+    <header className="bg-blue-700 px-4 py-3 sm:px-6 uppercase flex justify-between items-center">
 
       <span><img src={whiteLogo} className='w-50'></img></span>
-      <Link to='/' className='text-amber-100 relative left-5'>
+      <Link to='/' className='text-stone-100 relative right-5'>
         Yard Management System
       </Link>
-      <span className='text-amber-100'><p>{username}</p></span>
+      <Username />
     </header>
   )
 }

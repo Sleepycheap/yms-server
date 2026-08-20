@@ -52,6 +52,31 @@ export async function getTruckList(orgcode) {
   }
 }
 
+export async function getAllTrucks() {
+  try {
+    const query = db.prepare(`SELECT * FROM Trucks`);
+    const result = query.all();
+    return result;
+  } catch (err) {
+    console.log(`error getting all trucks`, err.message);
+  }
+}
+
+export async function getScacCodes() {
+  let array = [];
+  try {
+    const query = db.prepare(`SELECT scac_code FROM ScacTable`);
+    const result = query.all();
+    for (let i = 0; i < result.length; i++) {
+      const { scac_code } = result[i];
+      array.push(scac_code);
+    }
+    return array;
+  } catch (err) {
+    console.log("Error getting Scac Code", err.message);
+  }
+}
+
 // console.log(await getProductTypes());
 
 // syntax: createTable("scactable", "scac_code TEXT, carrier_name TEXT");

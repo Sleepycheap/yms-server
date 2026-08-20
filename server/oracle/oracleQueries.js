@@ -1,5 +1,5 @@
 import oracledb from "oracledb";
-import { pool } from "../db/pool.js";
+import { pool } from "./pool.js";
 import fs from "node:fs";
 import sql from "sql-template-tag";
 import { json } from "body-parser";
@@ -77,6 +77,20 @@ export async function GetScac() {
     await connection.close();
   } catch (err) {
     return err;
+  }
+}
+
+export async function PopulateScac() {
+  const list = await GetScac();
+  try {
+    for (let i = 0; i < list.length; i++) {
+      const { SCAC_CODE } = list[i];
+      const { CARRIER_NAME } = list[i];
+      const values = `('${SCAC_CODE}', '${CARRIER_NAME}')`;
+      insertIntoTable("ScacTable", values);
+    }
+  } catch (err) {
+    console.log("error populating scac", err.message);
   }
 }
 

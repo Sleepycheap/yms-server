@@ -1,14 +1,24 @@
-// import axios from 'axios';
-// import {getContext} from '@microsoft/power-apps/app';
+// const userPrincipalName = 'anthony.vauthier@bsbna.org'
 
-// // async function testFetch() {
-// //   const response = await axios.get('http://localhost:8080/api/producttypes')
-// //   console.log(response.data)
-// // }
+// const username = userPrincipalName.split('@')[0].split('.').join(' ');
 
-// // testFetch()
+// console.log(username)
 
-// const ctx = await getContext();
-// const fullName = ctx.user.fullName
-// console.log(ctx)
+import { getPosition } from "./src/utils/getPosition.js"
+import { determineClosestPlant } from "./src/utils/geoLocation.js"
+
+async function test() {
+  const obj = await getPosition();
+  console.log('obj',obj)
+  const center = {
+    lat: obj.coords.latitude,
+    lon: obj.coords.longitide,
+  }
+
+  console.log('center', center)
+  
+  const orgcode = await determineClosestPlant(center)
+}
+
+test()
 
