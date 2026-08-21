@@ -7,7 +7,7 @@ function AppLayout() {
   const isLoading = navigation.state === 'loading'
 
   return (
-    <div className="grid h-screen grid-rows-[10%_auto_10%]">
+    <div className="grid h-screen grid-rows-[10%_auto_15%] w-100vw h-100vh box-border text-center">
       {isLoading && <Loader />}
       
       <Header />

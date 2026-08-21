@@ -5,6 +5,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "tesseract.js": "^7.0.0"
   }
 }

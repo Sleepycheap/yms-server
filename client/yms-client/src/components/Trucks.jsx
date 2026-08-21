@@ -67,7 +67,7 @@ function Trucks() {
       <h1 className='text-center'>Truck Selection</h1>
       {!isLoading && (
         <select className='text-center appearance-none bg-gray-50' value='' onChange={e => handleSelection(e.target.value)} >
-          {/* <option value="">Please select a truck ID</option> */}
+          <option value="">Please select a truck ID</option>
           {trucks.map((truck, index) => (
             <option value={truck} key={index}>{truck}</option>
           ))}

@@ -1,0 +1,12 @@
+.truck-select {
+ display: grid;
+ grid-template-rows: repeat(5, minmax(0, 1fr));
+ grid-template-columns: repeat(1, minmax(0, 1fr));
+ gap: 1.25rem;
+ height: 20rem;
+}
+
+.select-header {
+  text-align: center;
+  
+}

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { getContext } from "@microsoft/power-apps/app";
 import { setOrg } from "../features/truck/truckSlice.js";
 import Loader from './Loader.jsx'
-// import Trucks from "../components/Trucks.jsx";
+import TruckSelection from "../features/truck/TruckSelection.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button.jsx";
 import { getPosition } from "../utils/getPosition.js";
@@ -13,11 +13,13 @@ import {updateName, updateOrgCode} from '../features/user/userSlice.js'
 import Login from "../features/user/Login.jsx";
 import Webcam from 'react-webcam'
 import TakePicture from "../components/TakePicture.jsx";
+import CreateTruck from "../features/truck/CreateTruck.jsx";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedOrg, setSelectedOrg] = useState('')
   const [takePhoto, setTakePhoto] = useState(false)
+  const [createTruck, setCreateTruck] = useState(false);
   const username = useSelector((state) => state.user.username)
   const orgCode = useSelector((state) => state.user.orgCode)
 
@@ -55,48 +57,36 @@ function Home() {
   }, [username])
   
   
+  
   function handleSelect(e) {
     dispatch(updateOrgCode(e))
   }
 
   function handleClick() {
-    navigate('/tests')
+    setCreateTruck(true)
   }
 
 
   return (
-  <div>
+    <div className=" my-5 ">
     {isLoading && (
       <Loader />
     )}
     {!isLoading && (
-    <div className="justify-center flex flex-col text-center h-182 ">
-      <h1 className="text-2xl capitalize ">Hello {username}</h1>
-      <p>It looks like you are logging in from {orgCode}, if this is not correct please choose org below</p>
-      <select className="text-center appearance-none bg-gray-50 w-50 relative left-165" value='' onChange={e => handleSelect(e.target.value)}>
-        <option value=''>SELECT A PLANT</option>
-        <option value="ANN">Annville</option>
-        <option value="VIS">Visalia</option>
-        <option value="JAC">Jackson</option>
-        <option value="MTY">Monterrey</option>
-        <option value="STJ">St. Joseph</option>
-        <option value="RAI">Rainsville</option>
-        <option value="EVA">Evansville</option>
-      </select>
-    
-       
-
-    <div>
-
-      <Button type='primary' onClick={handleClick}>If org is correct, click here</Button>
-    </div>
-    </div>
-
-
+      <>
+      <TruckSelection />
+      {/* <Button type="primary" onClick={handleClick}>Click here to create a truck</Button> */}
+      </>
     )}
-  </div>
-
+    {/* {
+      createTruck && (
+        <CreateTruck />
+      )
+    } */}
+    </div>
   )
+
+  
 }
 
 

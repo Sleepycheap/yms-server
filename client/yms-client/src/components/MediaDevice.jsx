@@ -1,32 +1,81 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 function MediaDevice() {
-  const [mediaStream, setMediaStream] = useState(null)
+  const videoRef = useRef(null)
+  const photoRef = useRef(null)
+  const stripRef = useRef(null)
+ 
 
   useEffect(() => {
-    async function enableStream() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(requestedMedia)
-        setMediaStream(stream)
-      } catch(err) {
-        console.log('error with media device', err.message)
+      async function startStream() {
+        try {
+          const constraints = {
+            video: true,
+            audio: false
+          }
+          navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+            let video = videoRef.current;
+            video.srcObject = stream
+            video.play()  
+          })
+        } catch(err) {
+          console.log('error with media device', err.message)
+        }
       }
+      
+      startStream()
+    
+
+  }, [])
+
+  const paintToCanvas = () => {
+    let video = videoRef.current;
+    let photo = photoRef.current;
+    let ctx = photo.getContext('2d');
+
+    const width = 320;
+    const height = 240;
+
+    return setInterval(() => {
+      ctx.drawImage(video, 0, 0, width, height)
+    }, 200)
+
+  };
+
+  const stop = (e) => {
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+
+    for (let i = 0; i < tracks.length; i++) {
+      let track = tracks[i]
+      track.stop()
     }
 
-    if (!mediaStream) {
-      enableStream()
-    } else {
-      return function cleanUp() {
-        mediaStream.getTracks().forEach(track => {
-          track.stop()
-        })
-      }
-    }
-  }, [mediaStream, requestedMedia]
+    video.srcObject = null;
+  }
 
-)
+  const takePhoto = () => {
+    let photo = photoRef.current;
+    let strip = stripRef.current
 
-  return mediaStream
+    const data = photo.toDataURL('image/jpeg')
+    const link = document.createElement('a')
+    link.href = data;
+    link.setAttribute('downloand', 'myWebcam');
+    link.innerHTML = `<img src='${data} alt='thumbnail/>`;
+    strip.insertBefore(link, strip.firstChild)
+  }
+
+
+  return (
+    <>
+    <div>
+      <video ref={videoRef} />
+      <photo ref={photoRef} />
+      <button onClick={() => takePhoto()}>Capture Photo</button>
+    </div>
+    </>
+  )
    
 }
 
