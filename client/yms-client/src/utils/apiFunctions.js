@@ -14,3 +14,9 @@ export async function getScacCodes() {
   const {data} = response
   return data
 }
+
+export async function getTextFromImage(imageSrc) {
+  const response = await axios.get(`${url}/:imageSrc`)
+  const {data} = response
+  return data
+}

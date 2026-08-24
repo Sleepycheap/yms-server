@@ -11,14 +11,20 @@ import apiRouter from "./routes/apiRouter.js";
 import { PopulateOrgCode, PopulateTrucks } from "./oracle/oracleQueries.js";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");
+// import corsMiddleWare from "./utils/cors-middleware.js";
 
 const corsOptions = {
   origin: ["http://localhost:5173"],
 };
 const app = express();
 
-app.use(cors(corsOptions));
+// app.use(
+//   corsMiddleWare({
+//     origins: ["http://localhost:5173/*"],
+//   }),
+// );
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -66,6 +72,12 @@ app.listen(port, (err) => {
 
 app.get("/", (req, res) => {
   res.status(200).send("You are connected to the backend");
+});
+
+app.all("/", function (req, res, next) {
+  (res.header("Access-Control-Allow-Origin", "*"),
+    res.header("ACcess-Control-Allow-Headers", "X-Requested-Width"),
+    next());
 });
 
 app.use("/oracle", oracleRouter);

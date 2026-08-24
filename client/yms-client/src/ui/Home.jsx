@@ -68,7 +68,7 @@ function Home() {
 
 
   return (
-    <div className=" my-5 ">
+    <div className="my-5 ">
     {isLoading && (
       <Loader />
     )}

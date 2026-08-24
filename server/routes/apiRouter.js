@@ -6,6 +6,7 @@ import {
   getScacCodes,
   getTruckList,
 } from "../db/handler.js";
+import { getText } from "../utils/tesseractOcr.js";
 
 const apiRouter = express.Router();
 
@@ -58,6 +59,16 @@ apiRouter.get("/scaccodes", async (req, res) => {
   try {
     const codes = await getScacCodes();
     res.json(codes);
+  } catch (err) {
+    return err.message;
+  }
+});
+
+apiRouter.post("/extractText", async (req, res) => {
+  const { imageSrc } = req.body;
+  try {
+    const text = await getText(imageSrc);
+    res.json(text);
   } catch (err) {
     return err.message;
   }
