@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button.jsx";
 import { getPosition } from "../utils/getPosition.js";
 import { determineClosestPlant } from "../utils/geoLocation.js";
-import {updateName, updateOrgCode} from '../features/user/userSlice.js'
+import {updateName, updateOrgCode, setDate} from '../features/user/userSlice.js'
 import Login from "../features/user/Login.jsx";
 import Webcam from 'react-webcam'
-import TakePicture from "../components/TakePicture.jsx";
+import TakePicture from "../components/Camera.jsx";
 import CreateTruck from "../features/truck/CreateTruck.jsx";
 
 function Home() {
@@ -43,9 +43,14 @@ function Home() {
         const {userPrincipalName} = ctx.user;
         
         const name = userPrincipalName.split('@')[0].split('.').join(' ')
-        
+
         dispatch(updateName(name))
 
+        const now = new Date()
+        const day = now.getDate()
+        const month = now.getMonth() + 1
+
+        dispatch(setDate(`${month}-${day}`))
 
         setIsLoading(false)
       }

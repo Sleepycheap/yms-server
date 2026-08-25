@@ -10,6 +10,7 @@ import { getTrucks } from './utils/apiFunctions'
 import { truckLoader } from './utils/loaders'
 import Login from './features/user/Login'
 import Tests from './ui/Tests'
+import BarcodeScanner from './components/BarcodeScanner'
 // import axios from 'axios'
 
 const router = createBrowserRouter([
@@ -50,7 +51,8 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
+
   )
 }
 

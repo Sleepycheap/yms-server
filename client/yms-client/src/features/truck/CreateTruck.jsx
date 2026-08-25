@@ -1,25 +1,103 @@
 import Button from "../../ui/Button"
+import axios from 'axios'
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { setTrailerNumber, setGeneratedTruck } from "./truckSlice"
 
-function CreateTruck() {
+const url = 'http://localhost:8080/api'
+
+function CreateTruck({setCreateTruck}) {
+  const [scacCodes, setScacCodes] = useState([])
+  const [selectedScac, setSelectedScac] = useState('')
+  const [error, setError] = useState(false)
+  const [errorText, setErrorText] = useState()
+  const generatedTruck = useSelector((state) => state.truck.generatedTruck)
+  const trailerNumber = useSelector((state) => state.truck.trailerNumber)
+  const date = useSelector((state) => state.user.date)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    async function getScacCodes() {
+      try {
+        const response = await axios.get(`${url}/scaccodes`);
+        const {data} = response;
+        console.log('data', data)
+        setScacCodes(data)
+      } catch (err) {
+        console.log('scac error', err.message)
+      }
+    }
+    
+    getScacCodes()
+  }, [])
+
+  useEffect(() => {
+
+  })
+
+  function handleScacSelect(e) {
+    setSelectedScac(e)
+  }
+
+  function handleTruckInput(e) {
+    if (e.length > 8) {
+      setError(true)
+      setErrorText('Entry cannot exceed 8 characters')
+      return
+    } 
+    if (e.length < 8 && error) {
+      setError(false)
+    }
+    dispatch(setTrailerNumber(e))
+  }
+
+  function handleCreateTruck() {
+    let dateString = ''
+    if (!date.startsWith('0')) {
+      dateString = `0${date}`
+    } else {
+      dateString = date
+    } 
+    const string = `${selectedScac}${trailerNumber} ${dateString}`
+    dispatch(setGeneratedTruck((string)))
+    setCreateTruck(false)
+  }
+
+  function handleDeleteTruck() {
+    dispatch(setGeneratedTruck(''))
+    setSelectedScac('')
+    dispatch(setTrailerNumber(''))
+  }
+
   return (
     <div id='ct-main' className="grid grid-rows-5 grid-cols-3 gap-5 my-5 h-90">
-      <h1 id='ct-header' className="row-start-1 col-start-2 text-center text-2xl self-center border-b-2 border-stone-500">Create Truck</h1>
+      <h1 id='ct-header' className="row-start-1 col-start-2 text-center text-2xl self-center border-b-2 border-stone-500">Create Truck {generatedTruck}</h1>
       <div id='ct-options' className="grid grid-rows-3 grid-cols-1 col-start-2 row-start-2 row-span-3 justify-self-center items-center justify-evenly w-100 sm:w-120">
         <div id='ct-scac-select' className="flex sm:w-120 justify-evenly">
-          <label for='scac-code' className="text-2xl">SCAC Code</label>
-          <select className="text-center appearance-none bg-gray-50 w-45 relative left-2"></select> 
+          <label htmlFor='scac-code' className="text-2xl">SCAC Code</label>
+          <select className="text-center appearance-none bg-gray-50 w-45 relative left-2" value={selectedScac} onChange={e => handleScacSelect(e.target.value)}
+            >
+              <option value=''>
+                Please select a ScacCode
+              </option>
+              {scacCodes.map((code, index) => (
+                <option value={code} key={index}>{code}</option>
+              ))}
+            </select> 
         </div>
         <div id='ct-tn' className="row-start-2 flex justify-evenly sm:w-120">
-          <label for='trailer-number' className="text-2xl">Trailer Number</label>
-          <input type='text' name='trailer-number' id='trailer-number' className="bg-gray-50 relative right-1" />
+          <label className="text-2xl">Trailer Number</label>
+          <input type='text' className="bg-gray-50 relative right-1" value={trailerNumber} onChange={e => handleTruckInput(e.target.value)}/>
+          {error && <p className="">{errorText}</p>}
         </div>
         <div id='ct-date' className="row-start-3 flex justify-evenly sm:w-120">
-          <label for='date' className="text-2xl">Date</label>
-          <input type='date' className=" appearance-none bg-gray-50 w-45 relative left-8"></input>
+          <label htmlFor='date' className="text-2xl">Date</label>
+          <label type='date' className="w-45 relative left-8 bg-gray-300 text-stone-900 text-center align-center">{date}</label>
         </div>
       </div>
         <div className="row-start-5 col-start-2">
-      <Button type='primary' >Create Truck</Button>
+      <Button type='primary' onClick={handleCreateTruck}>Create Truck</Button>
+      <Button type='primary' onClick={handleDeleteTruck}>Delete Truck</Button>
         </div>
     </div>
 

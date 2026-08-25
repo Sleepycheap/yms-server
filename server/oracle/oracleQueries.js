@@ -34,6 +34,7 @@ export async function testConnection(req, res) {
 }
 // testConnection();
 
+// pulls all OrgCodes from Oracle
 export async function GetOrgCode(req, res) {
   try {
     const connection = await pool.getConnection();
@@ -45,7 +46,7 @@ export async function GetOrgCode(req, res) {
     res.send({ error: err.message });
   }
 }
-
+// populates local tables with org code data
 export async function PopulateOrgCode() {
   const list = await GetOrgCode();
   let changes = 0;
@@ -66,6 +67,7 @@ export async function PopulateOrgCode() {
   }
   console.log(`Updated OrgCodes with ${changes} total changes`);
 }
+
 // PopulateOrgCode();
 
 export async function GetScac() {

@@ -13,7 +13,7 @@ DROP TABLE removes table from the database
 DELETE leaves columns but removes records from the columns. DELETE only needs tablename if all rows are going to be deleted
 
 */
-
+// returns all from producttype
 export async function getProductTypes() {
   try {
     const query = db.prepare("SELECT * FROM ProductType");
@@ -29,9 +29,9 @@ export async function getOrgCodes() {
   let codes = [];
   try {
     const query = db.prepare("SELECT * FROM OrgCodes");
+    // .raw tell query to return arrays instead of objects
     // query.raw(true);
     const result = query.all();
-    // console.log("result", result);
     for (let i = 0; i < result.length; i++) {
       const { organization_code } = result[i];
       codes.push(organization_code);

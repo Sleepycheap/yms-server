@@ -4,6 +4,7 @@ import orgReducer from './features/organization/orgSlice'
 import truckReducer from './features/truck/truckSlice'
 import orderReducer from './features/order/orderSlice'
 import pictureReducer from './features/pictures/pictureSlice'
+import canvasReducer from './features/refs/canvasSlice'
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     org: orgReducer,
     truck: truckReducer,
     order: orderReducer,
-    picture: pictureReducer
+    picture: pictureReducer,
+    canvas: canvasReducer
   }
 })
 

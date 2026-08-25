@@ -3,7 +3,9 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
   truckIDs: [],
   selectedTruck: '',
-  selectedOrg: ''
+  selectedOrg: '',
+  trailerNumber: '',
+  generatedTruck: ''
 }
 
 const truckSlice = createSlice({
@@ -22,13 +24,22 @@ const truckSlice = createSlice({
     setOrg(state, action) {
       state.selectedOrg = action.payload
     },
+    setTrailerNumber(state, action) {
+      state.trailerNumber = action.payload;
+    },
+    setGeneratedTruck(state, action) {
+      state.generatedTruck = action.payload
+    }
   },
 })
 
 export const {
   setSelectedTruck,
   setTruckIDs,
-  setOrg
+  setOrg,
+  setTrailerNumber,
+  addTruckID,
+  setGeneratedTruck
 } = truckSlice.actions;
 
 export default truckSlice.reducer;

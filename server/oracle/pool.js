@@ -1,15 +1,9 @@
-import { Pool } from "pg";
 import oracledb from "oracledb";
 import dotenv from "dotenv";
 dotenv.config({ path: "../server/.env" });
-// export const pool = new Pool({
-//   host: "localhost",
-//   user: "avauthier",
-//   database: "yms",
-//   password: "dbpassword",
-//   port: "5432",
-// });
 
+// this tells the app to connect to oracle with
+// the thick client
 oracledb.initOracleClient();
 
 export const pool = await oracledb.createPool({

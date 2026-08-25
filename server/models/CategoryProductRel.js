@@ -16,3 +16,15 @@ export function CategoryProductRel() {
     ),
   };
 }
+
+// creates table
+//CategoryProductRel().create;
+
+// returns name of table
+//CategoryProductRel().name;
+
+//returns array of columns with value type
+//CategoryProductRel().columns;
+
+// returns primary key
+//CategoryProductRel().pk;

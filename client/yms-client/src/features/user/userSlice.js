@@ -43,7 +43,8 @@ const initialState = {
   orgCode: '',
   status: 'idle',
   admin: false,
-  error: ''
+  error: '',
+  date: ''
 }
 
 const userSlice = createSlice({
@@ -55,6 +56,9 @@ const userSlice = createSlice({
     },
     updateOrgCode(state, action) {
       state.orgCode = action.payload
+    },
+    setDate(state, action) {
+      state.date = action.payload
     }
   },
   extraReducers: (builder) => 
@@ -73,7 +77,7 @@ const userSlice = createSlice({
     })
 })
 
-export const {updateName, updateOrgCode} = userSlice.actions
+export const {updateName, updateOrgCode, setDate} = userSlice.actions
 
 export default userSlice.reducer;
 

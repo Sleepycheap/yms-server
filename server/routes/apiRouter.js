@@ -10,10 +10,12 @@ import { getText } from "../utils/tesseractOcr.js";
 
 const apiRouter = express.Router();
 
+// tests connection to SQLite DB
 apiRouter.get("/", (req, res) => {
   res.status(200).json({ status: "connected to DB" });
 });
 
+// Gets all orgcodes from local DB
 apiRouter.get("/orgcodes", async (req, res) => {
   try {
     const codes = await getOrgCodes();
@@ -23,6 +25,7 @@ apiRouter.get("/orgcodes", async (req, res) => {
   }
 });
 
+// gets all truckIDs for requested org
 apiRouter.get("/trucks", async (req, res) => {
   const { org_code } = req.query;
   let array = [];
@@ -37,6 +40,7 @@ apiRouter.get("/trucks", async (req, res) => {
   }
 });
 
+// gets ALL truckIDs
 apiRouter.get("/alltrucks", async (req, res) => {
   try {
     const trucks = await getAllTrucks();
