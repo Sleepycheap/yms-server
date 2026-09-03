@@ -9,9 +9,9 @@ import { useDispatch } from "react-redux";
 
 
 
-function Camera() {
+function Camera({setTakePhoto}) {
   const canvasRef = useRef(null)
-  const [takePhoto, setTakePhoto] = useState(false)
+  // const [takePhoto, setTakePhoto] = useState(false)
   const [imgSrc, setImgSrc] = useState('')
   const [videoConstraints, setVideoConstraints] = useState({
     width: {ideal: 1920},

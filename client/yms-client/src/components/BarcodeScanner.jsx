@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useZxing } from "react-zxing"
 import { useSelector, useDispatch } from "react-redux"
 import { setScannedTruck, setScannedQRCode, setPictureTest } from "../features/pictures/pictureSlice"
+import { setSelectedTruck } from "../features/truck/truckSlice"
 
 function BarcodeScanner({setResult, result}) {
   // const [result, setResult] = useState('')
@@ -11,6 +12,8 @@ function BarcodeScanner({setResult, result}) {
   const {ref} = useZxing({
     onDecodeResult(result) {
       setResult(result.rawValue)
+      dispatch(setScannedQRCode(result.rawValue))
+      dispatch(setSelectedTruck(result.rawValue))
       // dispatch(setScannedQRCode(result.rawValue))
       console.log('result', result)
     }

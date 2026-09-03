@@ -1,8 +1,14 @@
 import {Link} from 'react-router-dom'
 import whiteLogo from '../assets/logo_white.png'
 import Username from '../features/user/Username'
+import { useSelector } from 'react-redux'
+import { useState } from 'react'
 
 function Header() {
+  const [load, setLoad] = useState(false)
+  const screen = useSelector((state) => state.layout.screen)
+
+  // if (screen === 'LoadScreen') setLoad(true)
 
   return (
     <header className="bg-blue-700 px-4 py-3 sm:px-6 uppercase flex md:justify-between justify-around items-center">

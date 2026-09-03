@@ -4,9 +4,9 @@ import { GetScac } from "../oracle/oracleQueries.js";
 export function ScacTable() {
   return {
     name: "ScacTable",
-    columns: ["ScacCode TEXT", "CarrierName TEXT"],
+    columns: ["Scac_Code TEXT", "Carrier_Name TEXT"],
     pk: "ScacCode",
 
-    create: createTable("ScacTable", "ScacCode TEXT, CarrierName TEXT"),
+    create: createTable("ScacTable", "Scac_Code TEXT, Carrier_Name TEXT"),
   };
 }

@@ -1,0 +1,50 @@
+.main {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 100vh;
+  grid-template-areas: 
+    "header"
+    "header"
+    "table" 
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  background: oklch(70.4% 0.04 256.788);
+  grid-area: header;
+  grid-row: 1 / span 2;
+  height: 200px;
+  color: oklch(97% 0.001 106.424)
+  /* border: 2px solid black; */
+}
+
+.table {
+  background: oklch(45% 0.017 213.2);
+  grid-area: table;
+  /* grid-row: 2 / -1 */
+}
+
+.option {
+  display: flex;
+  border: 1px oklch(21% 0.034 264.665) solid;
+  /* width: 33%; */
+  /* height: 25%; */
+  justify-content: space-between;
+  margin: 2px;
+}
+
+.title {
+  font-size: 1.5rem; 
+  line-height: calc(2 / 1.5);
+  background-color: oklch(55.4% 0.135 66.442);
+  width: 50%
+}
+
+.info {
+  font-size: 1.5rem;
+  line-height: calc(2 / 1.5);
+  background-color:  oklch(66.6% 0.179 58.318);
+  width: 50%
+}

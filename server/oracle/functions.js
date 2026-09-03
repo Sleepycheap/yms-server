@@ -1,346 +1,516 @@
-import * as type from "./types.js";
-import { DatabaseSync } from "node:sqlite";
-const db = new DatabaseSync(":memory:");
+import oracledb from "oracledb";
+import { pool } from "./pool.js";
+import dotenv from "dotenv";
+import logger from "../utils/logger.js";
+import { insertIntoTable } from "../db/handler.js";
+dotenv.config({ path: "../server/.env" });
 
-// Global table type declaration for different output
+const connection = await pool.getConnection();
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+// const packageName = "XXBBNA_WAREHOUSE_PROCESS_PKG";
+const pkg = process.env.PACKAGENAME;
+
+// XXSHIP_SCHD_BY_ORG has order_no, orgcode/id, shipping method, notes, shipping instructions
+
+// PRIJ12345 090126
+
+// SELECT * FROM XXWSH_TRUCK_SHIPMENT WHERE TRUCK_ID = 'PRIJ12345 090126'
+
+// MY user ID is 122452
+
 /*
-This function takes an array of objects, and returns the scactable object created from this array
-g_scac_records to add to scactable
-const scacRecords = [
-  {
-    scac_code: "AJT",
-    carrier_name: "Alpha John Trucks",
-  },
-  {
-    scac_code: "TSR",
-    carrier_name: "Transportation Services",
-  },
-];
+After assigning TruckID, container shows on xxwsh_container_loading
+*/
 
-function scactableFactory(scacRecords) {
-  //This maps each record from scacReords to an object in scactable
-  const scactable = scacRecords.map((record) =>
-    g_scac_recordFactory(record.scac_code, record.carrier_name),
-  );
-  return scactable;
-}
-
-would return scactable, which can then be accessed by calling the function and assigning to a variable
-
-const scactable = scactableFactory(scacRecords)
-
-console.log(scactable) returns
-
-[
-  { scac_code: 'AJT', carrier_name: 'Alpha John Trucks' },
-  { scac_code: 'TSR', carrier_name: 'Transportation Services' }
-]
-
-function updateScacTable({ scac_code: scac_code, carrier_name: carrier_name }) {
-  scacRecords.push({
-    scac_code,
-    carrier_name,
-  });
-  return createScacTable(scacRecords);
-}
+/*
+// SELECT * FROM XXWSH_CONTAINERS WHERE ORDER_NO = '2600429001' AND CONT_NAME = '14J'
+This provides information for specific container in order. This table 
 
 */
-///
-// Creates scactable
-export function createScacTable() {
-  const scactable = `CREATE TABLE scactable(scac_code TEXT PRIMARY KEY, carrier_name TEXT) STRICT`;
-  return scactable;
+
+// SELECT * FROM XXBM_PICK_STATUS_REPORT_VW WHERE order_number = '2600429001'
+/*
+SELECT * FROM xxwsh_containers
+This shows truck ID assigned to container
+SELECT * FROM XXWSH_CONTAINERS WHERE ORDER_NO = '2600429001'
+this shows all containers assigned to this truck ID
+*/
+
+/*
+SELECT * FROM wsh_delivery_details 912162
+This shows Item_description
+SELECT * FROM OE_ORDER_HEADERS_ALL WHERE HEADER_ID = '912162'
+Order number 2600429001 is header_id 40328120
+This ties order number to header_id maybe
+*/
+
+/*
+create or replace PACKAGE           xxbm_shp_pkgload IS
+  FUNCTION category_loc(p_location VARCHAR2, p_org_id NUMBER, p_cont_name VARCHAR DEFAULT NULL) RETURN VARCHAR2;
+  FUNCTION remnum_retvar(p_var VARCHAR2) RETURN VARCHAR2;
+  FUNCTION remvar_retnum(p_var VARCHAR2) RETURN NUMBER;
+END xxbm_shp_pkgload;
+*/
+
+// function example
+// returns Org ID
+export async function getOperatingUnitID(orgCode) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+      :ret := ${pkg}.xxbbna_get_operating_unit_id(:orgcode);
+      END;`,
+      {
+        orgcode: orgCode,
+        ret: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("error getting operating unit ID", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-export function insertScacTable(scac_record) {
-  const scacTableIns = `INSERT INTO scactable (scac_code, carrier_name) VALUES (?, ?)`;
-  return scacTableIns;
+// procedure example
+// returns Scac Codes based on organization
+export async function getScacCodesByOrg(orgCode) {
+  try {
+    // oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT; moved to top to see if affects all functions
+    const result = await connection.execute(
+      `BEGIN
+      ${pkg}.xxbbna_warehouse_scac_code(:x_org_code, :x_scac_cur);
+      END;`,
+      {
+        x_org_code: orgCode,
+        x_scac_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.x_scac_cur;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("there was an error getting scac codes", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function orgtableFactory(orgRecords) {
-  const orgtable = orgRecords.map((record) =>
-    type.g_org_recordFactory(record.org_code),
-  );
-  return orgtable;
+// returns all org codes
+export async function getOrgCodes() {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+      ${pkg}.xxbbna_warehouse_org_code(:x_org_cur);
+      END;`,
+      {
+        x_org_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.x_org_cur;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("error getting org codes", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function trucktableFactory(truckRecords) {
-  const trucktable = truckRecords.map((record) =>
-    type.g_truck_recordFactory(record.truck_id),
-  );
-  return trucktable;
+// returns all truck id for specified org
+export async function getTruckIDByOrg(orgCode) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+      ${pkg}.xxbbna_warehouse_truck_id(:x_org_code, :x_truck_id_cur);
+      END;`,
+      {
+        x_org_code: orgCode,
+        x_truck_id_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.x_truck_id_cur;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("error getting truck ids", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function g_shipping_order_details_rec_tableFactory(shippingOrderDetails) {
-  const g_shipping_order_details_tbl = shippingOrderDetails.map((record) =>
-    type.g_shipping_order_details_recFactory(
-      record.sequence_no,
-      record.cont_name,
-      record.linedescription,
-      record.header_desc,
-      record.order_number,
-      record.ship_set_name,
-      record.customer_name,
-      record.ship_from_org_code,
-      record.category,
-      record.transaction_type,
-      record.gross_weight,
-      record.requested_quantity,
-      record.project_name,
-      record.cust_po_number,
-      record.plant_info_sup,
-      record.quantity_picked,
-      record.backordered_quantity,
-      record.extended_wt_sup,
-      record.part_number_sup,
-      record.staged_truck_id,
-    ),
-  );
-  return g_shipping_order_details_tbl;
+// validates specified order
+export async function validateOrder(orgCode, orderNumber) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        :ret := ${pkg}.xxbbna_warehouse_valid_order(:p_org_code, :p_order_number);
+      END;`,
+      {
+        p_org_code: orgCode,
+        p_order_number: orderNumber,
+        ret: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("error validating order", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
+}
+
+export async function getLoadingShippingDetails(
+  orgCode,
+  orderNumber,
+  truckName,
+  processType,
+  singlePointOrg,
+  promiseDate,
+) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_loading_shipping_proc_m(:p_org, :p_order_number, :p_truck_name, :p_process_type, :p_single_point_org, :p_promise_date, :p_order_details_cur);
+      END;`,
+      {
+        p_org: orgCode,
+        p_order_number: orderNumber,
+        p_truck_name: truckName,
+        p_process_type: processType,
+        p_single_point_org: singlePointOrg,
+        p_promise_date: promiseDate,
+        p_order_details_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.p_order_details_cur;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("error getting loading/shipping details", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
+}
+
+export async function getTruckManifest(orgCode, truckID) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_truck_manifest_proc(:p_org_code, :p_truck, :p_truck_details_cur);
+      END;`,
+      {
+        p_org_code: orgCode,
+        p_truck: truckID,
+        p_truck_details_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.p_truck_details_cur;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("error getting truck manifest", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
+}
+
+export async function getLoadedTruckWeight(orgCode, truckID) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_truck_weight_qty_proc(:p_org, :p_truck, :p_truck_weight, :p_truck_quantity, :p_stagged_weight);
+      END;`,
+      {
+        p_org: orgCode,
+        p_truck: truckID,
+        p_truck_weight: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        p_truck_quantity: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        p_stagged_weight: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("error getting loaded truck weight", err.msg);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
+}
+
+// runs credit check on order
+export async function runOrderCreditCheck(orderNumber, orgCode) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+      :ret := xxcustom_order_credit_check(:p_order_no, :p_org_code);
+      END;`,
+      {
+        p_order_no: orderNumber,
+        p_org_code: orgCode,
+        ret: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("error running credit check", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
+}
+
+export async function runShowTruck(orderNumber, shipSetName, contName, org) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        :ret := xxbm_wsh_packing_frm.show_truck(:p1, :p2, :p3, :p4);
+      END;`,
+      {
+        p1: orderNumber,
+        p2: shipSetName,
+        p3: contName,
+        p4: org,
+        ret: { dir: oracledb.BIND_OUT, type: oracledb.BOOLEAN },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("there was an error validating container", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
 /*
-table functions that create multiple rows will return an array of objects that looks like this
+both assigns a truck id to a package, and removes truck ids
+the assignType variable determines whether the truck id is added or removed
+A = add and R = remove
 
-[
-  {
-    sequence_no: 123456789,
-    cont_name: '1AT',
-    linedescription: '4ftgr',
-    header_desc: 'N/A',
-    order_number: 260014145,
-    ship_set_name: 'direct',
-    customer_name: 'Bluescope',
-    ship_from_org_code: 'ANN',
-    category: undefined,
-    transaction_type: 'purchased',
-    gross_weight: 8000,
-    requested_quantity: 20,
-    truck: 'TEST',
-    project_name: '123f344as3f',
-    cust_po_number: 'Charles Beef',
-    plant_info_sup: 20,
-    quantity_picked: 0,
-    backordered_quantity: undefined,
-    extended_wt_sup: '234fef',
-    part_number_sup: '2349234805t1',
-    staged_truck_id: undefined
-  },
-  {
-    sequence_no: 22319784,
-    cont_name: '30M',
-    linedescription: '12313sf',
-    header_desc: 'N/A',
-    order_number: 194567951,
-    ship_set_name: 'direct',
-    customer_name: 'ACME',
-    ship_from_org_code: 'STJ',
-    category: undefined,
-    transaction_type: 'sold',
-    gross_weight: 20000,
-    requested_quantity: 300,
-    truck: 'TEST2',
-    project_name: '234asdf44as3f',
-    cust_po_number: 'John Stamos',
-    plant_info_sup: 300,
-    quantity_picked: 2,
-    backordered_quantity: undefined,
-    extended_wt_sup: '23490sdg',
-    part_number_sup: '44198911231T1',
-    staged_truck_id: undefined
+const add = await updateTruckID(
+  2600429001,
+  "1FSX",
+  "ANN",
+  "ANN",
+  null,
+  "PRIJ12345 090126",
+  "A",
+  122452,
+  "PRIJ12345 090126",
+  "M",
+);
+
+*/
+export async function updateTruckID(
+  orderNumber,
+  contName,
+  shipFromOrgCode,
+  org,
+  shipSetName,
+  truckID,
+  assignType,
+  userID,
+  headerTruck,
+  truckFlag,
+) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_update_truck_id(:order_number, :cont_name, :ship_from_org_code, :org, :ship_set_name, :truck_id, :assign_type, :user_id, :header_truck, :truck_flag, :status, :truck_weight, :truck_quantity);
+      END;`,
+      {
+        order_number: orderNumber,
+        cont_name: contName,
+        ship_from_org_code: shipFromOrgCode,
+        org: org,
+        ship_set_name: shipSetName,
+        truck_id: truckID,
+        assign_type: assignType,
+        user_id: userID,
+        header_truck: headerTruck,
+        truck_flag: truckFlag,
+        status: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        truck_weight: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        truck_quantity: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
+    );
+    return result.outBinds;
+  } catch (err) {
+    console.log("there was an error updating truck id", err.message);
   }
-]
-
-*/ ////////////////////
-function g_shipping_order_details_tbl_pFactory(shippingOrderDetails) {
-  const g_shipping_order_details_tbl_p = shippingOrderDetails.map((record) =>
-    type.g_shipping_order_details_rec_pFactory(
-      record.sequence_no,
-      record.cont_name,
-      record.linedescription,
-      record.header_desc,
-      record.order_number,
-      record.ship_set_name,
-      record.customer_name,
-      record.ship_from_org_code,
-      record.category,
-      record.transaction_type,
-      record.gross_weight,
-      record.requested_quantity,
-      record.project_name,
-      record.cust_po_number,
-      record.plant_info_sup,
-      record.quantity_picked,
-      record.backordered_quantity,
-      record.extended_wt_sup,
-      record.part_number_sup,
-      record.staged_truck_id,
-    ),
-  );
-  return g_shipping_order_details_tbl_p;
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function g_loaded_truck_detailsFactory(loadedTrucksDetails) {
-  const g_loaded_trucks_details_tbl = loadedTrucksDetails.map((record) =>
-    type.g_loaded_trucks_details_recFactory(
-      record.sequence_no,
-      record.cont_name,
-      record.linedescription,
-      record.header_desc,
-      record.order_number,
-      record.ship_set_name,
-      record.customer_name,
-      record.ship_from_org_code,
-      record.category,
-      record.transaction_type,
-      record.gross_weight,
-      record.requested_quantity,
-      record.project_name,
-      record.cust_po_number,
-      record.plant_info_sup,
-      record.quantity_picked,
-      record.backordered_quantity,
-      record.extended_wt_sup,
-      record.part_number_sup,
-      record.staged_truck_id,
-    ),
-  );
-  return g_loaded_trucks_details_tbl;
+// gets all containers for specific order
+export async function getAllContainersForOrder(orderNumber) {
+  try {
+    const result = await connection.execute(
+      // `SELECT a.delivery_detail_id, a.cont_name, b.item_description, a.cont_qty, a.cont_gross_wt, a.direct_truck, a.order_no FROM XXBM_PICK_STATUS_REPORT_VW a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_no = :order_number`,
+      `SELECT a.delivery_detail_id, a.cont_name, b.item_description, a.cont_qty, a.cont_gross_wt, a.direct_truck, a.order_number, b.shipping_instructions FROM XXBM_PICK_STATUS_REPORT_VW a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_number = :order_number AND a.released_status = 'Y' ORDER BY cont_name`,
+      [orderNumber],
+    );
+    console.log("result", result);
+    const { rows } = result;
+    return rows;
+  } catch (err) {
+    console.log("there was an error fetching containers", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function g_truck_manifest_tblFactory(truckManifestDetails) {
-  const g_truck_manifest_tbl = truckManifestDetails.map((record) =>
-    type.g_truck_manifest_recFactory(
-      record.organization,
-      record.description,
-      record.container_name,
-      record.truck,
-      record.ordered_qty,
-      record.extended_wt,
-      record.order_number,
-    ),
-  );
-  return g_truck_manifest_tbl;
+// gets name of customer on order
+export async function getCustomerName(orderNumber) {
+  try {
+    const result = await connection.execute(
+      `
+          SELECT customer_name
+    FROM (SELECT customer_name
+          FROM XXBM_PICK_STATUS_REPORT_VW a, apps.xxar_customers_v b, wsh_delivery_details c
+          WHERE a.delivery_detail_id = c.delivery_detail_id
+          AND b.customer_id = c.customer_id
+          AND a.order_number = :order_number
+          ORDER BY customer_name ASC FETCH FIRST 1 ROWS ONLY
+    )`,
+      [orderNumber],
+    );
+    const { rows } = result;
+    const data = rows[0];
+    return rows;
+  } catch (err) {
+    // logger.trace();
+    console.log("there was an error getting customer name", err.msg);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-function truckimgtableFactory(truckImages) {
-  const truckimgtable = truckimages.map((record) =>
-    type.g_truck_img_recordFactory(
-      record.truck_id,
-      record.user_id,
-      record.truck_image,
-    ),
-  );
-  return truckimgtable;
+// gets truck id by orgcode
+export async function getTruckID(orgCode) {
+  // if (!connection) {
+  //   const connection = await pool.getConnection();
+  // }
+  try {
+    const result = await connection.execute(
+      `SELECT truck_id  FROM   (SELECT xts.truck_id
+    FROM   xxwsh_truck_shipment xts
+    WHERE  xts.ship_date IS NULL
+    AND    xts.shipment_type = 'I'
+    AND    EXISTS
+    (SELECT 1
+    FROM xxwsh_container_loading xcl,
+                    xxwsh_containers xc,
+                    wsh.wsh_delivery_details wdd
+                    WHERE  xcl.ship_from_org_code = :order_number
+                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
+                    AND    xc.order_no = xcl.order_no
+                    AND    xc.ship_from_org_code = xcl.ship_from_org_code
+                    AND    xc.cont_name = xcl.cont_name
+                    AND    xc.ship_set_name = xcl.ship_set_name
+                    AND    ((xcl.truck_id_1 = xts.truck_id AND xc.truck_id_1 = xcl.truck_id_1) OR
+                    (xcl.staged_truck_id = xts.truck_id AND xc.staged_truck_id = xcl.staged_truck_id))
+                    AND    wdd.delivery_detail_id = xc.delivery_detail_id
+                    AND    wdd.released_status = 'Y')
+                    UNION
+                    SELECT xts.truck_id
+                    FROM   xxwsh_truck_shipment xts
+                    WHERE  xts.ship_date IS NULL
+                    AND    xts.shipment_type = 'S'
+                    AND    EXISTS (SELECT 1
+                    FROM   xxwsh_container_loading xcl
+                    WHERE  xcl.ship_set_name LIKE '%' || :order_number
+                    AND    xcl.truck_id_2 = xts.truck_id
+                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y')
+                    UNION -- direct, no single point
+                    SELECT xts.truck_id
+                    FROM   xxwsh_truck_shipment xts
+                    WHERE  xts.ship_date IS NULL
+                    AND    xts.shipment_type = 'S'
+                    AND    EXISTS (SELECT 1
+                    FROM   xxwsh_container_loading xcl,
+                    xxwsh_containers xc,
+                    wsh.wsh_delivery_details wdd
+                    WHERE  xcl.ship_from_org_code = :order_number
+                    AND    xcl.truck_id_2 = xts.truck_id
+                    AND    xcl.ship_set_name IS NULL
+                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
+                    AND    xc.order_no = xcl.order_no
+                    AND    xc.ship_from_org_code = xcl.ship_from_org_code
+                    AND    xc.cont_name = xcl.cont_name
+                    AND    xc.ship_set_name IS NULL
+                    AND    wdd.delivery_detail_id = xc.delivery_detail_id
+                    AND    wdd.released_status = 'Y'))`,
+      [orgCode],
+    );
+    const { rows } = result;
+    return rows;
+  } catch (err) {
+    console.log("There was an error getting truck IDs", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
 
-// function truckimgtableFactory(truckImages) {
-//   const truckimgtable = truckimages.map((record) =>
-//     type.g_truck_img_recordFactory(
-//       record.truck_id,
-//       record.user_id,
-//       record.truck_image,
-//     ),
-//   );
-//   return truckimgtable;
-// }
-
-function questions_tableFactory(questions) {
-  const questions_table = questions.map((question) =>
-    type.g_questions_recordFactory(
-      question.category_id,
-      question.category_type,
-      question.question,
-    ),
-  );
-  return questions_table;
+export async function populateTrucks(orgcode) {
+  const list = await getTruckID(orgcode);
+  try {
+    for (let i = 0; i < list.length; i++) {
+      const { TRUCK_ID } = list[i];
+      insertIntoTable("Trucks", `('${TRUCK_ID}')`);
+    }
+  } catch (err) {
+    console.log("there was an error populating trucks", err.message);
+  }
+  // finally {
+  //   if (connection) {
+  //     await connection.close();
+  //   }
+  // }
 }
-
-function answers_tableFactory(answers) {
-  const answers_table = answers.map((answers) =>
-    type.g_answers_recordFactory(
-      answers.category_id,
-      answers.category_type,
-      answers.answers,
-    ),
-  );
-  return answers_table;
-}
-
-function product_type_tableFactory(productTypes) {
-  const product_type_table = productTypes.map((product) =>
-    type.g_cat_product_type_rel_recordFactory(
-      product.category_prd_type_rel_id,
-      product.category,
-      product.product_type_id,
-    ),
-  );
-  return product_type_table;
-}
-
-function product_type_questions_tableFactory(productTypeQuestions) {
-  const product_type__questions_table = productTypesQuestions.map(
-    (productQuestion) =>
-      type.g_product_type_question_recordFactory(
-        productQuestion.product_type_ques_id,
-        productQuestion.product_type_id,
-        productQuestion.question,
-      ),
-  );
-  return product_type_table;
-}
-
-function product_type_answers_tableFactory(productTypeAnswers) {
-  const product_type_answers_table = productTypesAnswers.map((productAnswer) =>
-    type.g_product_type_question_recordFactory(
-      productAnswer.product_type_answer_id,
-      productAnswer.product_ques_id,
-      productAnswer.answers,
-    ),
-  );
-  return product_type_answers_table;
-}
-
-function g_load_verification_tbl_Factory(loadVerifications) {
-  const g_load_verification_tbl = loadVerifications.map((load) =>
-    type.g_product_type_question_recordFactory(
-      load.product_type_answer_id,
-      load.answer_flag,
-    ),
-  );
-  return g_load_verification_tbl;
-}
-
-// const answers_table = [g_answers_record]
-// INDEX BY BINARY_INTEGER;*/
-// const product_type_table = [g_product_type_record];
-// INDEX BY BINARY_INTEGER;
-
-// const category_product_type_table = [g_cat_product_type_rel_record];
-// INDEX BY BINARY_INTEGER;
-// const product_type_answers_table = [g_product_type_question_record];
-// INDEX BY BINARY_INTEGER;
-
-// const product_type_answers_table = [g_product_type_answers_record];
-// INDEX BY BINARY_INTEGER;
-
-// const g_load_verification_tbl = [g_load_verification_record];
-// INDEX BY BINARY_INTEGER;
-
-// const ld_txn_question_table = [g_ld_txn_question_record];
-// INDEX BY BINARY_INTEGER;
-
-// const ld_txn_answer_table = [g_ld_txn_answer_record];
-// INDEX BY BINARY_INTEGER;
-
-// For Singple Point org
-// const orglist = [g_org_list_record];
-// INDEX BY BINARY_INTEGER;
-
-// For Environment details
-// const ipaddr = [g_ip_addr_record];
-// INDEX BY BINARY_INTEGER;
-
-// For YMS App Version Details
-// const appversion = [g_app_version_record];
-// INDEX BY BINARY_INTEGER;

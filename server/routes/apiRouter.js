@@ -5,8 +5,13 @@ import {
   getProductTypes,
   getScacCodes,
   getTruckList,
+  getContainersByOrder,
+  getOrderDetails,
+  getOrderDetailsNoTruck,
+  getOrderDetailsWTruck,
 } from "../db/handler.js";
 import { getText } from "../utils/tesseractOcr.js";
+import { getCustomerName } from "../oracle/functions.js";
 
 const apiRouter = express.Router();
 
@@ -22,6 +27,65 @@ apiRouter.get("/orgcodes", async (req, res) => {
     res.json(codes);
   } catch (err) {
     res.json(err.message);
+  }
+});
+
+apiRouter.get("/customer/:order_number", async (req, res) => {
+  const { order_number } = req.params;
+  try {
+    const result = await getCustomerName(order_number);
+    const data = result[0];
+    const { CUSTOMER_NAME } = data;
+    // console.log(data);
+    // const { CUSTOMER_NAME } = result;
+    res.json(CUSTOMER_NAME);
+  } catch (err) {
+    res.json({ "there was an error getting customer info": err.message });
+  }
+});
+
+// Gets all containers for specific order number
+apiRouter.get("/containers/:order_no", async (req, res) => {
+  const { order_no } = req.params;
+  try {
+    const containers = await getContainersByOrder(order_no);
+    res.json(containers);
+  } catch (err) {
+    res.json({ "there was an error getting containers": err.message });
+  }
+});
+
+// gets order details for specific order number
+// order details is an aggregated list, with one aggregated row for EACH container_name
+apiRouter.get("/details/:order_no", async (req, res) => {
+  const { order_no } = req.params;
+  try {
+    const details = await getOrderDetails(order_no);
+    res.json(details);
+  } catch (err) {
+    res.json({ "there was an error getting order details": err.message });
+  }
+});
+
+// gets order details for containers that have not been assigned a truck id
+apiRouter.get("/details/:order_no/notloaded", async (req, res) => {
+  const { order_no } = req.params;
+  try {
+    const details = await getOrderDetailsNoTruck(order_no);
+    res.json(details);
+  } catch (err) {
+    res.json({ "there was an error getting order details": err.message });
+  }
+});
+
+// gets order details for containers that have been assigned a truck id
+apiRouter.get("/details/:order_no/loaded", async (req, res) => {
+  const { order_no } = req.params;
+  try {
+    const details = await getOrderDetailsWTruck(order_no);
+    res.json(details);
+  } catch (err) {
+    res.json({ "there was an error getting order details": err.message });
   }
 });
 

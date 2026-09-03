@@ -45,16 +45,29 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  width: 100%;
+  width: 100dvw;
   height: 100dvh;
 }
 
+/* .cont-main{
+  display: flex;
+  flex-direction: column;
+  height: 100%
+}
 
-@media only screen and (min-height: 100dvh) {
+.cont-table {
+  flex: 1;
+  overflow-y: scroll;
+  margin: 2%;
+  padding: 2%;
+} */
+
+
+/* @media only screen and (min-height: 100) {
   body {
     overflow-y: visible;
   }
-}
+} */
 
 /* 
 .header {

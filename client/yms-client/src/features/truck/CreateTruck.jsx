@@ -2,7 +2,7 @@ import Button from "../../ui/Button"
 import axios from 'axios'
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setTrailerNumber, setGeneratedTruck } from "./truckSlice"
+import { setTrailerNumber, setGeneratedTruck, setSelectedTruck } from "./truckSlice"
 
 const url = 'http://localhost:8080/api'
 
@@ -60,19 +60,21 @@ function CreateTruck({setCreateTruck}) {
     } 
     const string = `${selectedScac}${trailerNumber} ${dateString}`
     dispatch(setGeneratedTruck((string)))
+    dispatch(setSelectedTruck((string)))
     setCreateTruck(false)
   }
 
   function handleDeleteTruck() {
     dispatch(setGeneratedTruck(''))
+    dispatch(setSelectedTruck(''))
     setSelectedScac('')
     dispatch(setTrailerNumber(''))
   }
 
   return (
-    <div id='ct-main' className="grid grid-rows-5 grid-cols-3 gap-5 my-5 h-90">
-      <h1 id='ct-header' className="row-start-1 col-start-2 text-center text-2xl self-center border-b-2 border-stone-500">Create Truck {generatedTruck}</h1>
-      <div id='ct-options' className="grid grid-rows-3 grid-cols-1 col-start-2 row-start-2 row-span-3 justify-self-center items-center justify-evenly w-100 sm:w-120">
+    <div id='ct-main' className="grid grid-rows-5 grid-cols-3 sm:m-5">
+      <h1 id='ct-header' className="row-start-1 col-start-2 text-center text-2xl self-center border-b-2 border-stone-500 md:mb-4">Create Truck {generatedTruck}</h1>
+      <div id='ct-options' className="grid grid-rows-3 grid-cols-1 col-start-2 row-start-2 row-span-3 justify-self-center items-center  w-100 sm:w-120 h-35 sm:h-full">
         <div id='ct-scac-select' className="flex sm:w-120 justify-evenly">
           <label htmlFor='scac-code' className="text-2xl">SCAC Code</label>
           <select className="text-center appearance-none bg-gray-50 w-45 relative left-2" value={selectedScac} onChange={e => handleScacSelect(e.target.value)}
@@ -95,9 +97,13 @@ function CreateTruck({setCreateTruck}) {
           <label type='date' className="w-45 relative left-8 bg-gray-300 text-stone-900 text-center align-center">{date}</label>
         </div>
       </div>
-        <div className="row-start-5 col-start-2">
-      <Button type='primary' onClick={handleCreateTruck}>Create Truck</Button>
-      <Button type='primary' onClick={handleDeleteTruck}>Delete Truck</Button>
+        <div className="flex row-start-5 col-start-2 justify-evenly relative md:top-2 bottom-1 md:bottom-0">
+          <span className="relative right-20 md:right-0">
+            <Button type='primary' onClick={handleCreateTruck}>Create Truck</Button>
+          </span>
+          <span className="relative left-10 md:left-0">
+            <Button type='primary' onClick={handleDeleteTruck}>Delete Truck</Button>
+          </span>
         </div>
     </div>
 

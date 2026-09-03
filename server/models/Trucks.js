@@ -1,4 +1,4 @@
-import { createTable } from "../db/handler.js";
+import { createTable, dropTable } from "../db/handler.js";
 
 export function Trucks() {
   return {
@@ -9,3 +9,6 @@ export function Trucks() {
     create: createTable("Trucks", "TruckID TEXT, OrgCode TEXT"),
   };
 }
+
+dropTable("Trucks");
+Trucks().create;

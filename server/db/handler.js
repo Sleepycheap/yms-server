@@ -1,6 +1,8 @@
-import { createScacTable } from "../oracle/functions.js";
+// import { createScacTable } from "../oracle/functions.js";
 import { GetTrucks } from "../oracle/oracleQueries.js";
 import { db } from "./database.js";
+import { pool } from "../oracle/pool.js";
+import { getAllContainersForOrder } from "../oracle/functions.js";
 
 /*
 INTEGER - Integer
@@ -22,6 +24,96 @@ export async function getProductTypes() {
     return result;
   } catch (err) {
     console.log("error", err.message);
+  }
+}
+
+/*
+returns order details for specific order number
+this function aggregates each row with the same cont_name into an individual row with total qty and total_gross_wt
+the item description is set by the first delivery_detail_id for each container
+*/
+export async function getOrderDetails() {
+  try {
+    const query = db.prepare(
+      // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
+      `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
+        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+        SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
+        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ?`,
+    );
+    const result = query.all(2600429001);
+    return result;
+  } catch (err) {
+    console.log("error getting order details", err.msh);
+  }
+}
+
+// returns order details for containers that have not been assigned a truck id
+export async function getOrderDetailsNoTruck(orderNumber) {
+  try {
+    const query = db.prepare(
+      // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
+      `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
+        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+        SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
+        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck = 'null'`,
+    );
+    const result = query.all(orderNumber);
+    return result;
+  } catch (err) {
+    console.log("error getting order details", err.msh);
+  }
+}
+
+// returns order details for containers that have been assigned a truck id
+export async function getOrderDetailsWTruck(orderNumber) {
+  try {
+    const query = db.prepare(
+      // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
+      `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
+        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+        SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
+        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck <> 'null'`,
+    );
+    const result = query.all(orderNumber);
+    return result;
+  } catch (err) {
+    console.log("error getting order details", err.msh);
+  }
+}
+
+// populates local tables with container data from Oracle
+export async function populateContainersByOrder(orderNumber) {
+  let changes = 0;
+  const containers = await getAllContainersForOrder(orderNumber);
+  try {
+    for (let i = 0; i < containers.length; i++) {
+      const {
+        DELIVERY_DETAIL_ID,
+        CONT_NAME,
+        ITEM_DESCRIPTION,
+        CONT_QTY,
+        CONT_GROSS_WT,
+        DIRECT_TRUCK,
+        ORDER_NUMBER,
+      } = containers[i];
+      const values = `('${DELIVERY_DETAIL_ID}', '${CONT_NAME}', '${ITEM_DESCRIPTION}', '${CONT_QTY}', '${CONT_GROSS_WT}', '${DIRECT_TRUCK}', '${ORDER_NUMBER}')`;
+      insertIntoTable("Containers", values);
+      changes++;
+    }
+  } catch (err) {
+    console.log("there was an error populating containers", err.msg);
+  }
+  console.log(`Updated Containers with ${changes} total chnages`);
+}
+
+export async function getContainersByOrder(orderNumber) {
+  try {
+    const query = db.prepare(`SELECT * FROM Containers WHERE order_number = ?`);
+    const result = query.all(orderNumber);
+    return result;
+  } catch (err) {
+    console.log("error getting containers", err.msg);
   }
 }
 
@@ -68,8 +160,8 @@ export async function getScacCodes() {
     const query = db.prepare(`SELECT scac_code FROM ScacTable`);
     const result = query.all();
     for (let i = 0; i < result.length; i++) {
-      const { scac_code } = result[i];
-      array.push(scac_code);
+      const { Scac_Code } = result[i];
+      array.push(Scac_Code);
     }
     return array;
   } catch (err) {
@@ -119,6 +211,17 @@ export function dropTable(table) {
   }
 }
 
+// export function deleteFromTable(table) {
+//   try {
+//     const q = db.prepare(`DELETE FROM ?`);
+//     const result = q.run(table);
+//     console.log(`Successfully deleted all rows from ${table}`);
+//     return result;
+//   } catch (err) {
+//     console.log("there was an error deleting from table", err.message);
+//   }
+// }
+
 // dropManyTables(['scactable', 'truck_id']);
 export function dropManyTables(tables) {
   try {
@@ -136,15 +239,16 @@ export function dropManyTables(tables) {
 // insertIntoTable("scactable", values);
 export function insertIntoTable(table, values) {
   const columns = getColumnNames(table);
-  console.log("columns", columns);
+  // console.log("columns", columns);
   try {
     const insert = db.prepare(
       `INSERT INTO ${table} (${columns}) VALUES ` + values,
     );
     const result = insert.run();
     console.log(`Successfully Updated ${table}! Changes: ${result.changes}`);
+    return result;
   } catch (error) {
-    console.log("Insert Error", error.message);
+    throw new Error(error.message);
   }
 }
 
@@ -169,15 +273,15 @@ export function getColumns(table) {
   return result;
 }
 
-export function deleteFromTable(table) {
-  try {
-    const q = db.prepare(`DELETE FROM ${table}`);
-    const result = q.run();
-    console.log(`Successfully cleared ${table}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-}
+// export function deleteFromTable(table) {
+//   try {
+//     const q = db.prepare(`DELETE FROM ${table}`);
+//     const result = q.run();
+//     console.log(`Successfully cleared ${table}`);
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// }
 
 export function deleteFromMany(tables) {
   try {

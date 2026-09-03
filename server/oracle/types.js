@@ -47,6 +47,87 @@ the truck manifest object returned from this function would be:
 
 */
 
+import { pool } from "./pool.js";
+
+const connection = await pool.getConnection();
+
+export async function g_shipping_order_details_rec() {
+  const record = await connection.execute(
+    `CREATE OR REPLACE TYPE g_shipping_order_details AS OBJECT(
+        sequence_no NUMBER,
+        cont_name VARCHAR2(100),
+        linedescription VARCHAR2(240),
+        header_desc VARCHAR2(100),
+        order_number NUMBER,
+        ship_set_name VARCHAR2(100),
+        customer_name VARCHAR2(100),
+        ship_from_org_code VARCHAR2(10),
+        CATEGORY VARCHAR2(100),
+        transaction_type VARCHAR2(100),
+        gross_weight NUMBER,
+        requested_quantity NUMBER,
+        truck VARCHAR2(100),
+        project_name VARCHAR2(240),
+        cust_po_number VARCHAR2(50),
+        plant_info_sup VARCHAR2(3),
+        quantity_picked NUMBER,
+        backordered_quantity NUMBER,
+        extended_wt_sup NUMBER,
+        part_number_sup VARCHAR2(40),
+        staged_truck_id VARCHAR2(20)
+    );`,
+  );
+  const table = await connection.execute(`
+    CREATE OR REPLACE TYPE g_shipping_order_details_tbl IS TABLE OF g_shipping_order_details;`);
+  return table;
+}
+
+export async function createGetDesc() {
+  const query = await connection.execute(
+    `CREATE OR REPLACE TYPE get_desc_rec AS OBJECT(
+      order_number NUMBER,
+      cont_name VARCHAR2(100)
+      );`,
+  );
+  console.log("query", query);
+  const table = await connection.execute(`
+    CREATE OR REPLACE TYPE xxcustom_get_desc AS TABLE OF get_desc_rec;`);
+  return table;
+}
+
+// export async function createRunGetDesc() {
+//   const result = await connection.execute(`
+//     CREATE OR REPLACE FUNCTION get_desc(p_order_number IN NUMBER, p_cont_name IN VARCHAR2)
+//     RETURN xxcustom_get_desc
+//     AS
+//     l_get_desc xxcustom_get_desc
+//     BEGIN
+//     SELECT order_number, cont_name FROM
+//     `);
+// }
+
+export async function createGetTruckId() {
+  const query = await connection.execute(
+    `CREATE OR REPLACE TYPE get_truck_id_rec AS OBJECT(
+    order_number NUMBER,
+    cont_name VARCHAR2(100),
+    ship_from_org_code VARCHAR2(10),
+    org VARCHAR2(4),
+    ship_set_name VARCHAR2(100));`,
+  );
+  const table = await connection.execute(`
+    CREATE OR REPLACE TYPE xxcustom_truckId AS TABLE of get_truck_id_rec;`);
+  return table;
+}
+
+export async function orderNumberType() {
+  const query = connection.execute(
+    `CREATE OR REPLACE TYPE order_number_udt AS OBJECT(
+    order_number NUMBER)`,
+  );
+  return query;
+}
+
 // RETURNS g_scac_record Object
 export function g_scac_recordFactory(scac_code, carrier_name) {
   return {
@@ -89,54 +170,6 @@ export function g_answers_recordFactory(
     category_answer_id,
     category_id,
     answers,
-  };
-}
-
-export function g_shipping_order_details_recFactory(
-  sequence_no,
-  cont_name,
-  linedescription,
-  header_desc,
-  order_number,
-  ship_set_name,
-  customer_name,
-  ship_from_org_code,
-  category,
-  transaction_type,
-  gross_weight,
-  requested_quantity,
-  truck,
-  project_name,
-  cust_po_number,
-  plant_info_sup,
-  quantity_picked,
-  backordered_quantity,
-  extended_wt_sup,
-  part_number_sup,
-  staged_truck_id,
-) {
-  return {
-    sequence_no,
-    cont_name, //100 char limit
-    linedescription, // 250 limit
-    header_desc, //            'VARCHAR2(100)',
-    order_number,
-    ship_set_name, //          'VARCHAR2(100)',
-    customer_name, //          'VARCHAR2(100)',
-    ship_from_org_code, //     VARCHAR2(10),
-    CATEGORY, //               VARCHAR2(100),
-    transaction_type, //       VARCHAR2(100),
-    gross_weight,
-    requested_quantity,
-    truck, //                  VARCHAR2(100),
-    project_name, //           VARCHAR2(240),
-    cust_po_number, //        VARCHAR2(50),
-    plant_info_sup, //         VARCHAR2(3),
-    quantity_picked,
-    backordered_quantity,
-    extended_wt_sup,
-    part_number_sup, // VARCHAR2(40),
-    staged_truck_id, // VARCHAR2(20)
   };
 }
 

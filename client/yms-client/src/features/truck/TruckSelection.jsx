@@ -4,10 +4,12 @@ import { setTruckIDs, setSelectedTruck, getTruckIDs, getOrg, getSelectedTruck } 
 import { getOrderNumber, setOrderNumber } from "../order/orderSlice";
 import {updateOrgCode} from '../user/userSlice'
 import { setScannedTruck } from "../pictures/pictureSlice";
+import { setScreen } from "../appLayout/layoutSlice";
 import CreateTruck from "./CreateTruck";
 import axios from 'axios'
 import Button from "../../ui/Button";
 import BarcodeScanner from "../../components/BarcodeScanner";
+import TruckFooter from "../../ui/TruckFooter";
 
 
 
@@ -22,6 +24,7 @@ function TruckSelection() {
   const [result, setResult] = useState('')
   const [videoRef, setVideoRef] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [footer, setFooter] = useState(true)
   const [scanQR, setScanQR] = useState(false)
   const generatedTruck = useSelector((state) => state.truck.generatedTruck)
   const scannedQRCode = useSelector((state) => state.picture.scannedQRCode)
@@ -34,6 +37,7 @@ function TruckSelection() {
   useEffect(() => {
     let array = [];
     setIsLoading(true);
+    dispatch(setScreen('TruckSelection'))
     async function truckList() {
       try {
         setError("");
@@ -43,7 +47,6 @@ function TruckSelection() {
           const truckID = data[i]
           array.push(truckID)
         }
-        // console.log('array', array)
         dispatch(setTruckIDs(array))        
       } catch (err) {
         console.log('there was an error getting truck IDs', err.message)
@@ -79,7 +82,7 @@ function TruckSelection() {
   }
   
   function handleClick() {
-    setCreateTruck(true)
+    setCreateTruck(!createTruck)
   }
 
 
@@ -97,10 +100,10 @@ function TruckSelection() {
       
     )}
     {!scanQR && (
-      <div id='main' className="grid grid-rows-5 grid-cols-3 gap-5 h-80">
-        <h1 id='header' className="row-start-1 col-start-2 text-center self-center text-2xl border-b-2 border-stone-500">Select Truck</h1>
-          <div id='options' className="grid grid-rows-4 grid-cols-1 row-start-2 col-start-2 row-span-4 justify-self-center items-center w-100 sm:w-120  ">
-            <div id='org-select' className="flex sm:w-120  justify-evenly">
+      <div id='main' className="grid grid-rows-5 grid-cols-3 ">
+        <h1 id='header' className="row-start-1 col-start-2 text-center md:mb-4 self-center text-2xl border-b-2 border-stone-500">Select Truck</h1>
+          <div id='options' className="grid grid-rows-4 grid-cols-1 row-start-2 col-start-2 row-span-4 justify-self-center items-center w-100 sm:w-120 gap-1 ">
+            <div id='org-select' className="flex sm:w-120  justify-evenly ">
               <label htmlFor="orgCode" className="text-2xl">Organization</label>
               <select className="text-center appearance-none bg-gray-50 w-45 relative left-2" value={orgCode} onChange={e => handleOrgSelect(e.target.value)}>
                 <option value=''>SELECT A PLANT</option>
@@ -113,9 +116,9 @@ function TruckSelection() {
                 <option value="EVA">Evansville</option>
               </select>
             </div>
-            <div id='order-num' className="row-start-2 flex justify-evenly sm:w-120">
-              <label htmlFor='order-number' className="text-2xl">Order Number</label>
-              <input type='text' name="order-number" id='order-number' className="bg-gray-50 w-45" value={orderNumber} onChange={e => handleOrderSelect(e.target.value)}/>
+            <div id='order-num' className="row-start-2 flex justify-evenly sm:w-120 sm:m-1">
+              <label className="text-2xl">Order Number</label>
+              <input type='text' className="bg-gray-50 w-45 md:mr-1 text-center" value={orderNumber} onChange={e => handleOrderSelect(e.target.value)}/>
             </div>
             <div id='scan-truck' className="row-start-3 flex justify-evenly sm:w-120">
               <label htmlFor='scan-truck' className="text-2xl">Scan Truck</label>
@@ -125,25 +128,37 @@ function TruckSelection() {
               <label htmlFor='truck-id' className="text-2xl">Truck ID</label>
               <select className="text-center appearance-none bg-gray-50 w-45 relative left-6" value={selectedTruck}  onChange={e => handleTruckSelect(e.target.value)}>
                   <option value="">
-                    Please select a truck ID
+                    {!selectedTruck ? 'Please select a truck ID' : selectedTruck}
                   </option>
                   {trucks.map((truck, index) => (
                     <option value={truck} key={index}>{truck}</option>
                   ))}
               </select>
             </div>
-            <Button type="primary" onClick={handleClick}>{!generatedTruck ? 'Click here to create a truck' : 'created truck' +  ': ' + generatedTruck}</Button>
+            <div className="mt-2">
+            <Button type="primary" onClick={handleClick}>Click here to create a truck</Button>
+            </div>
         </div >
          
       </div>    
-  )}
-      {
-      createTruck && !scanQR &&(
+    )}
+  {
+    createTruck && !scanQR &&(
+      <div>
         <CreateTruck setCreateTruck={setCreateTruck}/>
+      </div>
       )
     }
-    </>
-
+    {selectedTruck && orderNumber && (
+      <div className="text-center flex justify-self-center justify-evenly border-2 border-black w-200">
+        <p className="space-x-2 flex">
+          <span>Truck ID: {selectedTruck}</span>
+          <span>Order#: {orderNumber}</span>
+        </p>
+        <Button type='primary' to='load'>Next</Button>
+      </div>
+    )}  
+  </>
   )
 }
 

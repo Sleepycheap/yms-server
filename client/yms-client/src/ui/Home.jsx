@@ -37,7 +37,7 @@ function Home() {
         };  
         const code = await determineClosestPlant(center)
         dispatch(updateOrgCode(code))
-        
+
         const ctx = await getContext();
         
         const {userPrincipalName} = ctx.user;
@@ -73,7 +73,7 @@ function Home() {
 
 
   return (
-    <div className="my-5 ">
+    <div className="md:m-10">
     {isLoading && (
       <Loader />
     )}

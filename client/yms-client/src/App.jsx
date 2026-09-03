@@ -4,7 +4,7 @@ import './index.css'
 import AppLayout from './ui/AppLayout'
 import Error from './ui/Error'
 import Home from './ui/Home'
-import Trucks from './components/Trucks'
+import LoadScreen from './features/load/LoadScreen'
 import TruckIDs from './features/truck/TruckIDs'
 import { getTrucks } from './utils/apiFunctions'
 import { truckLoader } from './utils/loaders'
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
       errorElement: <Error />
     },
     {
-      path: `/trucks`,
-      element: <Trucks />,
+      path: `/load`,
+      element: <LoadScreen />,
       errorElement: <Error />
     },
     {

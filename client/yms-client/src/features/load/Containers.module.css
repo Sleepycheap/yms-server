@@ -1,0 +1,51 @@
+.main {
+  border: 2px solid black;
+  border-bottom: none;
+  overflow-y: auto;
+  height: 400px;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: auto;
+  width: 100%;
+}
+
+thead {
+  border: 2px solid oklch(55.4% 0.046 257.417);
+  background-color: oklch(55.6% 0 none);
+  color: oklch(86.9% 0.005 56.366);
+  position: sticky;
+  top: 0;
+  z-index: 2
+}
+
+
+th, td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid oklch(26.8% 0.007 34.298)
+}
+
+/* th:nth-child(1) {
+  z-index: 6;
+} */
+
+
+/* tbody {
+  flex: 1 1 100%; 
+} */
+
+tbody tr:nth-child(even) {
+  background-color: oklch(86.9% 0.022 252.894);
+}
+
+
+tbody tr:nth-child(odd) {
+  background-color: oklch(92% 0.004 286.32);
+}
+
+/* 
+.containers {
+
+} */

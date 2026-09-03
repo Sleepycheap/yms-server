@@ -1,0 +1,79 @@
+import express from "express";
+// import { GetOrgCode } from "../oracle/procedures";
+import { PopulateOrgCode } from "../oracle/oracleQueries.js";
+import { getAllContainersForOrder, getTruckID } from "../oracle/functions.js";
+import { db } from "../db/database.js";
+import { getContainersByOrder, insertIntoTable } from "../db/handler.js";
+import logger from "../utils/logger.js";
+
+const propagateRouter = express.Router();
+
+// this router will be used to propagate local sqlite tables with oracle data
+propagateRouter.post("/orgcodes", async (req, res) => {
+  try {
+    const result = await PopulateOrgCode();
+    res.json("successfully inserted orgcodes into local table");
+  } catch (err) {
+    res.json({ "there was an error populating org cods": err.message });
+  }
+});
+
+propagateRouter.post("/truckids", async (req, res) => {
+  const { org_code } = req.body;
+  console.log("org", org_code);
+  try {
+    const del = db.prepare(`DELETE FROM Trucks`);
+    del.run();
+    const list = await getTruckID(org_code);
+    for (let i = 0; i < list.length; i++) {
+      const { TRUCK_ID } = list[i];
+      insertIntoTable("Trucks", `('${TRUCK_ID}')`);
+    }
+    // console.log("result", result);
+    res.json("successfully inserted truckids into local table");
+  } catch (err) {
+    res.json({ "there was an error getting truckids": err.message });
+  }
+});
+
+propagateRouter.post("/containers", async (req, res) => {
+  const { order_number } = req.body;
+  try {
+    const del = db.prepare("DELETE FROM Containers");
+    del.run();
+    const list = await getAllContainersForOrder(order_number);
+
+    for (let i = 0; i < list.length; i++) {
+      const { DELIVERY_DETAIL_ID } = list[i];
+      const { CONT_NAME } = list[i];
+      const { ITEM_DESCRIPTION } = list[i];
+      const { CONT_QTY } = list[i];
+      const { CONT_GROSS_WT } = list[i];
+      const { DIRECT_TRUCK } = list[i];
+      const { ORDER_NUMBER } = list[i];
+      const { SHIPPING_INSTRUCTIONS } = list[i];
+      const result = db.prepare(
+        `INSERT INTO Containers (DELIVERY_DETAIL_ID, CONT_NAME, ITEM_DESCRIPTION, CONT_QTY, CONT_GROSS_WT, DIRECT_TRUCK, ORDER_NUMBER, SHIPPING_INSTRUCTIONS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      );
+      result.run(
+        DELIVERY_DETAIL_ID,
+        CONT_NAME,
+        ITEM_DESCRIPTION,
+        CONT_QTY,
+        CONT_GROSS_WT,
+        DIRECT_TRUCK,
+        ORDER_NUMBER,
+        SHIPPING_INSTRUCTIONS,
+      );
+    }
+    const containers = await getContainersByOrder(order_number);
+    res.json(containers);
+  } catch (err) {
+    // console.log("containers", containers);
+    // logger.trace();
+    // res.status(400).json(err.message);
+    console.log("err", err.message);
+  }
+});
+
+export default propagateRouter;

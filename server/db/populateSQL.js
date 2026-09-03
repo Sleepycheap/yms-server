@@ -11,24 +11,65 @@ import { SignatureImg } from "../models/SignatureImg.js";
 import { IsPhotoTaken } from "../models/IsPhotoTaken.js";
 import { Environment } from "../models/Environment.js";
 import { SinglePointOrgMap } from "../models/SinglePointOrgMap.js";
+import { Containers } from "../models/Containers.js";
+import { OrgCodes } from "../models/OrgCodes.js";
+import {
+  PopulateOrgCode,
+  PopulateScac,
+  PopulateTrucks,
+} from "../oracle/oracleQueries.js";
+import { ScacTable } from "../models/ScacTable.js";
+import { Trucks } from "../models/Trucks.js";
+import { dropManyTables } from "./handler.js";
 
-export function CreateTables() {
+const tables = [
+  "CategoryProductRel",
+  "Containers",
+  "Environment",
+  "GrossObject",
+  "IPConfiguration",
+  "IsPhotoTaken",
+  "Log",
+  "OrgCodes",
+  "ProductType",
+  "ProductTypeAnswers",
+  "ProductTypeQuestions",
+  "ScacTable",
+  "ScanningItem",
+  "SignatureImg",
+  "SinglePointOrgMap",
+  "TruckImage",
+  "Trucks",
+];
+
+export function init() {
   try {
-    ScanningItem().create;
-    GrossObject().create;
-    Log().create;
-    IPConfiguration().create;
-    TruckImage().create;
-    ProductType().create;
+    dropManyTables(tables);
     CategoryProductRel().create;
-    ProductTypeQuestions().create;
-    ProductTypeAnswers().create;
-    SignatureImg().create;
-    IsPhotoTaken().create;
+    Containers().create;
     Environment().create;
+    GrossObject().create;
+    IPConfiguration().create;
+    IsPhotoTaken().create;
+    Log().create;
+    ProductType().create;
+    ProductTypeAnswers().create;
+    ProductTypeQuestions().create;
+    ScacTable().create;
+    ScanningItem().create;
+    SignatureImg().create;
     SinglePointOrgMap().create;
+    TruckImage().create;
+    OrgCodes().create;
+    Trucks().create;
     console.log("All tables created");
+
+    PopulateOrgCode();
+    PopulateScac();
+    PopulateTrucks();
   } catch (err) {
-    console.error(err.message);
+    console.error("there was an error initializing tables", err.message);
+  } finally {
+    console.log("Tables populated");
   }
 }

@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function Button({children, disabled, to, type, onClick}) {
+function Button({children, disabled, to, type, onClick, style}) {
     const base =
     'inline-block text-sm rounded-full bg-blue-600 font-semibold uppercase tracking-wide text-stone-100 transition-colors duration-300 hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-offset-2 disabled:cursor-not-allowed';
   const styles = {
@@ -13,18 +13,18 @@ function Button({children, disabled, to, type, onClick}) {
 
   if (to) 
     return (
-      <Link to={to}>
+      <NavLink to={to} className={styles[type]} style={style}>
         {children}
-      </Link>
+      </NavLink>
     )
 
   if (onClick) 
     return (
-      <button onClick={onClick} disabled={disabled} className={styles[type]}>{children}</button>
+      <button onClick={onClick} disabled={disabled} className={styles[type]} style={style}>{children}</button>
     )
 
     return (
-      <button disabled={disabled} className={styles[type]}>{children}</button>
+      <button  disabled={disabled} className={styles[type]} style={style}>{children}</button>
     )
 }
 

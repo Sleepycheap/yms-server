@@ -1,10 +1,6 @@
 import oracledb from "oracledb";
 import { pool } from "./pool.js";
-import fs from "node:fs";
-import sql from "sql-template-tag";
-import { json } from "body-parser";
 import * as proc from "./procedures.js";
-import { ProductType } from "../models/ProductType.js";
 import {
   createProductType,
   createTable,
@@ -12,10 +8,12 @@ import {
   insertIntoTable,
   getOrgCodes,
 } from "../db/handler.js";
-import { getConnectionPool } from "node-oracledb/src/oracle.lib.js";
 import { CategoryProductRel } from "../models/CategoryProductRel.js";
+import { getTruckID } from "./functions.js";
 
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+
+const connection = await pool.getConnection();
 
 export async function testConnection(req, res) {
   try {
@@ -50,13 +48,15 @@ export async function GetOrgCode(req, res) {
 export async function PopulateOrgCode() {
   const list = await GetOrgCode();
   let changes = 0;
-  dropTable("OrgCodes");
-  createTable("OrgCodes", "organization_code TEXT");
   try {
     for (let i = 0; i < list.length; i++) {
       try {
         const { ORGANIZATION_CODE } = list[i];
-        const result = insertIntoTable("OrgCodes", `('${ORGANIZATION_CODE}')`);
+        const { ORGANIZATION_ID } = list[i];
+        const result = insertIntoTable(
+          "OrgCodes",
+          `('${ORGANIZATION_ID}', '${ORGANIZATION_CODE}')`,
+        );
         changes++;
       } catch (err) {
         console.log("Org Codes list error", err.message);
@@ -90,6 +90,7 @@ export async function PopulateScac() {
       const { CARRIER_NAME } = list[i];
       const values = `('${SCAC_CODE}', '${CARRIER_NAME}')`;
       insertIntoTable("ScacTable", values);
+      console.log("scac tables populated");
     }
   } catch (err) {
     console.log("error populating scac", err.message);
@@ -97,12 +98,16 @@ export async function PopulateScac() {
 }
 
 export async function GetTrucks(orgCode) {
+  let list = [];
   try {
-    const connection = await pool.getConnection();
-    const query = proc.GetTruckID(orgCode);
-    const { rows } = await connection.execute(query);
-    return rows;
-    await connection.close();
+    // const connection = await pool.getConnection();
+    // const query = proc.GetTruckID(orgCode);
+    const query = await getTruckID(orgCode);
+    for (let i = 0; i < query.length; i++) {
+      const { TRUCK_ID } = query[i];
+      list.push(TRUCK_ID);
+    }
+    return list;
   } catch (err) {
     console.log("error", err.message);
   }
@@ -123,14 +128,18 @@ async function getTrucksPre(orgcode) {
   }
 }
 
+// export async function PopulateTrucks(orgcode) {
+//   tru
+// }
+
 export async function PopulateTrucks() {
   try {
-    const orgCodes = ["STJ", "RAI", "EVA"];
+    const orgCodes = ["ANN", "VIS", "JAC", "MTY", "STJ", "RAI", "EVA"];
     console.log("orgcodes", orgCodes);
-    console.log("starting populate");
+    // console.log("starting populate");
     const obj = { org: "", truckid: "" };
     for (let i = 0; i < orgCodes.length; i++) {
-      const trucks = await getTrucksPre(orgCodes[i]);
+      const trucks = await GetTrucks(orgCodes[i]);
       const org = orgCodes[i];
       for (let i = 0; i < trucks.length; i++) {
         const newObj = { ...obj, org: org, truckid: trucks[i] };
@@ -141,6 +150,43 @@ export async function PopulateTrucks() {
   } catch (err) {
     console.log("error populating trucks", err.message);
   }
+}
+
+// procedure
+// process type can be T O or S
+export async function getLoadingShippingDetails() {
+  const query = await connection.execute(
+    `BEGIN
+      xxbbna_loading_shipping_proc_m(:org, :order_number, :truck_name, :process_type, :single_point_org, :promise_date, :order_details);
+    END;`,
+    {
+      org: "ANN",
+      order_number: 2600429001,
+      truck_name: "2600429001T1",
+      process_type: "S",
+      single_point_org: "",
+      promise_date: "",
+      order_details: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_OBJECT },
+    },
+  );
+  const { outBinds } = query;
+  return query;
+}
+
+// function
+export async function runVerifyOrder(orgCode, orderNumber) {
+  const query = await connection.execute(
+    `BEGIN
+    :ret := xxbbna_warehouse_valid_order(:p1, :p2);
+    END;`,
+    {
+      p1: orgCode,
+      p2: orderNumber,
+      ret: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+    },
+  );
+  const result = query.outBinds;
+  return result;
 }
 
 export async function GetProductQuestionaireResponse() {
@@ -393,18 +439,9 @@ const xxbbna_warehouse_org_code = `SELECT truck_id
                     AND    wdd.delivery_detail_id = xc.delivery_detail_id
                     AND    wdd.released_status = 'Y'))`;
 
-// const getScacCodes = `SELECT scac_code, carrier_name
-//     FROM   (SELECT scac_code,
-//                    carrier_name,
-//                    CASE
-//                      WHEN c.scac_code IN
-//                           ('PSTO', 'SQCH', 'TFEJ', 'MAV1', 'MTLA', 'WSXI', 'WSXI', 'TMCD', 'PRIJ', 'SWIT', 'MTBC') THEN
-//                       1
-//                      ELSE
-//                       2
-//                    END name_order
-//             FROM   apps.wsh_carriers_v C
-//             WHERE  c.active = 'A'
-//             AND    c.scac_code IS NOT NULL
-//             --and
-//             ORDER  BY 3, 2 ASC) x`,
+/*
+-- SELECT * FROM wsh_delivery_details WHERE delivery_detail_id = '123208564'
+-- SELECT * FROM XXWSH_CONTAINERS WHERE delivery_detail_id = '11474604'
+SELECT * FROM XXBM_PICK_STATUS_REPORT_VW WHERE ROWID IN (SELECT MIN(ROWID) FROM XXBM_PICK_STATUS_REPORT_VW GROUP BY cont_name) ORDER BY cont_name
+-- SELECT a.delivery_detail_id, a.cont_name, b.item_description, a.cont_qty, a.cont_gross_wt, a.direct_truck, a.order_number FROM XXBM_PICK_STATUS_REPORT_VW a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_number = '2600429001' AND a.released_status = 'Y' ORDER BY cont_name
+*/

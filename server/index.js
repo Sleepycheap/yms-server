@@ -5,10 +5,13 @@ import "dotenv/config";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { createTable, dropManyTables } from "./db/handler.js";
-import { CreateTables } from "./db/populateSQL.js";
+// import { init } from "./db/populateSQL.js";
 import oracleRouter from "./routes/oracle.js";
 import apiRouter from "./routes/apiRouter.js";
-import { PopulateOrgCode, PopulateTrucks } from "./oracle/oracleQueries.js";
+import propagateRouter from "./routes/propagate.js";
+import morgan from "morgan";
+import logger from "./utils/logger.js";
+// import pino, { destination } from "pino";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");
 // import corsMiddleWare from "./utils/cors-middleware.js";
@@ -18,38 +21,16 @@ const corsOptions = {
 };
 const app = express();
 
-// app.use(
-//   corsMiddleWare({
-//     origins: ["http://localhost:5173/*"],
-//   }),
-// );
-
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(morgan("dev"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-const tables = [
-  "CategoryProductRel",
-  "Environment",
-  "GrossObject",
-  "IPConfiguration",
-  "IsPhotoTaken",
-  "Log",
-  "ProductType",
-  "ProductTypeAnswers",
-  "ProductTypeQuestions",
-  "ScanningItem",
-  "SignatureImg",
-  "SinglePointOrgMap",
-  "TruckImage",
-  // "Trucks"
-];
-dropManyTables(tables);
-CreateTables();
+// init();
 // PopulateOrgCode();
 // PopulateTrucks()
 
@@ -72,6 +53,7 @@ app.listen(port, (err) => {
 
 app.get("/", (req, res) => {
   res.status(200).send("You are connected to the backend");
+  logger.trace("this is a test");
 });
 
 app.all("/", function (req, res, next) {
@@ -82,3 +64,4 @@ app.all("/", function (req, res, next) {
 
 app.use("/oracle", oracleRouter);
 app.use("/api", apiRouter);
+app.use("/propagate", propagateRouter);
