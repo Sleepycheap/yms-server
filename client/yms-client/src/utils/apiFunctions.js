@@ -2,6 +2,7 @@
 import axios from 'axios'
 // dotenv.config({ path: "../server/.env" });
 const url = 'http://localhost:8080/api';
+const propUrl = 'http://localhost:8080/propagate'
 
 export async function getTrucks(org_code) {
   const response = await axios.get(`${url}/trucks?org_code=${org_code}`)
@@ -19,4 +20,57 @@ export async function getTextFromImage(imageSrc) {
   const response = await axios.get(`${url}/:imageSrc`)
   const {data} = response
   return data
+}
+
+export async function getContainers(orderNumber) {
+  const response = await axios.post(`${propUrl}/containers`, {order_number: orderNumber})
+  const {data} = response
+  return data;
+}
+
+export async function getWeight(orgcode, truckid) {
+  const response = await axios.get(`${url}/getweight/${orgcode}/${truckid}`)
+  const {data} = response;
+  return data
+}
+
+export async function getCustomerName(orderNumber) {
+  const response = await axios.get(`${url}/customer/${orderNumber}`)
+  const {data} = response;
+  return data
+}
+
+export async function loadContainer(order_number, cont_name, org_code, direct_truck, user_id) {
+  const response = await axios.post(`${url}/containers/assign`, {order_number: order_number,
+    cont_name: cont_name,
+    ship_from_org_code: org_code,
+    org: org_code,
+    ship_set_name: null,
+    truck_id: direct_truck,
+    assign_type: 'A',
+    user_id: user_id,
+    header_truck: direct_truck,
+    truck_flag: "M",})
+  const {data} = response;
+  console.log('data', response)
+  console.log(`${cont_name} has been loaded onto ${direct_truck}`)
+  return data;
+}
+
+export async function unloadContainer(order_number, cont_name, org_code, direct_truck, user_id) {
+
+  const response = await axios.post(`${url}/containers/assign`, {order_number: order_number,
+    cont_name: cont_name,
+    ship_from_org_code: org_code,
+    org: org_code,
+    ship_set_name: null,
+    truck_id: direct_truck,
+    assign_type: 'R',
+    user_id: user_id,
+    header_truck: direct_truck,
+    truck_flag: "M",})
+  const {data} = response;
+  console.log('data', response)
+  console.log(`${cont_name} has been unloaded from ${direct_truck}`)
+  return data;
 }

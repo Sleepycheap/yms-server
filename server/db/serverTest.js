@@ -75,6 +75,8 @@ import {
   PopulateScac,
 } from "../oracle/oracleQueries.js";
 
+// import { loadContainer } from "../../client/yms-client/src/utils/apiFunctions.js";
+
 // import { GetTrucks } from "../oracle/oracleQueries.js";
 
 // const test = await getLoadingShippingDetails(
@@ -96,16 +98,18 @@ import {
 
 // const add = await updateTruckID(
 //   2600429001,
-//   "1FSX",
+//   "10M",
 //   "ANN",
 //   "ANN",
 //   null,
-//   "PRIJ12345 090126",
-//   "A",
+//   "2600429001T1",
+//   "R",
 //   122452,
-//   "PRIJ12345 090126",
+//   "2600429001T1",
 //   "M",
 // );
+
+// const loadContainer
 
 // console.log("test", test[0].CONT_NAME);
 
@@ -141,4 +145,6 @@ import {
 // console.log(await PopulateScac());
 
 // console.log(await getScacCodes());
-console.log(await getContainersByOrder(2502262301));
+// console.log(await getContainersByOrder(2502262301));
+
+console.log(add);

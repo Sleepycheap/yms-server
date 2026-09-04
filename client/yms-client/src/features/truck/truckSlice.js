@@ -5,7 +5,9 @@ const initialState = {
   selectedTruck: '',
   selectedOrg: '',
   trailerNumber: '',
-  generatedTruck: ''
+  generatedTruck: '',
+  truckWeight: '',
+  truckQty: ''
 }
 
 const truckSlice = createSlice({
@@ -29,6 +31,12 @@ const truckSlice = createSlice({
     },
     setGeneratedTruck(state, action) {
       state.generatedTruck = action.payload
+    },
+    setTruckWeight(state, action) {
+      state.truckWeight = action.payload
+    },
+    setTruckQty(state, action) {
+      state.truckQty = action.payload
     }
   },
 })
@@ -39,7 +47,9 @@ export const {
   setOrg,
   setTrailerNumber,
   addTruckID,
-  setGeneratedTruck
+  setGeneratedTruck,
+  setTruckWeight,
+  setTruckQty
 } = truckSlice.actions;
 
 export default truckSlice.reducer;

@@ -5,38 +5,48 @@ import axios from 'axios'
 import styles from './Containers.module.css'
 import Loader from '../../ui/Loader'
 import { useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getContainers, getScacCodes } from '../../utils/apiFunctions'
 
 function Containers() {
   const [isLoading, setIsLoading] = useState(false)
-  const [isMounted, setIsMounted] = useState(true)
+  // const [isMounted, setIsMounted] = useState(true)
   const containers = useSelector((state) => state.load.containers)
   const orderNumber = useSelector((state) => state.order.orderNumber)
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isMounted) {
-      setIsMounted(true)
-      async function getContainers() {
-        setIsLoading(true);
-        const del = await axios.post(`http://localhost:8080/propagate/containers`, {order_number: orderNumber})
-        // const response = await axios.get(`http://localhost:8080/api/containers/${orderNumber}`);
-        const {data} = del;
-        
-        console.log('data', data)
-        dispatch(setContainers(data))
-        setIsLoading(false)
-        
-        setIsMounted(false)   
-      }
-      
-      getContainers()
+  const x = useQuery({
+    queryKey: ['containers', orderNumber],
+    queryFn: async () => {
+      const data = await getContainers(orderNumber)
+      return data
     }
-  }, [])
+  })
+
+  // useEffect(() => {
+  //   if (isMounted) {
+  //     setIsMounted(true)
+  //     async function getContainers() {
+  //       setIsLoading(true);
+  //       const del = await axios.post(`http://localhost:8080/propagate/containers`, {order_number: orderNumber})
+  //       // const response = await axios.get(`http://localhost:8080/api/containers/${orderNumber}`);
+  //       const {data} = del;
+        
+  //       console.log('data', data)
+  //       dispatch(setContainers(data))
+  //       setIsLoading(false)
+        
+  //       setIsMounted(false)   
+  //     }
+      
+  //     getContainers()
+  //   }
+  // }, [])
 
   
   
-  console.log('containers', containers)
+  console.log(x)
   
 
   return (

@@ -150,12 +150,12 @@ function TruckSelection() {
       )
     }
     {selectedTruck && orderNumber && (
-      <div className="text-center flex justify-self-center justify-evenly border-2 border-black w-200">
-        <p className="space-x-2 flex">
+      <div className="text-center flex justify-center border-2 border-black w-full">
+        <p className="flex flex-row ">
           <span>Truck ID: {selectedTruck}</span>
           <span>Order#: {orderNumber}</span>
+          <Button type='primary' to='load'>Next</Button>
         </p>
-        <Button type='primary' to='load'>Next</Button>
       </div>
     )}  
   </>

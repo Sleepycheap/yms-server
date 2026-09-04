@@ -10,7 +10,7 @@ import oracleRouter from "./routes/oracle.js";
 import apiRouter from "./routes/apiRouter.js";
 import propagateRouter from "./routes/propagate.js";
 import morgan from "morgan";
-import logger from "./utils/logger.js";
+// import logger from "./utils/logger.js";
 // import pino, { destination } from "pino";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const dbPath = join(dirname, "db");

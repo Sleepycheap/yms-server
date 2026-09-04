@@ -10,6 +10,7 @@ import {
   getOrderDetailsNoTruck,
   getOrderDetailsWTruck,
 } from "../db/handler.js";
+import { getLoadedTruckWeight, updateTruckID } from "../oracle/functions.js";
 import { getText } from "../utils/tesseractOcr.js";
 import { getCustomerName } from "../oracle/functions.js";
 
@@ -132,6 +133,16 @@ apiRouter.get("/scaccodes", async (req, res) => {
   }
 });
 
+apiRouter.get("/getweight/:orgcode/:truckid", async (req, res) => {
+  const { orgcode, truckid } = req.params;
+  try {
+    const weight = await getLoadedTruckWeight(orgcode, truckid);
+    res.json(weight);
+  } catch (err) {
+    return err.message;
+  }
+});
+
 apiRouter.post("/extractText", async (req, res) => {
   const { imageSrc } = req.body;
   try {
@@ -142,11 +153,37 @@ apiRouter.post("/extractText", async (req, res) => {
   }
 });
 
-// apiRouter.delete('/:table_name', async (req, res) => {
-//   try {
-//     const {table_name} = req.params
+apiRouter.post("/containers/assign", async (req, res) => {
+  const {
+    order_number,
+    cont_name,
+    ship_from_org_code,
+    org,
+    ship_set_name,
+    truck_id,
+    assign_type,
+    user_id,
+    header_truck,
+    truck_flag,
+  } = req.body;
 
-//   }
-// })
+  try {
+    const result = await updateTruckID(
+      order_number,
+      cont_name,
+      ship_from_org_code,
+      org,
+      ship_set_name,
+      truck_id,
+      assign_type,
+      user_id,
+      header_truck,
+      truck_flag,
+    );
+    res.json(result);
+  } catch (err) {
+    return err.message;
+  }
+});
 
 export default apiRouter;

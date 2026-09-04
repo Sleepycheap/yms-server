@@ -74,6 +74,7 @@ function Home() {
 
   return (
     <div className="md:m-10">
+      <button onClick={() => navigate('/tests')}>Test</button>
     {isLoading && (
       <Loader />
     )}

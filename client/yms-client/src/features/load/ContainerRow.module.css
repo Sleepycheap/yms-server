@@ -1,0 +1,24 @@
+
+
+/* th:nth-child(1) {
+  z-index: 6;
+} */
+
+
+/* tbody {
+  flex: 1 1 100%; 
+} */
+
+tbody tr:nth-child(even) {
+  background-color: oklch(86.9% 0.022 252.894);
+}
+
+
+tbody tr:nth-child(odd) {
+  background-color: oklch(92% 0.004 286.32);
+}
+
+/* 
+.containers {
+
+} */

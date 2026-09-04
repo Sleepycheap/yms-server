@@ -8,6 +8,22 @@
     "table" 
 }
 
+.load_main {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-areas: 
+    "buttons"
+    "header"
+    "table"
+    "table"
+    "table"
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 .header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -23,6 +39,7 @@
 .table {
   background: oklch(45% 0.017 213.2);
   grid-area: table;
+  -ms-grid-row-span: 3;
   /* grid-row: 2 / -1 */
 }
 
