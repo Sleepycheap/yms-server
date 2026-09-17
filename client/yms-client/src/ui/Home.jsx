@@ -9,11 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button.jsx";
 import { getPosition } from "../utils/getPosition.js";
 import { determineClosestPlant } from "../utils/geoLocation.js";
-import {updateName, updateOrgCode, setDate} from '../features/user/userSlice.js'
+import {updateName, updateOrgCode, setDate, setUserID} from '../features/user/userSlice.js'
 import Login from "../features/user/Login.jsx";
 import Webcam from 'react-webcam'
 import TakePicture from "../components/Camera.jsx";
 import CreateTruck from "../features/truck/CreateTruck.jsx";
+import { getUserID } from "../utils/apiFunctions.js";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -41,6 +42,10 @@ function Home() {
         const ctx = await getContext();
         
         const {userPrincipalName} = ctx.user;
+
+        const ID = await getUserID(userPrincipalName)
+
+        dispatch(setUserID(ID))
         
         const name = userPrincipalName.split('@')[0].split('.').join(' ')
 
@@ -74,21 +79,14 @@ function Home() {
 
   return (
     <div className="md:m-10">
-      <button onClick={() => navigate('/tests')}>Test</button>
     {isLoading && (
       <Loader />
     )}
     {!isLoading && (
       <>
       <TruckSelection />
-      {/* <Button type="primary" onClick={handleClick}>Click here to create a truck</Button> */}
       </>
     )}
-    {/* {
-      createTruck && (
-        <CreateTruck />
-      )
-    } */}
     </div>
   )
 

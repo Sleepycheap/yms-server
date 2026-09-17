@@ -29,18 +29,23 @@
 // }
 
 // console.log(checkOrderNumber());
-import { loadContainer } from "./src/utils/apiFunctions.js";
+import { loadContainer, getTrucks, verifyOrder } from "./src/utils/apiFunctions.js";
 
+// const test = await getTrucks('ANN')
+// console.log(test)
 
-const test = await loadContainer(  2600429001,
-  "10M",
-  "ANN",
-  "ANN",
-  null,
-  "2600429001T1",
-  "A",
-  122452,
-  "2600429001T1",
-  "M",)
+const test = await verifyOrder('ANN', 2600429001)
+console.log(test)
 
-console.log('test', test)
+// const test = await loadContainer(  2600429001,
+//   "10M",
+//   "ANN",
+//   "ANN",
+//   null,
+//   "2600429001T1",
+//   "A",
+//   122452,
+//   "2600429001T1",
+//   "M",)
+
+// console.log('test', test)

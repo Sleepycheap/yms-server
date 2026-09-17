@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
+create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   -- #########################################################################################################
   --  Package Name  : XXBBNA_WAREHOUSE_PROCESS_PKG                                                           #
   --  Created        : 8/31/2026                                                                             #
@@ -202,7 +202,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
              (SELECT 1
                     FROM   xxwsh_container_loading xcl,
                            xxwsh_containers        xc,
-                           wsh.wsh_delivery_details          wdd
+                           wsh.wsh_delivery_details  wdd
                     WHERE  xcl.ship_from_org_code = x_org_code
                     AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
                     AND    xc.order_no = xcl.order_no
@@ -244,7 +244,6 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
                     AND    xc.ship_set_name IS NULL
                     AND    wdd.delivery_detail_id = xc.delivery_detail_id
                     AND    wdd.released_status = 'Y')); --- pick released
-
     -- x_truck_id := l_truck_id;
   EXCEPTION
     WHEN others THEN
@@ -302,21 +301,185 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   END xxbbna_warehouse_valid_order;
 
   ----------------------------------------------------------------------------------------------------------------------
-  PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
+PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
                                            p_order_number IN NUMBER,
-                                           p_truck_name   IN VARCHAR2,
+                                           p_truck_name   VARCHAR2,
                                            p_process_type IN VARCHAR2,
                                            --p_direct_load        IN       VARCHAR2,
                                            p_single_point_org IN VARCHAR2,
                                            p_promise_date     IN VARCHAR2,
                                            p_order_details_cur    OUT SYS_REFCURSOR) IS
     -- l_order_details g_shipping_order_details_tbl;
-    -- lv_org_id       NUMBER := NVL(interface.xxbm_get_master_org_id, xxbbna_get_operating_unit_id(p_org)); --get_org_id(p_org);
-    -- lv_org_inv_id   NUMBER := xxbbna_get_operating_inv_id(p_org);
-    -- v_count         NUMBER;
-    -- v_truck_name    VARCHAR2(100);
+    lv_org_id       NUMBER := NVL(interface.xxbm_get_master_org_id, xxbbna_get_operating_unit_id(p_org)); --get_org_id(p_org);
+    lv_org_inv_id   NUMBER := xxbbna_get_operating_inv_id(p_org);
+    v_count         NUMBER;
+    v_truck_name    VARCHAR2(100);
 
-    OPEN p_order_details_cur(p_org IN VARCHAR2, p_single_point_org IN VARCHAR2, P_promise_date IN VARCHAR2) FOR
+    --changes start - abhallam
+    w_org              NUMBER := LENGTH(p_org);
+    w_order_number     NUMBER := LENGTH(p_order_number);
+    w_truck_name       NUMBER := LENGTH(p_truck_name);
+    w_process_type     NUMBER := LENGTH(p_process_type);
+    w_single_point_org NUMBER := LENGTH(p_single_point_org);
+    w_promise_date     NUMBER := LENGTH(p_promise_date);
+    l_p_date           DATE;
+    l_prc              VARCHAR2(100) := 'xxbbna_loading_shipping_proc_m';
+    l_user_id          fnd_user.user_id%TYPE;
+    l_resp_id          fnd_responsibility_tl.responsibility_id%TYPE;
+    l_resp_appl_id     fnd_responsibility_tl.application_id%TYPE;
+    --changes end - abhallam
+
+    l_promise_date VARCHAR2(20) := REPLACE(p_promise_date, CHR(63));
+
+  BEGIN
+    v_truck_name := p_truck_name;
+
+    w_promise_date := LENGTH(l_promise_date);
+
+    BEGIN
+      SELECT user_id INTO l_user_id FROM fnd_user WHERE user_name = 'SYSADMIN';
+    EXCEPTION
+      WHEN others THEN
+        l_user_id := 0; --SYSADMIN
+    END;
+    --log( l_prc,'1-2 l_user_id=' || l_user_id);
+
+    BEGIN
+      SELECT responsibility_id, application_id
+      INTO   l_resp_id, l_resp_appl_id
+      FROM   fnd_responsibility_tl
+      WHERE  responsibility_name = 'BSNA Shipping' --'BSCN Order Management Super User - SJG' --'BSNA Shipping'
+      AND    language = 'US';
+    EXCEPTION
+      WHEN others THEN
+        l_resp_id      := 50438; --'BSNA Shipping'
+        l_resp_appl_id := 665;
+    END;
+    --log( l_prc,'1-3 l_resp_id=' || l_resp_id || ', l_resp_appl_id=' || l_resp_appl_id);
+
+    BEGIN
+      --          fnd_global.APPS_INITIALIZE(user_id      => l_user_id,
+      --                                     resp_id      => l_resp_id,
+      --                                     resp_appl_id => l_resp_appl_id);
+      mo_global.set_policy_context('S', lv_org_id);
+    END;
+
+   
+    --
+    -- Based on p_process_type = Truck pull the data  --Truck data should be there for process_type = T or O or S
+    --
+    BEGIN
+      INSERT INTO xxbm_order_truck_activity
+        (order_number, last_activity, truck_name)
+        SELECT a.*
+        FROM   (SELECT xcl.order_no order_number,
+                       MAX(NVL(xcl.last_update_date, xcl.creation_date)) last_activity,
+                       v_truck_name truck_name
+                FROM   xxwsh_container_loading xcl
+                WHERE  v_truck_name IS NOT NULL
+                AND    v_truck_name IN (xcl.truck_id_1, xcl.truck_id_2, xcl.staged_truck_id)
+                GROUP  BY xcl.order_no
+                ORDER  BY last_activity DESC) a
+        WHERE  1 = 1;
+    END;
+
+    --
+    -- Based on p_process_type = Order pull the data
+    --
+    IF (p_process_type = 'O') THEN
+      BEGIN
+
+        SELECT COUNT(1) INTO v_count FROM xxbm_order_truck_activity WHERE order_number = p_order_number;
+
+        IF v_count = 0 THEN
+          INSERT INTO xxbm_order_truck_activity
+            (order_number, last_activity, truck_name)
+            (SELECT p_order_number order_number, SYSDATE last_activity, v_truck_name
+             FROM   dual
+             WHERE  p_order_number IS NOT NULL);
+        END IF;
+      END;
+
+      --
+      -- Based on p_process_type = Single-point org pull the data
+      --
+    ELSIF (p_process_type = 'S') THEN
+
+      --log( l_prc,'2 - in p_direct_load = N');
+
+      BEGIN
+        INSERT INTO xxbm_order_truck_activity
+          (order_number, last_activity, truck_name)
+          SELECT oh.order_number, NULL, NULL
+          FROM   ont.oe_order_headers_all oh
+          WHERE  oh.open_flag = 'Y'
+          AND    oh.org_id = lv_org_id
+          AND    oh.flow_status_code = 'BOOKED'
+          AND    NOT EXISTS
+           (SELECT NULL FROM xxbm_order_truck_activity xo WHERE xo.order_number = oh.order_number)
+          AND    EXISTS
+           (SELECT NULL
+                  FROM   wsh.wsh_delivery_details wdd
+                  WHERE  wdd.org_id = oh.org_id
+                  AND    wdd.source_header_id = oh.header_id
+                  AND    wdd.customer_id = oh.sold_to_org_id
+                  AND    wdd.pickable_flag = 'Y'
+                        --AND    wdd.released_status in ('B','R','S')
+                  AND    wdd.released_status = 'Y'
+                        -- AND    nvl(wdd.picked_quantity, 0) = 0
+                  AND    NVL(wdd.picked_quantity, 0) > 0
+                  AND    EXISTS (SELECT NULL
+                          FROM   ont.oe_order_lines_all ol
+                          WHERE  ol.header_id = wdd.source_header_id
+                          AND    ol.line_id = wdd.source_line_id
+                          AND    ol.org_id = oh.org_id
+                          AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(l_promise_date, 'MM/DD/YYYY'))
+                          AND    ol.flow_status_code != 'CLOSED'
+                          AND    ol.flow_status_code != 'CANCELLED'
+                          AND    ol.shipping_instructions = p_single_point_org))
+          UNION
+          SELECT DISTINCT oh.order_number, NULL, NULL
+          FROM   ont.oe_order_headers_all        oh,
+                 apps.po_requisition_headers_all prh,
+                 apps.po_requisition_lines_all   prl,
+                 apps.oe_po_requisition_lines_v  v,
+                 apps.oe_order_lines_all         ol
+          WHERE  1 = 1
+          AND    oh.flow_status_code = 'BOOKED'
+          AND    oh.header_id = ol.header_id
+          AND    ol.flow_status_code != 'CLOSED'
+          AND    ol.flow_status_code != 'CANCELLED'
+          AND    ol.org_id = oh.org_id
+          AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(l_promise_date, 'MM/DD/YYYY'))
+          AND    prh.requisition_header_id = prl.requisition_header_id
+          AND    prh.requisition_header_id = oh.source_document_id
+          AND    prh.type_lookup_code IN ( 'INTERNAL', 'PURCHASE' ) --KMM 10/09/19
+          AND    prl.requisition_line_id = v.requisition_line_id
+          AND    v.from_loc = SUBSTR(p_single_point_org, 1, 3)
+          AND    v.to_loc = SUBSTR(p_single_point_org, 5, 3)
+          AND    oh.open_flag = 'Y'
+          AND    oh.org_id = lv_org_id
+          AND    oh.flow_status_code = 'BOOKED'
+          AND    NOT EXISTS
+           (SELECT NULL FROM xxbm_order_truck_activity xo WHERE xo.order_number = oh.order_number)
+          AND    EXISTS (SELECT NULL
+                  FROM   wsh.wsh_delivery_details wdd
+                  WHERE  wdd.org_id = oh.org_id
+                  AND    wdd.source_header_id = oh.header_id
+                  AND    wdd.customer_id = oh.sold_to_org_id
+                  AND    wdd.pickable_flag = 'Y'
+                  AND    wdd.released_status = 'Y'
+                  AND    NVL(wdd.picked_quantity, 0) > 0);
+
+        --log( l_prc,'3 - after insert. released_status = B,R,S rowcount = ' || sql%rowcount);
+      END;
+
+    END IF;
+
+    --
+    -- Load the data into out variable via cursor cur_orderd_det
+    --
+    OPEN p_order_details_cur FOR
       SELECT ROW_NUMBER() OVER(ORDER BY SUBSTR(cont_name, INSTR(TRANSLATE(UPPER(cont_name), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '--------------------------'), '-'))) sequence_no,
              shpp.*
       FROM   (SELECT sall.cont_name,
@@ -433,7 +596,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
                                                AND    NVL(xc.truck_id_1, NVL(xc.truck_id_2, xc.staged_truck_id)) IS NULL
                                                AND    NVL(p_process_type, 'A') = 'S'
                                                AND    ol.shipping_instructions = p_single_point_org
-                                               AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(c_promise_date, 'MM/DD/YYYY'))
+                                               AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(p_promise_date, 'MM/DD/YYYY'))
                                                UNION ALL
                                                SELECT NULL
                                                FROM   dual
@@ -605,213 +768,10 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
                                                    '-') - 1),
                                       0)));
 
-    --changes start - abhallam
-    w_org              NUMBER := LENGTH(p_org);
-    w_order_number     NUMBER := LENGTH(p_order_number);
-    w_truck_name       NUMBER := LENGTH(p_truck_name);
-    w_process_type     NUMBER := LENGTH(p_process_type);
-    w_single_point_org NUMBER := LENGTH(p_single_point_org);
-    w_promise_date     NUMBER := LENGTH(p_promise_date);
-    l_p_date           DATE;
-    l_prc              VARCHAR2(100) := 'xxbbna_loading_shipping_proc_m';
-    l_user_id          NUMBER;
-    l_resp_id          NUMBER;
-    l_resp_appl_id     NUMBER;
-    --changes end - abhallam
-
-    l_promise_date VARCHAR2(20) := REPLACE(p_promise_date, CHR(63));
-
-  BEGIN
-    v_truck_name := p_truck_name;
-
-    --changes start - abhallam
-    --log ( l_prc,'START. lv_org_id='||lv_org_id);
-    /*
-    IF fnd_global.user_id < 0 THEN
-        mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_org));
-    END IF;
-    */
-
-    /* log( l_prc,'0  p_org=' || p_org || ', p_order_number=' || p_order_number || ', p_truck_name=' || p_truck_name
-         || ', p_process_type=' || p_process_type || ', p_single_point_org=' || p_single_point_org
-         || ', p_promise_date=' || p_promise_date
-        );
-
-    log( l_prc,'1  w_org='         || w_org
-        || ', w_order_number='     || w_order_number
-        || ', w_truck_name='       || w_truck_name
-        || ', w_process_type='     || w_process_type
-        || ', w_single_point_org=' || w_single_point_org
-        || ', w_promise_date='     || w_promise_date);*/
-
-    w_promise_date := LENGTH(l_promise_date);
-    --log( l_prc,'1-1  w_promise_date_trim=' || w_promise_date);
-
-    BEGIN
-      SELECT user_id INTO l_user_id FROM fnd_user WHERE user_name = 'SYSADMIN';
-    EXCEPTION
-      WHEN others THEN
-        l_user_id := 0; --SYSADMIN
-    END;
-    --log( l_prc,'1-2 l_user_id=' || l_user_id);
-
-    BEGIN
-      SELECT responsibility_id, application_id
-      INTO   l_resp_id, l_resp_appl_id
-      FROM   fnd_responsibility_tl
-      WHERE  responsibility_name = 'BSNA Shipping' --'BSCN Order Management Super User - SJG' --'BSNA Shipping'
-      AND    language = 'US';
-    EXCEPTION
-      WHEN others THEN
-        l_resp_id      := 50438; --'BSNA Shipping'
-        l_resp_appl_id := 665;
-    END;
-    --log( l_prc,'1-3 l_resp_id=' || l_resp_id || ', l_resp_appl_id=' || l_resp_appl_id);
-
-    BEGIN
-      --          fnd_global.APPS_INITIALIZE(user_id      => l_user_id,
-      --                                     resp_id      => l_resp_id,
-      --                                     resp_appl_id => l_resp_appl_id);
-      mo_global.set_policy_context('S', lv_org_id);
-    END;
-
-    /*
-    begin
-    fnd_global.APPS_INITIALIZE(user_id=>61269, --l_user_id,
-                               resp_id=>52544, --l_resp_id,
-                               resp_appl_id=>660); --l_resp_appl_id);
-    mo_global.set_policy_context('S',41);
-    end;
-              */
-
-    --log( l_prc,'1-4 after apps_initialize');
-
-    --changes end - abhallam
-
-    --
-    -- Based on p_process_type = Truck pull the data  --Truck data should be there for process_type = T or O or S
-    --
-    BEGIN
-      INSERT INTO xxbm_order_truck_activity
-        (order_number, last_activity, truck_name)
-        SELECT a.*
-        FROM   (SELECT xcl.order_no order_number,
-                       MAX(NVL(xcl.last_update_date, xcl.creation_date)) last_activity,
-                       v_truck_name truck_name
-                FROM   xxwsh_container_loading xcl
-                WHERE  v_truck_name IS NOT NULL
-                AND    v_truck_name IN (xcl.truck_id_1, xcl.truck_id_2, xcl.staged_truck_id)
-                GROUP  BY xcl.order_no
-                ORDER  BY last_activity DESC) a
-        WHERE  1 = 1;
-    END;
-
-    --
-    -- Based on p_process_type = Order pull the data
-    --
-    IF (p_process_type = 'O') THEN
-      BEGIN
-
-        SELECT COUNT(1) INTO v_count FROM xxbm_order_truck_activity WHERE order_number = p_order_number;
-
-        IF v_count = 0 THEN
-          INSERT INTO xxbm_order_truck_activity
-            (order_number, last_activity, truck_name)
-            (SELECT p_order_number order_number, SYSDATE last_activity, v_truck_name
-             FROM   dual
-             WHERE  p_order_number IS NOT NULL);
-        END IF;
-      END;
-
-      --
-      -- Based on p_process_type = Single-point org pull the data
-      --
-    ELSIF (p_process_type = 'S') THEN
-
-      --log( l_prc,'2 - in p_direct_load = N');
-
-      BEGIN
-        INSERT INTO xxbm_order_truck_activity
-          (order_number, last_activity, truck_name)
-          SELECT oh.order_number, NULL, NULL
-          FROM   ont.oe_order_headers_all oh
-          WHERE  oh.open_flag = 'Y'
-          AND    oh.org_id = lv_org_id
-          AND    oh.flow_status_code = 'BOOKED'
-          AND    NOT EXISTS
-           (SELECT NULL FROM xxbm_order_truck_activity xo WHERE xo.order_number = oh.order_number)
-          AND    EXISTS
-           (SELECT NULL
-                  FROM   wsh.wsh_delivery_details wdd
-                  WHERE  wdd.org_id = oh.org_id
-                  AND    wdd.source_header_id = oh.header_id
-                  AND    wdd.customer_id = oh.sold_to_org_id
-                  AND    wdd.pickable_flag = 'Y'
-                        --AND    wdd.released_status in ('B','R','S')
-                  AND    wdd.released_status = 'Y'
-                        -- AND    nvl(wdd.picked_quantity, 0) = 0
-                  AND    NVL(wdd.picked_quantity, 0) > 0
-                  AND    EXISTS (SELECT NULL
-                          FROM   ont.oe_order_lines_all ol
-                          WHERE  ol.header_id = wdd.source_header_id
-                          AND    ol.line_id = wdd.source_line_id
-                          AND    ol.org_id = oh.org_id
-                          AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(l_promise_date, 'MM/DD/YYYY'))
-                          AND    ol.flow_status_code != 'CLOSED'
-                          AND    ol.flow_status_code != 'CANCELLED'
-                          AND    ol.shipping_instructions = p_single_point_org))
-          UNION
-          SELECT DISTINCT oh.order_number, NULL, NULL
-          FROM   ont.oe_order_headers_all        oh,
-                 apps.po_requisition_headers_all prh,
-                 apps.po_requisition_lines_all   prl,
-                 apps.oe_po_requisition_lines_v  v,
-                 apps.oe_order_lines_all         ol
-          WHERE  1 = 1
-          AND    oh.flow_status_code = 'BOOKED'
-          AND    oh.header_id = ol.header_id
-          AND    ol.flow_status_code != 'CLOSED'
-          AND    ol.flow_status_code != 'CANCELLED'
-          AND    ol.org_id = oh.org_id
-          AND    TRUNC(ol.promise_date) = TRUNC(TO_DATE(l_promise_date, 'MM/DD/YYYY'))
-          AND    prh.requisition_header_id = prl.requisition_header_id
-          AND    prh.requisition_header_id = oh.source_document_id
-          AND    prh.type_lookup_code IN ( 'INTERNAL', 'PURCHASE' ) --KMM 10/09/19
-          AND    prl.requisition_line_id = v.requisition_line_id
-          AND    v.from_loc = SUBSTR(p_single_point_org, 1, 3)
-          AND    v.to_loc = SUBSTR(p_single_point_org, 5, 3)
-          AND    oh.open_flag = 'Y'
-          AND    oh.org_id = lv_org_id
-          AND    oh.flow_status_code = 'BOOKED'
-          AND    NOT EXISTS
-           (SELECT NULL FROM xxbm_order_truck_activity xo WHERE xo.order_number = oh.order_number)
-          AND    EXISTS (SELECT NULL
-                  FROM   wsh.wsh_delivery_details wdd
-                  WHERE  wdd.org_id = oh.org_id
-                  AND    wdd.source_header_id = oh.header_id
-                  AND    wdd.customer_id = oh.sold_to_org_id
-                  AND    wdd.pickable_flag = 'Y'
-                  AND    wdd.released_status = 'Y'
-                  AND    NVL(wdd.picked_quantity, 0) > 0);
-
-        --log( l_prc,'3 - after insert. released_status = B,R,S rowcount = ' || sql%rowcount);
-      END;
-
-    END IF;
-
-    --
-    -- Load the data into out variable via cursor cur_orderd_det
-    -- --
-    -- OPEN cur_orderd_det(p_org, p_single_point_org, l_promise_date);
-
-    -- FETCH cur_orderd_det BULK COLLECT
-    --   INTO l_order_details;
-
-    -- CLOSE cur_orderd_det;
 
     --log(l_prc,'END - l_order_details.count = ' || l_order_details.count);
 
-    -- p_order_details := l_order_details;
+   
   EXCEPTION
     WHEN others THEN
       dbms_output.put_line(sqlerrm);
@@ -824,8 +784,8 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   --    Output parameters:
   --        p_status        : Returns the status  from the program.
   --
-  --   procedure: This both assigns a truck ID to a container, and removes the truck ID from the   --      container. The p_assigntype variable determines whether the truck id is assigned or --        removed. 
-  --          A = assign, and R = remove
+  --      procedure: This procedure add or remove all truck ids for  particular order
+  --    Query extracted from   Package Loading Report
   --
   ----------------------------------------------------------------------------------------------------------------------
   PROCEDURE xxbbna_update_truck_id(p_order_number       NUMBER,
@@ -852,12 +812,14 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
     p_sgpt_allowed              BOOLEAN := TRUE;
     l_single_point_truck_exists VARCHAR2(1) := 'N';
     --P Means Already updated through oracle form/other user
-    lv_status               VARCHAR2(1) := 'S';
+    lv_status               VARCHAR2(50) := 'S';
     l_cont_wt               NUMBER;
     l_truck_shipment_exists VARCHAR2(1);
     l_truck_shipment_wt     NUMBER;
     l_shipment_type         VARCHAR2(1);
     l_truck_id              VARCHAR2(30) := p_truck_id;
+    l_assigned_truck VARCHAR2(40);
+    truck_id_err EXCEPTION;
 
     q_order_number       NUMBER := LENGTH(p_order_number);
     q_cont_name          NUMBER := LENGTH(p_cont_name);
@@ -873,6 +835,13 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
     pragma autonomous_transaction;
   BEGIN
     xxbm_wsh_packing_frm.container_validation(p_order_number); -- Fix/add any missing container loading records
+
+
+    dbms_output.put_line(p_assigntype);
+    
+
+
+
     IF (l_truck_id IS NULL) THEN
       BEGIN
         SELECT truck
@@ -904,6 +873,8 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
       END;
     END IF;
 
+    
+
     SELECT fresp.responsibility_id, fresp.application_id
     INTO   l_resp_id, resp_appl_id
     FROM   fnd_user fnd, fnd_responsibility_tl fresp
@@ -914,9 +885,52 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
       fnd_global.apps_initialize(user_id => p_user_id, resp_id => l_resp_id, resp_appl_id => resp_appl_id);
       COMMIT;
     EXCEPTION
+      -- WHEN truck_id_err THEN
+      --   lv_status := 'truck assign error';
       WHEN others THEN
-        lv_status := 'F';
+      -- Status A means error with responsibility
+        lv_status := 'responsibility error';
     END;
+
+        IF p_assigntype = 'A' THEN
+      BEGIN 
+      SELECT truck_id_2 INTO 
+      l_assigned_truck FROM xxwsh_container_loading WHERE order_no = p_order_number AND cont_name = p_cont_name;
+      -- COMMIT;
+      IF l_assigned_truck IS NOT NULL THEN
+      RAISE truck_id_err;
+      END IF;
+      EXCEPTION 
+        WHEN truck_id_err THEN 
+        lv_status := 'container has already been assigned to truck';
+        dbms_output.put_line(lv_status);
+        -- ROLLBACK;
+        -- RETURN;
+       
+        WHEN NO_DATA_FOUND THEN
+        lv_status := 'container not found';
+        -- RETURN;
+      END;
+    ELSIF p_assigntype = 'R' THEN
+    BEGIN 
+      SELECT truck_id_2 into l_assigned_truck FROM xxwsh_container_loading WHERE order_no = p_order_number AND cont_name = p_cont_name;
+      -- COMMIT;
+      IF l_assigned_truck IS NULL THEN
+      RAISE truck_id_err;
+      END IF;
+      EXCEPTION
+       WHEN truck_id_err THEN
+      lv_status := 'container has already been unassigned';
+      dbms_output.put_line(lv_status);
+
+      -- ROLLBACK;
+      -- RETURN;
+
+      WHEN NO_DATA_FOUND THEN
+      lv_status := 'container not found';
+      -- RETURN;
+      END;
+    END IF;
 
     -- ====================================
     -- Get container weight
@@ -1000,7 +1014,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
             lv_status := 'S';
           EXCEPTION
             WHEN others THEN
-              lv_status := 'F';
+              lv_status := 'singlepoint_update_error';
           END;
         ELSIF p_truck_id1 IS NULL AND p_org = p_ship_from_org_code AND p_ship_set_name IS NOT NULL THEN
           BEGIN
@@ -1040,7 +1054,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
             lv_status := 'S';
           EXCEPTION
             WHEN others THEN
-              lv_status := 'F';
+              lv_status := 'directload_update_error';
               --log(l_prc,'24 Error: '|| sqlerrm);
           END;
         END IF;
@@ -1073,7 +1087,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
 
           IF l_single_point_truck_exists = 'Y' THEN
             p_sgpt_allowed := FALSE;
-            lv_status      := 'G'; -- single point unload not allowed
+            lv_status      := 'singlepoint_upload_not_allowed'; -- single point unload not allowed
           END IF;
         EXCEPTION
           WHEN no_data_found THEN
@@ -1131,7 +1145,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
             lv_status := 'S';
           EXCEPTION
             WHEN others THEN
-              lv_status := 'F';
+              lv_status := 'sgpt_unassign_error';
               --log(l_prc,'35');
           END;
         ELSIF p_truck_id1 IS NOT NULL AND p_org = p_ship_from_org_code AND p_ship_set_name IS NOT NULL THEN
@@ -1175,7 +1189,7 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
             lv_status := 'S';
           EXCEPTION
             WHEN others THEN
-              lv_status := 'F';
+              lv_status := 'truckid_unassign_error';
               --log(l_prc,'39');
           END;
         END IF;
@@ -1493,13 +1507,145 @@ CREATE OR REPLACE PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   --        Query extracted from   Package Loading Report
   --
   ----------------------------------------------------------------------------------------------------------------------
-  PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
+--   PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
+--                                        p_truck             IN VARCHAR2,
+--                                        p_truck_details_cur     OUT SYS_REFCURSOR) IS
+--     -- l_truck_details g_truck_manifest_tbl;
+--     -- l_prc           VARCHAR2(100) := 'xxbbna_truck_manifest_proc';
+-- BEGIN
+
+--   BEGIN
+--     OPEN p_truck_details_cur FOR
+--       SELECT ORGANIZATION,
+--              description,
+--              container_name,
+--              truck_id,
+--              --order_by_cont_name,
+--              NVL(SUM(shipped_qty), 0) shipped_qty,
+--              NVL(SUM(cont_gross_wt), 0) extended_wt,
+--              compass_order_no order_number
+--       --oe_number
+--       FROM   (SELECT '123' order_number,
+--                      oh.order_number compass_order_no,
+--                      oh.attribute1 project_name,
+--                      oh.attribute2 oe_number,
+--                      wdd.cust_po_number purchase_order,
+--                      LTRIM(RTRIM(hp.party_name)) customer_name,
+--                      mp.organization_code plant_info,
+--                      msi.segment1 part_number,
+--                      xxbm_bsl_get_brand_desc(msi.description, xxbm_bsl_get_brand(oh.order_number)) description,
+--                      ol.ordered_quantity quantity_ordered,
+--                      mp.organization_code origination_plant,
+--                      DECODE(p_organization_code, NULL, 'ALL', p_organization_code) ORGANIZATION,
+--                      xcl.cont_name container_name,
+--                      --DECODE(xcl.truck_id_2, NULL, NVL(xcl.truck_id_1, 'xxxx'), xcl.truck_id_2) truck_id,
+--                      NVL(xcl.truck_id_2, NVL(xcl.truck_id_1, xcl.staged_truck_id)) truck_id, --added on 03-MAY-2018 by abhallam
+--                      ol.attribute16 part_mark,
+--                      ol.attribute20 erection_mark,
+--                      REPLACE(TRANSLATE(xcl.cont_name, '1234567890', '0000000000'), '0') order_by_cont_name,
+
+--                      --
+--                      (SELECT TO_NUMBER(ph.segment1)
+--                       FROM   apps.po_requisition_headers_all ph, apps.po_requisition_lines_all pl
+--                       WHERE  ph.requisition_header_id = pl.requisition_header_id
+--                       AND    ph.segment1 = ol.orig_sys_document_ref
+--                       AND    ol.orig_sys_line_ref = TO_CHAR(pl.line_num)
+--                       AND    ROWNUM <= 1) requisition_no,
+--                      --
+--                      DECODE(wdd.released_status, 'Y', wdd.requested_quantity, 'C', wdd.requested_quantity, 0) shipped_qty,
+--                      --
+--                      DECODE(wdd.released_status, 'B', wdd.requested_quantity, 0) backordered_qty,
+--                      --
+--                      wdd.requested_quantity ordered_qty,
+--                      xc.cont_gross_wt
+--               FROM   wsh.wsh_delivery_details          wdd,
+--                      apps.mtl_system_items_vl          msi,
+--                      apps.oe_order_headers             oh,
+--                      apps.oe_order_lines               ol,
+--                      apps.xxwsh_containers             xc,
+--                      xxwsh_container_loading xcl,
+--                      --apps.ra_customers                 rc, PR00100 R12 Upgrade
+--                      hz_cust_accounts    hca,
+--                      hz_parties          hp,
+--                      apps.mtl_parameters mp
+--               WHERE  wdd.source_header_id = oh.header_id
+--                     --AND :p_allow_report_to_run = 1
+--               AND    (wdd.requested_quantity > 0 OR wdd.released_status != 'D')
+--               AND    wdd.inventory_item_id = msi.inventory_item_id
+--               AND    oh.header_id = ol.header_id
+--               AND    ol.line_id = wdd.source_line_id
+--               AND    ol.inventory_item_id = msi.inventory_item_id
+--               AND    msi.organization_id = oh.org_id
+--                     --AND rc.customer_id = wdd.customer_id
+--               AND    hca.cust_account_id = wdd.customer_id
+--               AND    hp.party_id = hca.party_id
+--               AND    mp.organization_id = ol.ship_from_org_id
+--               AND    wdd.delivery_detail_id = xc.delivery_detail_id
+--               AND    xc.cont_name = xcl.cont_name
+--               AND    xc.order_no = xcl.order_no
+--               AND    NVL(xc.truck_id_1, 'YY') = NVL(xcl.truck_id_1, 'YY')
+--               AND    NVL(xc.truck_id_2, 'YY') = NVL(xcl.truck_id_2, 'YY')
+--               AND    NVL(xcl.staged_truck_id, 'YY') = NVL(xcl.staged_truck_id, 'YY')
+--               AND    xc.ship_from_org_code = xcl.ship_from_org_code
+--               AND    NOT msi.segment1 LIKE 'SS%'
+--               AND    xc.order_no = oh.order_number
+--                     --AND    DECODE(UPPER(xcl.truck_id_2), NULL, UPPER(xcl.truck_id_1), UPPER(xcl.truck_id_2)) = UPPER(p_truck)   --lp_truck_qry
+--               AND    UPPER(p_truck) IS NOT NULL
+--               AND    UPPER(p_truck) IN (xcl.truck_id_1, xcl.truck_id_2, xcl.staged_truck_id) --30-apr-2018 - abhallam
+--                     --AND OH.ORDER_NUMBER='|| ':P_ORDER_NO--lp_order_qry
+--               AND    (mp.organization_code = p_organization_code
+--                     --OR xc.ship_set_name LIKE '%' || p_organization_code)
+--                     ))
+--       GROUP  BY order_number,
+--                 compass_order_no,
+--                 project_name,
+--                 purchase_order,
+--                 requisition_no,
+--                 customer_name,
+--                 plant_info,
+--                 ORGANIZATION,
+--                 origination_plant,
+--                 part_number,
+--                 description,
+--                 part_mark,
+--                 erection_mark,
+--                 container_name,
+--                 truck_id,
+--                 order_by_cont_name,
+--                 oe_number;
+--   END;
+--   BEGIN
+--     IF fnd_global.user_id < 0 THEN
+--       mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
+--     END IF;
+--   END;  
+
+--     -- OPEN cur_truck_det(p_organization_code, p_truck);
+
+--     -- FETCH cur_truck_det BULK COLLECT
+--     --   INTO l_truck_details;
+
+--     -- CLOSE cur_truck_det;
+
+--     -- p_truck_details := l_truck_details;
+
+--     --log(l_prc,'END. p_truck_details.count=' || p_truck_details.count);
+
+--   EXCEPTION
+--     WHEN others THEN
+--       dbms_output.put_line(sqlerrm);
+--       --log(l_prc,'Error: ' || sqlerrm);
+--   END xxbbna_truck_manifest_proc;
+PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
                                        p_truck             IN VARCHAR2,
-                                       p_truck_details_cur     OUT SYS_REFCURSOR) IS
-    -- l_truck_details g_truck_manifest_tbl;
-    -- l_prc           VARCHAR2(100) := 'xxbbna_truck_manifest_proc';
-BEGIN
-    OPEN p_truck_details_cur(p_organization_code IN VARCHAR2, p_truck IN VARCHAR2) FOR
+                                       p_truck_details  OUT SYS_REFCURSOR ) IS
+  BEGIN
+
+    IF fnd_global.user_id < 0 THEN
+    mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
+    END IF;
+
+    OPEN p_truck_details FOR
       SELECT ORGANIZATION,
              description,
              container_name,
@@ -1530,7 +1676,7 @@ BEGIN
 
                      --
                      (SELECT TO_NUMBER(ph.segment1)
-                      FROM   apps.po_requisition_headers_all ph, apps.po_requisition_lines_all pl
+                      FROM   apps.po_requisition_headers ph, apps.po_requisition_lines pl
                       WHERE  ph.requisition_header_id = pl.requisition_header_id
                       AND    ph.segment1 = ol.orig_sys_document_ref
                       AND    ol.orig_sys_line_ref = TO_CHAR(pl.line_num)
@@ -1597,17 +1743,15 @@ BEGIN
                 truck_id,
                 order_by_cont_name,
                 oe_number;
-  END;
-  BEGIN
-    IF fnd_global.user_id < 0 THEN
-      mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
-    END IF;
-  END;  
 
-    -- OPEN cur_truck_det(p_organization_code, p_truck);
 
-    -- FETCH cur_truck_det BULK COLLECT
-    --   INTO l_truck_details;
+
+
+
+    -- p_truck_details := l_truck_details;
+
+    -- OPEN p_truck_details(p_organization_code, p_truck);
+
 
     -- CLOSE cur_truck_det;
 
@@ -2076,16 +2220,16 @@ BEGIN
                                          p_truck_id     IN VARCHAR2,
                                          p_user_id      IN NUMBER,
                                          x_data_exists  OUT VARCHAR2,
-                                         x_ld_txn_ques  OUT ld_txn_question_table,
-                                         x_ld_txn_answ  OUT ld_txn_answer_table,
+                                         x_ld_txn_ques  OUT SYS_REFCURSOR,
+                                         x_ld_txn_answ  OUT SYS_REFCURSOR,
                                          x_loaders_name OUT VARCHAR2,
                                          x_status       OUT VARCHAR2,
                                          x_error_msg    OUT VARCHAR2) IS
     v_count              NUMBER;
     v_transaction_id     NUMBER;
     v_data_exists        VARCHAR2(1);
-    v_txn_question_table ld_txn_question_table;
-    v_txn_answer_table   ld_txn_answer_table;
+    -- v_txn_question_table ld_txn_question_table;
+    -- v_txn_answer_table   ld_txn_answer_table;
     v_error_flag         VARCHAR2(1) := 'S';
     v_loaders_name       VARCHAR2(1000);
   BEGIN
@@ -2107,8 +2251,8 @@ BEGIN
       x_status       := 'S';
       v_error_flag   := 'S';
       v_loaders_name := '';
-      x_ld_txn_ques  := v_txn_question_table;
-      x_ld_txn_answ  := v_txn_answer_table;
+      -- x_ld_txn_ques  := v_txn_question_table;
+      -- x_ld_txn_answ  := v_txn_answer_table;
       dbms_output.put_line('No Data Found ------ ' || x_data_exists);
     ELSE
       --
@@ -2142,14 +2286,16 @@ BEGIN
         --
         -- Get the data for question table
         --
-        SELECT DISTINCT ques.product_type_ques_id,
+
+        -- BULK   COLLECT
+        -- INTO   v_txn_question_table
+        OPEN x_ld_txn_ques FOR
+                SELECT DISTINCT ques.product_type_ques_id,
                         ques.product_type_id,
                         pro.product_type,
                         ques.question,
                         htxn.additional_comments,
                         htxn.transaction_id
-        BULK   COLLECT
-        INTO   v_txn_question_table
         FROM   xxbm_trkloadver_txn_det      txn,
                xxbm_trkloadver_prd_type_ans ans,
                xxbm_trkloadver_prd_type_qn  ques,
@@ -2163,7 +2309,6 @@ BEGIN
         AND    txn.transaction_id = v_transaction_id
         ORDER  BY product_type_ques_id;
 
-        x_ld_txn_ques := v_txn_question_table;
       EXCEPTION
         WHEN others THEN
           v_error_flag := 'F';
@@ -2178,13 +2323,13 @@ BEGIN
         --
         -- Get the data for question table
         --
-        SELECT txn.answer_flag,
+
+        OPEN x_ld_txn_answ FOR
+                SELECT txn.answer_flag,
                ans.answers,
                ques.product_type_ques_id,
                txn.product_type_answer_id,
                txn.transaction_detail_id
-        BULK   COLLECT
-        INTO   v_txn_answer_table
         FROM   xxbm_trkloadver_txn_det      txn,
                xxbm_trkloadver_prd_type_ans ans,
                xxbm_trkloadver_prd_type_qn  ques
@@ -2193,7 +2338,6 @@ BEGIN
         AND    txn.transaction_id = v_transaction_id
         ORDER  BY transaction_detail_id;
 
-        x_ld_txn_answ := v_txn_answer_table;
       EXCEPTION
         WHEN others THEN
           v_error_flag := 'F';

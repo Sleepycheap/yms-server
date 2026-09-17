@@ -32,12 +32,12 @@ returns order details for specific order number
 this function aggregates each row with the same cont_name into an individual row with total qty and total_gross_wt
 the item description is set by the first delivery_detail_id for each container
 */
-export async function getOrderDetails() {
+export async function getOrderDetailsAll() {
   try {
     const query = db.prepare(
       // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
       `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
-        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+        PARTITION BY CONT_NAME ORDER BY cont_name) AS rn FROM Containers)
         SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
         SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ?`,
     );
@@ -49,14 +49,14 @@ export async function getOrderDetails() {
 }
 
 // returns order details for containers that have not been assigned a truck id
-export async function getOrderDetailsNoTruck(orderNumber) {
+export async function getOrderDetailsPicked(orderNumber) {
   try {
     const query = db.prepare(
       // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
       `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
-        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+        PARTITION BY CONT_NAME ORDER BY cont_name) AS rn FROM Containers)
         SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
-        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck = 'null'`,
+        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck IS NULL AND cont_name IS NOT NULL`,
     );
     const result = query.all(orderNumber);
     return result;
@@ -66,14 +66,30 @@ export async function getOrderDetailsNoTruck(orderNumber) {
 }
 
 // returns order details for containers that have been assigned a truck id
-export async function getOrderDetailsWTruck(orderNumber) {
+export async function getOrderDetailsLoaded(orderNumber) {
+  try {
+    const query = db.prepare(
+      `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
+        PARTITION BY CONT_NAME ORDER BY cont_name) AS rn FROM Containers)
+        SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
+        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck IS NOT NULL AND cont_name IS NOT NULL`,
+    );
+    const result = query.all(orderNumber);
+    return result;
+  } catch (err) {
+    console.log("error getting order details", err.msh);
+  }
+}
+
+export async function getOrderDetailsUnpicked(orderNumber) {
   try {
     const query = db.prepare(
       // `SELECT cont_name, GROUP_CONCAT(item_description, ';') AS items, SUM(cont_qty) AS total_qty, SUM(cont_gross_wt) AS total_gross_wt, COUNT(*) AS ITEM_COUNT, ORDER_NUMBER FROM Containers GROUP BY cont_name, order_number ORDER BY cont_name`,
-      `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
-        PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
-        SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
-        SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck <> 'null'`,
+      // `WITH ranked AS (SELECT *, ROW_NUMBER() OVER (
+      //   PARTITION BY CONT_NAME ORDER BY delivery_detail_id) AS rn FROM Containers)
+      //   SELECT order_number, cont_name, item_description, SUM(cont_qty) OVER (PARTITION BY cont_name) AS total_qty,
+      //   SUM(cont_gross_wt) OVER (PARTITION BY cont_name) AS total_gross_wt, direct_truck FROM ranked WHERE rn = 1 AND order_number = ? AND direct_truck IS NULL AND cont_name IS NULL`,
+      `SELECT * FROM Containers WHERE direct_truck IS NULL AND cont_name IS NULL AND order_number = ?`,
     );
     const result = query.all(orderNumber);
     return result;
@@ -114,6 +130,30 @@ export async function getContainersByOrder(orderNumber) {
     return result;
   } catch (err) {
     console.log("error getting containers", err.msg);
+  }
+}
+
+export async function getContNameByDescription(itemDescription) {
+  try {
+    const query = db.prepare(
+      `SELECT cont_name FROM Containers WHERE item_description = ?`,
+    );
+    const result = query.all(itemDescription);
+    return result;
+  } catch (err) {
+    console.log("error getting contname", err.message);
+  }
+}
+
+export async function getDescriptionByContName(contName) {
+  try {
+    const query = db.prepare(
+      `SELECT item_description FROM Containers WHERE cont_name = ?`,
+    );
+    const result = query.all(contName);
+    return result;
+  } catch (err) {
+    console.log("error getting contname", err.message);
   }
 }
 

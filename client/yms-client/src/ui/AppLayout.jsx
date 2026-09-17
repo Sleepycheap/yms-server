@@ -2,9 +2,9 @@ import { Outlet, useNavigation } from "react-router-dom"
 import Header from './Header'
 import Loader from "./Loader"
 import { useSelector } from "react-redux"
-import TruckFooter from "./TruckFooter"
+// import TruckFooter from "./TruckFooter"
 import { useState } from "react"
-import LoadHeader from "../features/load/LoadHeader"
+// import LoadHeader from "../features/load/LoadHeader"
 
 
 function AppLayout() {

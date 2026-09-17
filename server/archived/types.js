@@ -47,7 +47,7 @@ the truck manifest object returned from this function would be:
 
 */
 
-import { pool } from "./pool.js";
+import { pool } from "../oracle/pool.js";
 
 const connection = await pool.getConnection();
 

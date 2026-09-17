@@ -65,3 +65,24 @@
   background-color:  oklch(66.6% 0.179 58.318);
   width: 50%
 }
+
+.manual  {
+  font-size: 1.5rem;
+  line-height: calc(2 / 1.5);
+  background-color:  oklch(70.9% 0.01 56.259);
+  width: 50%;
+  color: oklch(14.7% 0.004 49.25)
+}
+
+.manual textarea {
+  caret-color: oklch(14.7% 0.004 49.25);
+}
+
+:hover.manual {
+  cursor: text;
+}
+/* 
+.filter {
+  background-color: oklch(79.5% 0.184 86.047);
+  width: 50% 
+} */

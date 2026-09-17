@@ -8,6 +8,7 @@ import axios from "axios"
 // import ScannerControls from "../components/ScannerControls"
 import {useZxing} from 'react-zxing'
 import Camera from "../components/Camera"
+import Counter from "./Counter"
 
 // import { insideCircle, distanceTo, toLatLon, getLongitude } from "geolocation-utils";
 
@@ -15,7 +16,17 @@ import Camera from "../components/Camera"
 function Tests() {
 
   return (
-    <Camera />
+   <div>
+    <h1>Compount component test</h1>
+
+    <Counter>
+      <Counter.Decrease icon="-" />
+      <Counter.Count />
+      <Counter.Increase icon="+" />
+      {/* <Counter.Label>Counter</Counter.Label> */}
+    </Counter>
+
+   </div>
 
   )
   

@@ -5,6 +5,7 @@ dotenv.config({ path: "../server/.env" });
 // this tells the app to connect to oracle with
 // the thick client
 oracledb.initOracleClient();
+oracledb.fetchAsBuffer = [oracledb.BLOB];
 
 export const pool = await oracledb.createPool({
   user: process.env.NODE_ORACLEDB_USER,

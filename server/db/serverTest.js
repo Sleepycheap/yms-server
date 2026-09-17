@@ -1,44 +1,5 @@
-// import { getOrgCodes } from "./handler.js";
-
-// console.log(await getOrgCodes());
-
 import { pool } from "../oracle/pool.js";
-
-// import {
-//   GetTrucks,
-//   runVerifyOrder,
-//   getLoadingShippingDetails,
-// } from "../oracle/oracleQueries.js";
-// import {
-//   g_shipping_order_details_rec,
-//   createGetTruckId,
-//   orderNumberType,
-// } from "../oracle/types.js";
-// // import { GetCatProdTypeRel } from "../oracle/procedures.js";
-// import {
-//   getColumnNames,
-//   insertIntoTable,
-//   getOrgCodes,
-//   getTruckList,
-//   dropTable,
-//   getScacCodes,
-// } from "./handler.js";
-// // import { db } from "./database.js";
-// import { Trucks } from "../models/Trucks.js";
-// import { OrgCodes } from "../models/OrgCodes.js";
-
-// import {
-//   GetTruckID,
-//   createOperatingInvIDFunc,
-//   createLoadingShippingProc,
-//   createGetIPPlant,
-//   createCustomTruckIDProc,
-//   createCustomGetDesc,
-// } from "../oracle/procedures.js";
-
-// const connection = await pool.getConnection();
-
-// console.log(await getLoadingShippingDetails());
+import axios from "axios";
 
 import {
   getOrgCodes,
@@ -46,23 +7,39 @@ import {
   getOperatingUnitID,
   validateOrder,
   getLoadingShippingDetails,
-  getTruckManifest,
+  // getTruckManifest,
   getLoadedTruckWeight,
   runOrderCreditCheck,
   // runContainerValidation,
-  runShowTruck,
+  // runShowTruck,
   updateTruckID,
   getAllContainersForOrder,
   getCustomerName,
   getTruckID,
   populateTrucks,
+  getAllOrdersByOrg,
+  creditCheck,
+  // propagateOrders,
+  verifyContainer,
+  // runOrderOnHold,
+  getUserID,
+  uploadTruckImage,
+  getTruckImage,
+  // truckImageTable,
+  getUnpickedContainersForOrder,
+  runTruckManifest,
+  getPromiseDate,
 } from "../oracle/functions.js";
 
 import {
   populateContainersByOrder,
-  getOrderDetails,
-  getOrderDetailsNoTruck,
+  // getOrderDetails,
+  // getOrderDetailsNoTruck,
   // deleteFromTable,
+  getOrderDetailsAll,
+  getOrderDetailsLoaded,
+  getOrderDetailsPicked,
+  getOrderDetailsUnpicked,
   dropTable,
   getScacCodes,
   getContainersByOrder,
@@ -74,77 +51,215 @@ import {
   PopulateTrucks,
   PopulateScac,
 } from "../oracle/oracleQueries.js";
+import { getWeight } from "../../client/yms-client/src/utils/apiFunctions.js";
+import oracledb from "oracledb";
 
-// import { loadContainer } from "../../client/yms-client/src/utils/apiFunctions.js";
+import { fileTypeFromBuffer, fileTypeFromFile } from "file-type";
+import { readChunk } from "read-chunk";
 
-// import { GetTrucks } from "../oracle/oracleQueries.js";
+import fs from "node:fs";
+import { join } from "node:path";
+import { Buffer } from "node:buffer";
+import { fileURLToPath } from "node:url";
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+const imagePath = join(dirname, "Truck1.jpg");
 
-// const test = await getLoadingShippingDetails(
-//   "ANN",
-//   2600429001,
-//   "2600429001T1",
-//   "S",
-//   "NULL",
-//   "NULL",
+// console.log(
+//   await getLoadingShippingDetails(
+//     "ANN",
+//     2600429001,
+//     "2600429001T1",
+//     "A",
+//     null,
+//     "MAY-15-26",
+//   ),
 // );
 
-// my user ID is 122452
+// console.log(await getOperatingUnitID("ANN"));
 
-// const test = await runShowTruck(2600429001, null, "10J", "ANN");
-// const test = await getTruckManifest("STJ", "TEST12345 06-14");
-
-// console.log(test);
-// SELECT * FROM APPS.XDP_OE_ORDER_DETAILS_V
-
-// const add = await updateTruckID(
-//   2600429001,
-//   "10M",
-//   "ANN",
-//   "ANN",
-//   null,
-//   "2600429001T1",
-//   "R",
-//   122452,
-//   "2600429001T1",
-//   "M",
-// );
-
-// const loadContainer
-
-// console.log("test", test[0].CONT_NAME);
-
-// async function test2() {
-//   const test = await getAllContainersForOrder(2600429001);
-//   for (let i = 0; i < test.length; i++) {
-//     const { CONT_NAME, ITEM_DESCRIPTION } = test[i];
-//     console.log("name", CONT_NAME, ITEM_DESCRIPTION);
-//   }
-// }
-
-// populateContainersByOrder(2600429001);
+// console.log(await validateOrder("ANN", 2600429001));
 
 // console.log(await getAllContainersForOrder(2600429001));
-// test2();
 
-// console.log(await getOrderDetailsNoTruck(2600429001));
+// console.log(await getUnpickedContainersForOrder(2600429001));
 
-// console.log(await getCustomerName(2600429001));
+// console.log(await getOrderDetailsLoaded(2600429001));
 
-// console.log(await populateTrucks("ANN"));
-// console.log(deleteFromTable("Trucks"));
+// console.log(await runTruckManifest("THE", "ACMAK652"));
 
-// console.log(await PopulateTrucks());
-// console.log(await getTruckID("ANN"));
+// console.log(await getPromiseDate(2600429001));
 
-// const test = await GetTrucks("ANN");
-// console.log("test", test);
+// console.log(await )
 
-// const test = await getCustomerName(2600429001);
+// console.log(test);
+// console.log(await validateOrder(41, 2600429069));
 
-// console.log(test[0]);
-// console.log(await PopulateScac());
+// console.log(await verifyContainer(2600429001, "10JJJJs"));
 
-// console.log(await getScacCodes());
-// console.log(await getContainersByOrder(2502262301));
+// const buffer = Buffer.from(imagePath, {});
 
-console.log(add);
+// console.log(imageBuffer);
+
+// const image = await getTruckImage(122452);
+// const { TRUCK_IMAGE } = image[0];
+
+// console.log(await fileTypeFromFile(TRUCK_IMAGE));
+
+// console.log(image);
+
+// console.log(await fileTypeFromBuffer(TRUCK_IMAGE));
+
+// const imageBlob = new Blob([imagePath], { type: "image/jpg" });
+
+// console.log(imageBlob);
+// const imageBuffer = fs.readFileSync(imagePath);
+// const imageObject = {
+//   TRUCK_ID: "2600429001T2",
+//   USER_ID: 122452,
+//   TRUCK_IMAGE: imageBuffer,
+// };
+// console.log("test", await uploadTruckImage(imageObject));
+
+// const table = await truckImageTable(data);
+
+// console.log(table);
+
+// const truckImage = await uploadTruckImage(imageObject);
+// console.log("test", truckImage);
+/*
+
+[
+  {
+    TRUCK_ID: '2600429001T1',
+    TRUCK_IMAGE: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 60 00 60 00 00 ff e1 30 ca 45 78 69 66 00 00 4d 4d 00 2a 00 00 00 08 00 04 01 31 00 02 00 00 00 0b 00 00 ... 49107 more bytes>,
+    CREATED_BY: 122452,
+    CREATION_DATE: 2026-08-26T20:02:32.000Z,
+    LAST_UPDATE_DATE: 2026-08-26T20:02:32.000Z,
+    LAST_UPDATED_BY: 122452
+  },
+  {
+    TRUCK_ID: '2600429001T1',
+    TRUCK_IMAGE: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 60 00 60 00 00 ff e1 30 ca 45 78 69 66 00 00 4d 4d 00 2a 00 00 00 08 00 04 01 31 00 02 00 00 00 0b 00 00 ... 49107 more bytes>,
+    CREATED_BY: 122452,
+    CREATION_DATE: 2026-08-26T20:04:30.000Z,
+    LAST_UPDATE_DATE: 2026-08-26T20:04:30.000Z,
+    LAST_UPDATED_BY: 122452
+  },
+  {
+    TRUCK_ID: 'PRIJ12345 082626',
+    TRUCK_IMAGE: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 60 00 60 00 00 ff e1 30 ca 45 78 69 66 00 00 4d 4d 00 2a 00 00 00 08 00 04 01 31 00 02 00 00 00 0b 00 00 ... 49107 more bytes>,
+    CREATED_BY: 122452,
+    CREATION_DATE: 2026-08-26T20:09:19.000Z,
+    LAST_UPDATE_DATE: 2026-08-26T20:09:19.000Z,
+    LAST_UPDATED_BY: 122452
+  },
+  {
+    TRUCK_ID: 'PRIJ12345 090126',
+    TRUCK_IMAGE: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 60 00 60 00 00 ff e1 30 ca 45 78 69 66 00 00 4d 4d 00 2a 00 00 00 08 00 04 01 31 00 02 00 00 00 0b 00 00 ... 49107 more bytes>,
+    CREATED_BY: 122452,
+    CREATION_DATE: 2026-09-01T16:14:03.000Z,
+    LAST_UPDATE_DATE: 2026-09-01T16:14:03.000Z,
+    LAST_UPDATED_BY: 122452
+  },
+  {
+    TRUCK_ID: '2600429001T1',
+    TRUCK_IMAGE: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 60 00 60 00 00 ff e1 30 ca 45 78 69 66 00 00 4d 4d 00 2a 00 00 00 08 00 04 01 31 00 02 00 00 00 0b 00 00 ... 49103 more bytes>,
+    CREATED_BY: 122452,
+    CREATION_DATE: 2026-09-10T19:58:34.000Z,
+    LAST_UPDATE_DATE: 2026-09-10T19:58:34.000Z,
+    LAST_UPDATED_BY: 122452
+  }
+]
+
+*/
+
+// console.log(await getTruckImages());
+// const b = test[0].TRUCK_IMAGE;
+
+// const buffer = await blob.arrayBuffer();
+
+// testBlob();
+
+// console.log(TestType.prototype);
+
+// const imgBuffer = fs.readFileSync(imagePath);
+
+// const connection = await pool.getConnection();
+
+// const TestType = await connection.getDbObjectClass(
+//   "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.G_TRUCK_IMG_RECORD",
+// );
+// console.log("TT", TestType);
+
+// const g_truck_img = ["2600429001T1", 122452, imgBuffer];
+
+// const g_truck = new TestType({
+//   TRUCK_ID: "2600429001T1",
+//   USER_ID: 122452,
+//   TRUCK_IMAGE: imgBuffer,
+// });
+
+// const g_truck = {
+//   TRUCK_ID: "2600429001T1",
+//   USER_ID: 122452,
+//   TRUCK_IMAGE: imgBuffer,
+// };
+
+// console.log("gtruck", g_truck);
+
+// const TableType = await connection.getDbObjectClass(
+//   "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.TRUCKIMGTABLE",
+// );
+
+// // console.log(g_truck.TRUCK_ID);
+
+// async function uploadTruckImage(imageObject) {
+//   const { TRUCK_ID, USER_ID, TRUCK_IMAGE } = imageObject;
+//   try {
+//     const connection = await pool.getConnection();
+//     const result = await connection.execute(
+//       `
+//       INSERT INTO XXBBNA_TRUCK_IMAGE (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) VALUES (:p1, :p2, :p3, SYSDATE, SYSDATE, :p6)`,
+//       [TRUCK_ID, TRUCK_IMAGE, USER_ID, USER_ID],
+//     );
+//     const { rows } = result;
+//     return rows;
+//   } catch (err) {
+//     console.log("there was an error uploading truck image", err.message);
+//   }
+// // }
+
+// const test = await uploadTruckImage(g_truck);
+// console.log(test);
+
+// const truckImage = new TestType({
+//   TRUCK_ID: "2600429001T1",
+//   USER_ID: 122452,
+//   TRUCK_IMAGE: imgBuffer,
+// });
+
+// const table = new TableType({
+//   TRUCK_ID: truckImage.TRUCK_ID,
+//   USER_ID: truckImage.USER_ID,
+//   TRUCK_IMAGE: truckImage.TRUCK_IMAGE,
+// });
+
+// console.log("table", table);
+
+// console.log(await uploadTruckImage(g_truck));
+
+// const test = async () => {
+//   try {
+//     const connection = await pool.getConnection();
+//     const result = await connection.execute(
+//       `SELECT * FROM XXBBNA_TRUCK_IMAGE WHERE CREATED BY = :id`,
+//       [122452],
+//     );
+//     const { rows } = result;
+//     return rows;
+//   } catch (err) {
+//     console.log("there was an error", err.message);
+//   }
+// };
+
+// console.log(await truckImage());

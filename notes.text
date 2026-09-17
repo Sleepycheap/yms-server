@@ -2,3 +2,93 @@ App starts on MainPage
 
 After Login Btn is clicked, app navigates to Truck Selection
 
+// XXSHIP_SCHD_BY_ORG has order_no, orgcode/id, shipping method, notes, shipping instructions, and header id
+
+// PRIJ12345 090126
+
+// SELECT * FROM XXWSH_TRUCK_SHIPMENT WHERE TRUCK_ID = 'PRIJ12345 090126'
+
+XXWSH_TRUCK_SHIPMENT shows whether a truck has been shipped or not. It also displays shipment type
+
+xxwsh_containers is all individual containers (packages)
+xxwsh_container_loading is a single aggregated for each container name
+
+SELECT * FROM XXWSH_CONTAINER_LOADING has everything except item description.
+wsh_delivery_details has Item_description, order_no, cont_name, delivery_detail_id, inventory_item_id
+
+mtl_system_items_b has inventory_item_id and description
+
+SELECT a.order_no, a.cont_name, a.ship_from_org_code, a.cont_gross_wt, a.cont_qty, a.truck_id_2, b.item_description, b.organization_id FROM xxwsh_containers a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id
+
+
+SELECT a.order_no, a.cont_name, a.cont_qty, a.cont_gross_wt, a.ship_from_org_code, a.truck_id_2, b.item_description, b.organization_id FROM xxbm_containers_v_tmp a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_no = 
+
+/*
+After assigning TruckID, container shows on xxwsh_container_loading
+*/
+
+/*
+// SELECT * FROM XXWSH_CONTAINERS WHERE ORDER_NO = '2600429001' AND CONT_NAME = '14J'
+This provides information for specific container in order. This table 
+
+*/
+
+
+// SELECT * FROM XXBM_PICK_STATUS_REPORT_VW WHERE order_number = '2600429001'
+/*
+SELECT * FROM xxwsh_containers
+This shows truck ID assigned to container
+SELECT * FROM XXWSH_CONTAINERS WHERE ORDER_NO = '2600429001'
+this shows all containers assigned to this truck ID
+*/
+
+/*
+SELECT * FROM wsh_delivery_details 912162
+This shows Item_description
+SELECT * FROM OE_ORDER_HEADERS_ALL WHERE HEADER_ID = '912162'
+Order number 2600429001 is header_id 40328120
+This ties order number to header_id maybe
+*/
+
+annville order numbers
+2601174101
+2601160601
+2601158101
+2601157001
+2601156101
+2600429001
+
+visalia order numbers
+2601196701
+2601141201
+2601128001
+2601127701
+2601125601
+
+monterrey order numbers
+2600380701
+2600201401
+2600132901
+2503172701
+2503172301
+
+st joseph order numbers
+2601187201
+2601177501
+2601158701
+2601151801
+2601137301
+
+Rainsville order numbers
+2601154601
+2601150401
+2601138601
+2601125701
+2601122501
+
+evansville order numbers
+2601182101
+2601175801
+2601174901
+2601149001
+2601148701

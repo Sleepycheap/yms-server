@@ -1,4 +1,4 @@
-import { pool } from "./pool.js";
+import { pool } from "../oracle/pool.js";
 import sql from "sql-template-tag";
 
 const connection = await pool.getConnection();

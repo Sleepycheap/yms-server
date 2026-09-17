@@ -13,17 +13,20 @@ import { truckLoader } from './utils/loaders'
 import Login from './features/user/Login'
 import Tests from './ui/Tests'
 import BarcodeScanner from './components/BarcodeScanner'
-import LoadTable from './features/load/LoadTable'
+// import LoadTable from './features/load/LoadTable'
 import Spinner from './components/Spinner'
 import { Toaster } from 'react-hot-toast'
+import Counter from './ui/Counter'
+import ScannerInterface from './pages/ScannerInterface'
 // import axios from 'axios'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // staleTime: 60 * 1000,
-      staleTime: 0
-    }
+      staleTime: 0,
+    },
+    
   }
 })
 
@@ -50,12 +53,16 @@ const router = createBrowserRouter([
       loader: truckLoader,
     },
     {
-      path: '/login',
-      element: <Login />
+      path: '/scanner',
+      element: <ScannerInterface />
     },
     {
       path: '/tests',
-      element: <LoadTable />
+      element: <Tests />
+    },
+    {
+      path: 'error',
+      element: <Error />
     }
 
   ]
@@ -77,7 +84,7 @@ function App() {
           duration: 3000,
         },
         error: {
-          duration: 5000
+          duration: 3000
         },
         style: {
           fontSize: "16px",

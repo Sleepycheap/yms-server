@@ -413,7 +413,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     --        Query extracted from   Package Loading Report
     --
 ----------------------------------------------------------------------------------------------------------------------
-    PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2, p_truck IN VARCHAR2, p_truck_details_cur OUT SYS_REFCURSOR);
+    PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2, p_truck IN VARCHAR2, p_truck_details OUT SYS_REFCURSOR);
 
   ----------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------

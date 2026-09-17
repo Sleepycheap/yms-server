@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setContainers } from './loadSlice'
+import { setContainers } from '../src/features/load/loadSlice'
 import axios from 'axios'
 import styles from './Containers.module.css'
-import Loader from '../../ui/Loader'
+import Loader from '../src/ui/Loader'
 import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getContainers, getScacCodes } from '../../utils/apiFunctions'
+import { getContainers, getScacCodes } from '../src/utils/apiFunctions'
 
 function Containers() {
   const [isLoading, setIsLoading] = useState(false)

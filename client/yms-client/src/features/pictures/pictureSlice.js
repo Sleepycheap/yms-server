@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   scannedTruck: null,
   scannedQRCode: '',
-  pictureTest: ''
+  scanBarCode: false,
+  scannedContainer: '',
+  scannedObject: null
 }
 
 const pictureSlice = createSlice({
@@ -16,13 +18,19 @@ const pictureSlice = createSlice({
     setScannedQRCode(state, action) {
       state.scannedTruck = action.payload
     },
-    setPictureTest(state, action) {
+    setScanBarCode(state, action) {
       state.pictureTest = action.payload
+    },
+    setScannedContainer(state, action) {
+      state.scannedContainer = action.payload
+    },
+    setScannedObject(state, action) {
+      state.scannedObject = action.payload
     }
   }
 })
 
-export const {setScannedTruck, setScannedQRCode, setPictureTest} = pictureSlice.actions;
+export const {setScannedTruck, setScannedQRCode, setScanBarCode, setScannedContainer, setScannedObject} = pictureSlice.actions;
 
 export default pictureSlice.reducer;
 

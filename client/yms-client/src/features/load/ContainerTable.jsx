@@ -1,46 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { getContainers, getScacCodes } from '../../utils/apiFunctions'
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../../ui/Loader'
 import styled from 'styled-components'
 import ContainerRow from './ContainerRow'
-import styles from './LoadTable.module.css'
+import styles from './ContainerTable.module.css'
+import TableOptions from '../../components/TableOptions'
+import { useSearchParams } from 'react-router-dom'
 // import Spinner from '../../components/Spinner'
 
-// const Table = styled.div`
-//   border: 2px solid oklch(55.1% 0.027 264.364);
-//   font-size: 1.4rem;
-//   background-color: oklch(96.7% 0.003 264.542);
-//   border-radius: 7px;
-//   overflow: hidden;
-// `
-
-// const TableHeader = styled.header`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-//   column-gap: 2.4rem;
-//   align-items: center;
-//   background-color: oklch(98.5% 0.002 247.839);
-//   border-bottom: 1px solid oklch(87.2% 0.01 258.338)
-//   text-transform: uppeercase;
-//   letter-spacing: 0.4px;
-//   font-weight: 600;
-//   color: oklch(44.6% 0.03 256.802)
-//   padding: 1.6rem 2.4re,;
-// `
 
 
 function LoadTable() { 
   const orderNumber = useSelector((state) => state.order.orderNumber)
-
-
-  // rder_number, cont_name, orgCode, direct_truck, user_id
-
-
-
+  const [searchParams] = useSearchParams()
   
-  const {isLoading, data: containers, error} = useQuery({
+  const {isLoading, data: containers, error: containerError} = useQuery({
     queryKey: ['containers', orderNumber],
     queryFn: async () => {
       const data = await getContainers(orderNumber)
@@ -48,11 +24,20 @@ function LoadTable() {
     }
   })
 
+  
   if (isLoading) return <Loader text={'containers'} />
 
-  return (
-    <div className={styles.main}>
+  const filterValue = searchParams.get('filter') || 'picked';
+  
+  let filteredContainers;
+  if (filterValue === 'loaded') filteredContainers = containers.filter((container) => container.direct_truck !== null )
+  if (filterValue === 'picked') filteredContainers = containers.filter((container) => container.direct_truck === null && container.cont_name !== null )
+  if (filterValue === 'unpicked') filteredContainers = containers.filter((container) => container.cont_name === null )
 
+  return (
+    <>
+    <TableOptions containers={containers}/>
+    <div className={styles.main}>
     <table role='table'>
     <thead role='row'>
       <tr>
@@ -67,12 +52,13 @@ function LoadTable() {
       </tr>
       </thead>
       <tbody>
-      {containers.map((container, index) => (
+      {filteredContainers.map((container, index) => (
         <ContainerRow container={container} key={index} />
       ))}
       </tbody>
   </table>
       </div>
+      </>
         ) 
 }
 

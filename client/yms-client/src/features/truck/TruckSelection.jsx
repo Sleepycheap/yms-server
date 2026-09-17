@@ -10,10 +10,15 @@ import axios from 'axios'
 import Button from "../../ui/Button";
 import BarcodeScanner from "../../components/BarcodeScanner";
 import TruckFooter from "../../ui/TruckFooter";
+import qrlogo from '../../assets/QrCode.png'
+import { verifyOrder, getTrucks } from "../../utils/apiFunctions";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 
 
-const url = 'http://localhost:8080/api'
+
+// const url = 'http://localhost:8080/api'
 
 
 
@@ -33,6 +38,7 @@ function TruckSelection() {
   const orderNumber = useSelector((state) => state.order.orderNumber)
   const trucks = useSelector((state) => state.truck.truckIDs)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     let array = [];
@@ -41,13 +47,8 @@ function TruckSelection() {
     async function truckList() {
       try {
         setError("");
-        const response = await axios.get(`${url}/trucks?org_code=${orgCode}`)
-        const {data} = response;
-        for (let i = 0; i < data.length; i++) {
-          const truckID = data[i]
-          array.push(truckID)
-        }
-        dispatch(setTruckIDs(array))        
+        const response = await getTrucks(orgCode)
+        dispatch(setTruckIDs(response))        
       } catch (err) {
         console.log('there was an error getting truck IDs', err.message)
         setError(err)
@@ -69,7 +70,7 @@ function TruckSelection() {
     dispatch(setSelectedTruck(e))
   }
 
-  function handleOrderSelect(e) {
+  async function handleOrderSelect(e) {
     dispatch(setOrderNumber(e))
   }
 
@@ -83,6 +84,22 @@ function TruckSelection() {
   
   function handleClick() {
     setCreateTruck(!createTruck)
+  }
+
+  function handleClear() {
+    if (selectedTruck) {
+      dispatch(setSelectedTruck(''))    
+    }
+  }
+
+  async function handleNext() {
+    const result = await verifyOrder(orgCode, orderNumber)
+    const {order_verified} = result
+    if (!order_verified) {
+      toast.error(`${orderNumber} does not belong to ${orgCode}`)
+    } else {
+      navigate('/load')
+    }  
   }
 
 
@@ -120,9 +137,11 @@ function TruckSelection() {
               <label className="text-2xl">Order Number</label>
               <input type='text' className="bg-gray-50 w-45 md:mr-1 text-center" value={orderNumber} onChange={e => handleOrderSelect(e.target.value)}/>
             </div>
-            <div id='scan-truck' className="row-start-3 flex justify-evenly sm:w-120">
+            <div id='scan-truck' className="row-start-3 flex justify-evenly sm:w-130">
               <label htmlFor='scan-truck' className="text-2xl">Scan Truck</label>
-              <button type='button' className="bg-gray-50 w-45 relative left-4 hover:bg-gray-200" onClick={startScan}>{result}</button>
+              <input type='text' className='bg-gray-50 w-45 relative left-12 justify-items-center placeholder:px-4 ' value={selectedTruck} placeholder='Scan or type truck id' onChange={e => handleTruckSelect(e.target.value)} onClick={handleClear}></input>
+              {/* <button onClick={handleClear} className="relative left-10">{selectedTruck ? "X" : ''}</button> */}
+              <button type='button' className="bg-gray-50 w-10 hover:cursor-pointer hover:shadow-2xl/30 hover:shadow-stone-900 hover:ring-2 hover:ring-gray-600 relative left-8" onClick={startScan}><img src={qrlogo}></img></button>
             </div>
             <div id='truck-id-select' className="row-start-4 flex justify-evenly sm:w-120">
               <label htmlFor='truck-id' className="text-2xl">Truck ID</label>
@@ -154,7 +173,7 @@ function TruckSelection() {
         <p className="flex flex-row ">
           <span>Truck ID: {selectedTruck}</span>
           <span>Order#: {orderNumber}</span>
-          <Button type='primary' to='load'>Next</Button>
+          <Button type='primary' onClick={handleNext}>Next</Button>
         </p>
       </div>
     )}  

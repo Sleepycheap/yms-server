@@ -40,6 +40,7 @@ export const getUserDetails = createAsyncThunk(
 
 const initialState = {
   username: '',
+  userID: '',
   orgCode: '',
   status: 'idle',
   admin: false,
@@ -59,7 +60,10 @@ const userSlice = createSlice({
     },
     setDate(state, action) {
       state.date = action.payload
-    }
+    },
+    setUserID(state, action) {
+      state.userID = action.payload
+    },
   },
   extraReducers: (builder) => 
     builder
@@ -77,7 +81,7 @@ const userSlice = createSlice({
     })
 })
 
-export const {updateName, updateOrgCode, setDate} = userSlice.actions
+export const {updateName, updateOrgCode, setDate, setUserID} = userSlice.actions
 
 export default userSlice.reducer;
 
