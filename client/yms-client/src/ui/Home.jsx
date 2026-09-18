@@ -79,14 +79,15 @@ function Home() {
 
   return (
     <div className="md:m-10">
-    {isLoading && (
+      <Button to='tests'>Click me</Button>
+    {/* {isLoading && (
       <Loader />
     )}
     {!isLoading && (
       <>
       <TruckSelection />
       </>
-    )}
+    )} */}
     </div>
   )
 

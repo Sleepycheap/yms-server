@@ -49,6 +49,7 @@ propagateRouter.post("/containers", async (req, res) => {
     const unpicked = await getUnpickedContainersForOrder(order_number);
 
     for (let i = 0; i < list.length; i++) {
+      const { DELIVERY_DETAIL_ID } = list[i];
       const { ORDER_NO } = list[i];
       const { CONT_NAME } = list[i];
       const { CONT_QTY } = list[i];
@@ -59,9 +60,10 @@ propagateRouter.post("/containers", async (req, res) => {
       const { ITEM_DESCRIPTION } = list[i];
 
       const result = db.prepare(
-        `INSERT INTO Containers (order_number, cont_name, cont_qty, cont_gross_wt, ship_from_org_code, direct_truck, ship_set_name, item_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Containers (delivery_detail_id, order_number, cont_name, cont_qty, cont_gross_wt, ship_from_org_code, direct_truck, ship_set_name, item_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       );
       result.run(
+        DELIVERY_DETAIL_ID,
         ORDER_NO,
         CONT_NAME,
         CONT_QTY,
@@ -74,6 +76,7 @@ propagateRouter.post("/containers", async (req, res) => {
     }
 
     for (let i = 0; i < unpicked.length; i++) {
+      const { DELIVERY_DETAIL_ID } = unpicked[i];
       const { ORDER_NUMBER } = unpicked[i];
       const { CONT_NAME } = unpicked[i];
       const CONT_QTY = null;
@@ -83,9 +86,10 @@ propagateRouter.post("/containers", async (req, res) => {
       const SHIP_SET_NAME = null;
       const { ITEM_DESCRIPTION } = unpicked[i];
       const result = db.prepare(
-        `INSERT INTO Containers (order_number, cont_name, cont_qty, cont_gross_wt, ship_from_org_code, direct_truck, ship_set_name, item_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Containers (delivery_detail_id, order_number, cont_name, cont_qty, cont_gross_wt, ship_from_org_code, direct_truck, ship_set_name, item_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       );
       result.run(
+        DELIVERY_DETAIL_ID,
         ORDER_NUMBER,
         CONT_NAME,
         CONT_QTY,

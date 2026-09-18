@@ -142,6 +142,7 @@ export async function getContNameByDescription(itemDescription) {
     return result;
   } catch (err) {
     console.log("error getting contname", err.message);
+    return { "error getting contname": err.message };
   }
 }
 
@@ -153,7 +154,22 @@ export async function getDescriptionByContName(contName) {
     const result = query.all(contName);
     return result;
   } catch (err) {
-    console.log("error getting contname", err.message);
+    console.log("error getting description", err.message);
+    return { "error getting description": err.message };
+  }
+}
+
+export async function getContainerByID(id) {
+  try {
+    const query = db.prepare(
+      `SELECT * FROM Containers WHERE delivery_detail_id = ?`,
+    );
+    const result = query.all(id);
+    console.log("result", result);
+    return result;
+  } catch (err) {
+    console.log("error getting container", err.message);
+    return { "error getting container": err.message };
   }
 }
 

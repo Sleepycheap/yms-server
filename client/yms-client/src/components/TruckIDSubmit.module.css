@@ -1,0 +1,16 @@
+/* .photoGrid {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; */
+  /* grid-template-areas: 
+    "titles"
+    "data" */
+
+/* 
+.gridHeaders {
+  display: grid;
+  grid-row-start: 1;
+  -ms-grid-column-span: ;
+  justify-content: space-evenly;
+  border: 2px solid black;
+} */

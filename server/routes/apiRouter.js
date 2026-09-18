@@ -12,6 +12,7 @@ import {
   getOrderDetailsAll,
   getContNameByDescription,
   getDescriptionByContName,
+  getContainerByID,
 } from "../db/handler.js";
 import {
   getLoadedTruckWeight,
@@ -113,6 +114,21 @@ apiRouter.get("/containers/:order_no", async (req, res) => {
   }
 });
 
+apiRouter.get("/container/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("id", id);
+  try {
+    const container = await getContainerByID(id);
+    console.log("container", container);
+    res.json(container);
+  } catch (err) {
+    res
+      .status(400)
+      .json({ "there was an error getting container": err.message });
+  }
+});
+
+// get containers from local by description
 apiRouter.get("/contname/:item_description", async (req, res) => {
   const { item_description } = req.params;
   try {

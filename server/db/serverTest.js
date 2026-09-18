@@ -43,6 +43,7 @@ import {
   dropTable,
   getScacCodes,
   getContainersByOrder,
+  getContainerByID,
 } from "./handler.js";
 
 import { db } from "./database.js";
@@ -74,6 +75,8 @@ const imagePath = join(dirname, "Truck1.jpg");
 //     "MAY-15-26",
 //   ),
 // );
+
+console.log(await getContainerByID(122940557));
 
 // console.log(await getOperatingUnitID("ANN"));
 

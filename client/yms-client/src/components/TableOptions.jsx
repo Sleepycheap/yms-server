@@ -31,7 +31,7 @@ function TableOptions({containers}) {
   // const cont_name = '1BT'
 
 
-  const containerName = scannedObject.cont_name;
+  const containerName = scannedObject?.cont_name;
 
   const {isLoading: assigning, mutate: assignContainer, status, } = useMutation({
   mutationFn: ({order_number, cont_name, orgCode, selectedTruck, userID}) => {

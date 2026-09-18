@@ -143,3 +143,13 @@ export async function getContainerDesc(cont_name) {
     return err.message
   }
 }
+
+export async function getContainerByID(id) {
+  try {
+    const response = await axios.get(`${url}/container/${id}`)
+    const {data} = response;
+    return data
+  } catch (err) {
+    return err.message
+  }
+}

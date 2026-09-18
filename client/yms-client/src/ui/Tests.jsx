@@ -9,25 +9,23 @@ import axios from "axios"
 import {useZxing} from 'react-zxing'
 import Camera from "../components/Camera"
 import Counter from "./Counter"
+import Modal from "./Modal"
+import ScanTruckBarcode from "../components/ScanTruckBarcode"
 
 // import { insideCircle, distanceTo, toLatLon, getLongitude } from "geolocation-utils";
 
 
 function Tests() {
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
-   <div>
-    <h1>Compount component test</h1>
-
-    <Counter>
-      <Counter.Decrease icon="-" />
-      <Counter.Count />
-      <Counter.Increase icon="+" />
-      {/* <Counter.Label>Counter</Counter.Label> */}
-    </Counter>
-
-   </div>
-
+    <div className="border-2 h-dvh">
+      <div className="flex">
+        <p>This is a test</p>
+      </div>
+      <button onClick={() => setIsOpenModal((show) => !show)}>Show Modal</button>
+      {isOpenModal && <Modal onClose={() => setIsOpenModal(false)}><ScanTruckBarcode onCloseModal={() => setIsOpenModal(false)}/> </Modal>}
+    </div>
   )
   
 }

@@ -5,6 +5,9 @@ import { unloadContainer, loadContainer, getWeight } from '../../utils/apiFuncti
 import { useState } from 'react';
 import Button from '../../ui/Button';
 import toast from 'react-hot-toast';
+import Modal from '../../ui/Modal';
+import ScanTruckBarcode from '../../components/ScanTruckBarcode';
+import TruckIDSubmit from '../../components/TruckIDSubmit';
 
 
 
@@ -13,7 +16,8 @@ import toast from 'react-hot-toast';
 function ContainerRow({container}) {
   const orgCode = useSelector((state) => state.user.orgCode)
   const [isLoaded, setIsLoaded] = useState(false)
-  const {cont_name, item_description, cont_qty, cont_gross_wt, direct_truck, order_number, shipping_instructions} = container;
+  const [isModalOpen, setIsOpenModal] = useState(false)
+  const {delivery_detail_id, cont_name, item_description, cont_qty, cont_gross_wt, direct_truck, order_number, shipping_instructions} = container;
   const userID = useSelector((state) => state.user.userID)
   const selectedTruck = useSelector((state) => state.truck.selectedTruck)
 
@@ -61,16 +65,17 @@ function ContainerRow({container}) {
     onError: (err) => toast.error(err.message) 
   })
 
-  // const {isLoading: loadingTruck, mutate: checkWeight} = useMutation({
-  //   mutationFn: (selectedTruck) => {
-  //     return getWeight(selectedTruck)
-  //   },
-  //   onSuccess: () => 
-  // })
-  
+  // console.log('container', container)
+
+  // function handleLoad() {
+    
+  // }
+
+//() => assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})} disabled={assigning}
 
   return (
-    
+    <>
+    {isModalOpen && <Modal  onClose={() => setIsOpenModal(false)}><TruckIDSubmit id={delivery_detail_id} onCloseModal={() => setIsOpenModal(false)}/> </Modal>}
     <tr>
       <td>{order_number}</td>
       <td>{cont_name}</td>
@@ -78,10 +83,11 @@ function ContainerRow({container}) {
       <td>{cont_qty}</td>
       <td>{cont_gross_wt}</td>
       <td>{shipping_instructions}</td>
-      <td><button className='hover:cursor-pointer'  onClick={() => assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})} disabled={assigning}>{direct_truck ? direct_truck : 'click'}</button></td>
+      <td><button className='hover:cursor-pointer'  onClick={() => setIsOpenModal(true)}>{direct_truck ? direct_truck : 'click'}</button></td>
       <td><button className='hover:cursor-pointer' onClick={() => unassignContainer({order_number, cont_name, orgCode, direct_truck, userID})} disabled={removing}>{direct_truck ? 'unload' : ''}</button></td>
 
     </tr>
+    </>
   )
 }
 

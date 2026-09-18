@@ -58,7 +58,7 @@ const router = createBrowserRouter([
     },
     {
       path: '/tests',
-      element: <Tests />
+      element: <NativeCamera />
     },
     {
       path: 'error',
