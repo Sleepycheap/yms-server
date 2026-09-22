@@ -62,8 +62,16 @@ import fs from "node:fs";
 import { join } from "node:path";
 import { Buffer } from "node:buffer";
 import { fileURLToPath } from "node:url";
-const dirname = fileURLToPath(new URL(".", import.meta.url));
+import { imageSize } from "image-size";
+const dirname = fileURLToPath(new URL("../uploads", import.meta.url));
+
 const imagePath = join(dirname, "Truck1.jpg");
+
+const otherPath = join(dirname, "available packages.png");
+
+console.log(dirname);
+
+console.log(otherPath);
 
 // console.log(
 //   await getLoadingShippingDetails(
@@ -76,7 +84,7 @@ const imagePath = join(dirname, "Truck1.jpg");
 //   ),
 // );
 
-console.log(await getContainerByID(122940557));
+// console.log(await getContainerByID(122940557));
 
 // console.log(await getOperatingUnitID("ANN"));
 
@@ -106,16 +114,24 @@ console.log(await getContainerByID(122940557));
 // const image = await getTruckImage(122452);
 // const { TRUCK_IMAGE } = image[0];
 
+// console.log(TRUCK_IMAGE, CREATION_DATE);
+// console.log(image);
+
 // console.log(await fileTypeFromFile(TRUCK_IMAGE));
 
 // console.log(image);
 
 // console.log(await fileTypeFromBuffer(TRUCK_IMAGE));
 
+// const dimensions = imageSize(TRUCK_IMAGE);
+// console.log(dimensions);
+
 // const imageBlob = new Blob([imagePath], { type: "image/jpg" });
 
 // console.log(imageBlob);
-// const imageBuffer = fs.readFileSync(imagePath);
+const imageBuffer = fs.readFileSync(otherPath);
+console.log(imageBuffer);
+
 // const imageObject = {
 //   TRUCK_ID: "2600429001T2",
 //   USER_ID: 122452,

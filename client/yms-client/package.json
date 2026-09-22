@@ -23,6 +23,9 @@
     "dotenv": "^17.4.2",
     "geolocation-utils": "^1.2.6",
     "html5-qrcode": "^2.3.8",
+    "idb": "^8.0.3",
+    "jsstore": "^4.9.0",
+    "localforage": "^1.10.0",
     "postcss": "^8.5.26",
     "react": "^19.2.0",
     "react-barcode-scanner": "^4.1.0",
@@ -34,7 +37,9 @@
     "react-zxing": "^3.0.0",
     "styled-components": "^6.5.3",
     "tailwindcss": "^4.3.3",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-externals": "^0.6.2",
+    "vite-plugin-file": "^1.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -49,6 +54,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vite-plugin-node-polyfills": "^0.28.0"
   }
 }

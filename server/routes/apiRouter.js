@@ -23,6 +23,8 @@ import {
   validateOrder,
   getAllContainersForOrder,
   getUnpickedContainersForOrder,
+  getTruckImage,
+  uploadTruckImage,
 } from "../oracle/functions.js";
 import { getText } from "../utils/tesseractOcr.js";
 import { getCustomerName } from "../oracle/functions.js";
@@ -45,6 +47,30 @@ apiRouter.get("/userID/:username", async (req, res) => {
     res
       .status(400)
       .json({ "there was an error getting username": err.message });
+  }
+});
+
+// get truck image by user
+apiRouter.get("/truckPhoto/:userid", async (req, res) => {
+  const { userid } = req.params;
+  try {
+    const result = await getTruckImage(userid);
+    const { TRUCK_IMAGE } = result[0];
+    const data = result[0];
+    res.json({ TRUCK_IMAGE, data: data });
+  } catch (err) {
+    res.json(err.message);
+  }
+});
+
+apiRouter.post("/truckPhoto", async (req, res) => {
+  const { truck_id, user_id, truck_image } = req.body;
+  const data = req.body;
+  try {
+    const result = await uploadTruckImage(data);
+    res.json(result);
+  } catch (err) {
+    res.json(err.message);
   }
 });
 

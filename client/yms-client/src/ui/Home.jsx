@@ -80,14 +80,14 @@ function Home() {
   return (
     <div className="md:m-10">
       <Button to='tests'>Click me</Button>
-    {/* {isLoading && (
+    {isLoading && (
       <Loader />
     )}
     {!isLoading && (
       <>
       <TruckSelection />
       </>
-    )} */}
+    )}
     </div>
   )
 

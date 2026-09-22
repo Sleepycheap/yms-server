@@ -11,20 +11,37 @@ import Camera from "../components/Camera"
 import Counter from "./Counter"
 import Modal from "./Modal"
 import ScanTruckBarcode from "../components/ScanTruckBarcode"
+import LocalStorageInterface from "../components/LocalStorageInterface"
+import { getTruckImage } from "../utils/apiFunctions"
+import { useSelector } from "react-redux"
 
 // import { insideCircle, distanceTo, toLatLon, getLongitude } from "geolocation-utils";
 
 
 function Tests() {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [imgSelected, setImgSelected] = useState(false)
+  const [image, setImage] = useState(null)
+  const userID = useSelector((state) => state.user.userID)
+
+  async function handleGet() {
+    const result = await getTruckImage(userID)
+    const {TRUCK_IMAGE} = result
+    // console.log(TRUCK_IMAGE)
+    const bytes = new Uint8Array(TRUCK_IMAGE.data)
+    const base64String = bytes.toBase64();
+    const img = `data:image/jpg;base64,${base64String}`
+    console.log(img)
+    setImgSelected(true)
+    setImage(img)
+  }
 
   return (
-    <div className="border-2 h-dvh">
-      <div className="flex">
-        <p>This is a test</p>
-      </div>
-      <button onClick={() => setIsOpenModal((show) => !show)}>Show Modal</button>
-      {isOpenModal && <Modal onClose={() => setIsOpenModal(false)}><ScanTruckBarcode onCloseModal={() => setIsOpenModal(false)}/> </Modal>}
+    // <LocalStorageInterface />
+
+    <div>
+      <h1>Image example</h1>
+      <button onClick={handleGet}>get image</button>
+      {imgSelected && <img src={image} className="w-200"></img>}
     </div>
   )
   

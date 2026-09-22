@@ -11,6 +11,12 @@ export async function getUserID(upn) {
   return data
 }
 
+export async function getTruckImage(userid) {
+  const response = await axios.get(`${url}/truckPhoto/${userid}`)
+  const {data} = response
+  return data
+}
+
 export async function getTrucks(org_code) {
   const response = await axios.get(`${url}/trucks?org_code=${org_code}`)
   const {data} = response;
@@ -35,11 +41,6 @@ export async function getContainers(orderNumber) {
   return data;
 }
 
-// export async function getLoadedContainers(orderNumber) {
-//   const response = await axios.get(`${url}/details/loaded/${orderNumber}`)
-//   const {data} = response;
-//   return data;
-// }
 
 export async function getFilteredContainers(orderNumber, filter) {
   const response = await axios.get(`${url}/details/${orderNumber}?filter=${filter}`)
@@ -124,6 +125,19 @@ try {
   }
 }
 
+export async function submitTruckImage(truck_id, user_id, truck_image) {
+  try {
+    const response = await axios.post(`${url}/truckPhoto`, {truck_id: truck_id, user_id: user_id, truck_image: truck_image}, {maxBodyLength: Infinity, maxContentLength: Infinity})
+    const {data} = response
+    // const response = await uploadTruckImage(truck_id, user_id, truck_image)
+    console.log(`photo has successfully been submitted for ${truck_id}`)
+    return data
+  } catch (error) {
+    const err = error.response.data
+    throw new Error(err)
+  }
+}
+
 export async function getContainerName(item_description) {
   try {
     const response = await axios.get(`${url}/contname/${item_description}`);
@@ -148,6 +162,16 @@ export async function getContainerByID(id) {
   try {
     const response = await axios.get(`${url}/container/${id}`)
     const {data} = response;
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export async function testPicPath() {
+  try {
+    const response = await axios.get(`${url}/photoTest`)
+    const {data} = response
     return data
   } catch (err) {
     return err.message

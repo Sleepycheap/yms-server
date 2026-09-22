@@ -4,10 +4,14 @@ import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import { insertIntoTable } from "../db/handler.js";
 import { db } from "../db/database.js";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 // import { dir } from "node:console";
 dotenv.config({ path: "../server/.env" });
-
+const dirname = fileURLToPath(new URL("../uploads", import.meta.url));
 const connection = await pool.getConnection();
+
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 oracledb.fetchAsBuffer = [oracledb.BLOB];
 
@@ -35,10 +39,18 @@ export async function getOperatingUnitID(orgCode) {
   }
 }
 
+/*
+to display the image on frontend, do this:
+    const result = await getTruckImage(userID)
+    const bytes = new Uint8Array(result.data)
+    const base64String = bytes.toBase64();
+    const img = `data:image/jpg;base64,${base64String}`
+*/
+
 export async function getTruckImage(userId) {
   try {
     const result = await connection.execute(
-      `SELECT * FROM XXBBNA_TRUCK_IMAGE WHERE CREATED_BY = :id`,
+      `SELECT * FROM XXBBNA_TRUCK_IMAGE WHERE CREATED_BY = :id ORDER BY CREATION_DATE DESC`,
       [userId],
       { fetchInfo: { TRUCK_IMAGE: { type: oracledb.BUFFER } } },
     );
@@ -62,13 +74,19 @@ await uploadTruckImage(imageObject);
 */
 
 export async function uploadTruckImage(imageObject) {
+  const { truck_id, user_id, truck_image } = imageObject;
+  console.log("ti", truck_image);
+  const imagePath = join(dirname, truck_image);
+  console.log("ip", dirname, imagePath);
+  const imageBuffer = fs.readFileSync(imagePath);
+  console.log("ib", imageBuffer);
+
   try {
-    const { TRUCK_ID, USER_ID, TRUCK_IMAGE } = imageObject;
     const sql = `INSERT INTO XXBBNA_TRUCK_IMAGE (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) VALUES (:p1, :p2, :p3, SYSDATE, SYSDATE, :p3)`;
     const binds = {
-      p1: TRUCK_ID,
-      p2: { val: TRUCK_IMAGE, type: oracledb.BUFFER, dir: oracledb.BIND_IN },
-      p3: USER_ID,
+      p1: truck_id,
+      p2: { val: imageBuffer, type: oracledb.BUFFER, dir: oracledb.BIND_IN },
+      p3: user_id,
     };
     const options = { autoCommit: true };
     const result = await connection.execute(sql, binds, options);
