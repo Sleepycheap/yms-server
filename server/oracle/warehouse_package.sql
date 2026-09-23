@@ -111,7 +111,7 @@ FUNCTION AfterReport RETURN BOOLEAN;
         order_number     NUMBER
     );
 
-    TYPE g_truck_img_record IS RECORD(
+    TYPE truck_image_rec IS RECORD(
         truck_id      VARCHAR2(30),
         user_id       NUMBER,
         truck_image   BLOB
@@ -224,7 +224,11 @@ FUNCTION AfterReport RETURN BOOLEAN;
   TYPE g_truck_manifest_tbl IS TABLE OF g_truck_manifest_rec
         INDEX BY BINARY_INTEGER;
 
-  TYPE truckimgtable IS TABLE OF g_truck_img_record
+--   TYPE truckimg_status IS OBJECT (
+--         status VARCHAR2(50),
+--         success BOOLEAN
+--   )  ;
+  TYPE truck_image_tbl IS TABLE OF truck_image_rec
         INDEX BY BINARY_INTEGER;
 
     /*TYPE questions_table IS TABLE OF g_questions_record
@@ -425,7 +429,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     --      procedure: This procedure upload Truck image into table xxbbna_truck_image
     --
 ----------------------------------------------------------------------------------------------------------------------
-    PROCEDURE xxbbna_upload_truck_image(p_image IN truckimgtable, x_status OUT VARCHAR2);
+    PROCEDURE xxbbna_upload_truck_image(p_truck_id IN VARCHAR2, p_truck_image IN xxbbna_truck_image.truck_image%type, p_user_id IN NUMBER, x_status OUT VARCHAR2, x_success OUT BOOLEAN);
 
  ----------------------------------------------------------------------------------------------------------------------
     --      Name: xxbbna_category_questions

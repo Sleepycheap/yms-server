@@ -36,13 +36,13 @@ function Tests() {
   }
 
   return (
-    // <LocalStorageInterface />
+    <LocalStorageInterface />
 
-    <div>
-      <h1>Image example</h1>
-      <button onClick={handleGet}>get image</button>
-      {imgSelected && <img src={image} className="w-200"></img>}
-    </div>
+    // <div>
+    //   <h1>Image example</h1>
+    //   <button onClick={handleGet}>get image</button>
+    //   {imgSelected && <img src={image} className="w-200"></img>}
+    // </div>
   )
   
 }

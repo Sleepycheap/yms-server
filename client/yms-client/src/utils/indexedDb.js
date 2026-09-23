@@ -1,5 +1,7 @@
 let db;
 
+//creates db if first time opening
+//otherwise accesses db and sets to db
 export function openDb() {
   const req = window.indexedDB.open('YMSClient')
   req.onsuccess = function(e) {
@@ -13,8 +15,9 @@ export function openDb() {
 
   req.onupgradeneeded = function (e) {
     console.log('opendb.onupgradeneeded')
+    // id is 'delivery_detail_id' of containers
     const store = e.currentTarget.result.createObjectStore(
-      'truckPhotos', {autoIncrement: true}
+      'truckPhotos', {keyPath: 'id'}
     )
     store.createIndex('user', 'user', {unique: false})
     store.createIndex('container', 'container', {unique: false})
@@ -30,10 +33,14 @@ export function getObjectStore() {
   })
 }
 
+// clears entire store
 export function clearObjectStore() {
+  openDb()
   return new Promise((resolve, reject) => {
     let msg = ''
-    const store = getObjectStore('truckPhotos', 'readwrite')
+    // const store = getObjectStore('truckPhotos', 'readwrite')
+    const tx = db.transaction('truckPhotos', 'readwrite')
+    const store = tx.objectStore('truckPhotos')
     const req = store.clear()
     req.onsuccess = function(e) {
       msg = 'Store cleared'
@@ -47,6 +54,28 @@ export function clearObjectStore() {
   })
 }
 
+
+// deletes one item by its ID
+export function deleteItemByID(id) {
+  openDb()
+  let msg 
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('truckPhotos', 'readwrite')
+    const store = tx.objectStore('truckPhotos')
+    const req = store.delete(id)
+
+    req.onsuccess = function() {
+      msg = `Item ${id} successfully deleted`
+      resolve(msg)
+    }
+    req.onerror = function(e) {
+      msg = `Error deleting item: ${e.target.error}`
+      reject(err)
+    }
+  })
+}
+
+// adds item to db
 export function addToDB(object) {
   openDb()
   return new Promise((resolve, reject) => {
@@ -73,6 +102,7 @@ export function addToDB(object) {
   })
 }
 
+// deletes db
 export function deleteDB(name) {
   return new Promise((resolve, reject) => {
 
@@ -92,6 +122,8 @@ export function deleteDB(name) {
   })
 }
 
+// gets item by provided idex
+// currently only looking at container index
 export function getItemByIndex(item) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction('truckPhotos', 'readonly')
@@ -108,6 +140,7 @@ export function getItemByIndex(item) {
   })
 }
 
+// gets all items
 export function getAllItems() {
   return new Promise((resolve, reject) => {
     const tx = db.transaction('truckPhotos', 'readonly');
@@ -120,11 +153,13 @@ export function getAllItems() {
       reject(e.target.error)
     }
   })
-  // console.log('results2', results)
 }
 
 
-
+/*
+await getItemById(delivery_detail_id)
+*/
+// gets one item by its ID
 export function getItemById(id) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction('truckPhotos', 'readonly');

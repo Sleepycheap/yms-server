@@ -364,7 +364,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
       mo_global.set_policy_context('S', lv_org_id);
     END;
 
-   
+
     --
     -- Based on p_process_type = Truck pull the data  --Truck data should be there for process_type = T or O or S
     --
@@ -771,7 +771,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
 
     --log(l_prc,'END - l_order_details.count = ' || l_order_details.count);
 
-   
+
   EXCEPTION
     WHEN others THEN
       dbms_output.put_line(sqlerrm);
@@ -838,7 +838,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
 
 
     dbms_output.put_line(p_assigntype);
-    
+
 
 
 
@@ -873,7 +873,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
       END;
     END IF;
 
-    
+
 
     SELECT fresp.responsibility_id, fresp.application_id
     INTO   l_resp_id, resp_appl_id
@@ -906,7 +906,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
         dbms_output.put_line(lv_status);
         -- ROLLBACK;
         -- RETURN;
-       
+
         WHEN NO_DATA_FOUND THEN
         lv_status := 'container not found';
         -- RETURN;
@@ -2364,41 +2364,40 @@ PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
   --      procedure: This procedure upload Truck image into table xxbbna_truck_image
   --
   ----------------------------------------------------------------------------------------------------------------------
-  PROCEDURE xxbbna_upload_truck_image(p_image IN truckimgtable, x_status OUT VARCHAR2) IS
-    -- Local variable declaration
-    --
-    lv_status        VARCHAR2(1);
-    l_image_rec_type xxbbna_warehouse_process_pkg.truckimgtable;
+  PROCEDURE xxbbna_upload_truck_image(p_truck_id IN VARCHAR2, p_truck_image IN xxbbna_truck_image.truck_image%type, p_user_id IN NUMBER, x_status OUT VARCHAR2, x_success OUT BOOLEAN) IS
+    truckimg_type_err EXCEPTION;
   BEGIN
-    l_image_rec_type := p_image;
 
-    FOR l_rec IN 1 .. l_image_rec_type.count LOOP
-      BEGIN
-        INSERT INTO xxbbna_truck_image
-          (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by)
-        VALUES
-          (l_image_rec_type(l_rec).truck_id,
-           l_image_rec_type(l_rec).truck_image,
-           l_image_rec_type(l_rec).user_id,
-           SYSDATE,
-           SYSDATE,
-           l_image_rec_type(l_rec).user_id);
+    INSERT INTO xxbbna_truck_image (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) 
+    VALUES (p_truck_id, p_truck_image, p_user_id, SYSDATE, SYSDATE, p_user_id);
+    COMMIT;
 
-        lv_status := 'S';
-        x_status  := lv_status;
-      EXCEPTION
-        WHEN others THEN
-          dbms_output.put_line('Exception ------ ' || sqlerrm);
-          lv_status := 'F';
-          x_status  := lv_status;
-      END xxbbna_upload_truck_image;
-    END LOOP;
-  EXCEPTION
-    WHEN others THEN
-      dbms_output.put_line('Exception ------ ' || sqlerrm);
-      lv_status := 'F';
-      x_status  := lv_status;
-  END xxbbna_upload_truck_image;
+    dbms_output.put_line('Insert was Successful!');
+      x_status := 'Truck image was successfully inserted!';
+      x_success := TRUE;
+      -- l_status := x_status;
+      -- l_success := x_success;
+    --   END;
+    -- END LOOP;
+    EXCEPTION
+      WHEN truckimg_type_err THEN
+      dbms_output.put_line('Exception:'|| sqlerrm);
+      x_status := 'Truck Image is not correct type. Make sure it is a BLOB';  
+      x_success := FALSE;
+      -- l_status := x_status;
+      -- l_success := x_success;
+
+      WHEN others THEN
+      dbms_output.put_line('Exception:' || sqlerrm);
+      x_status := sqlerrm;
+      x_success := FALSE;
+      -- l_status := x_status;
+      -- l_success := x_success;
+  END xxbbna_upload_truck_image;  
+
+
+
+
 
   ----------------------------------------------------------------------------------------------------------------------------
   -- Procedure for getting all the Single Point Orgs from the FND Lookups

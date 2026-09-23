@@ -31,6 +31,15 @@ import { getCustomerName } from "../oracle/functions.js";
 
 const apiRouter = express.Router();
 
+class ApiError extends Error {
+  constructor(message, data = {}) {
+    super(message);
+    this.code = data.code;
+    this.statusCode = data.statusCode || 500;
+    this.details = data.details || null;
+  }
+}
+
 // tests connection to SQLite DB
 apiRouter.get("/", (req, res) => {
   res.status(200).json({ status: "connected to DB" });
@@ -63,14 +72,22 @@ apiRouter.get("/truckPhoto/:userid", async (req, res) => {
   }
 });
 
+// upload truck image
 apiRouter.post("/truckPhoto", async (req, res) => {
   const { truck_id, user_id, truck_image } = req.body;
   const data = req.body;
   try {
     const result = await uploadTruckImage(data);
+    console.log("result", result);
+    if (result.errorName)
+      throw new ApiError("Error uploading truck photo", {
+        code: result.errorName,
+        statusCode: 422,
+        details: result.errorMsg,
+      });
     res.json(result);
   } catch (err) {
-    res.json(err.message);
+    res.status(422).json(err);
   }
 });
 

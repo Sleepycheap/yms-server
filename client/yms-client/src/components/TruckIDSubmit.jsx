@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux"
-import { getContainerByID, getContainers, submitTruckImage, testPicPath } from "../utils/apiFunctions";
+import { getContainerByID, getContainers, loadContainer, submitTruckImage, testPicPath } from "../utils/apiFunctions";
 import { useEffect } from "react";
 import qrlogo from '../assets/QrCode.png'
 // import check from '../assets/checkmark.jpg'
 import ScanTruckBarcode from "./ScanTruckBarcode";
 import { useState } from "react";
 import styles from './TruckIDSubmit.module.css'
-import { addToDB, getItemByIndex} from "../utils/indexedDb";
+import { openDb, getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID } from "../utils/indexedDb"
 import Button from "../ui/Button";
 import toast from "react-hot-toast";
 import { Buffer } from "node:buffer";
@@ -18,20 +18,44 @@ import axios from "axios";
 This component will allow the user to confirm the information of the container being submitted is correct, and allow either barcode scanning, or camera/photo upload
 */
 
-function TruckIDSubmit({id, onCloseModal}) {
+function TruckIDSubmit({id, onCloseModal, assignContainer}) {
   const [truckPhoto, setTruckPhoto] = useState(null)
   const [scanning, setScanning] = useState(false)
   const [photo, setPhoto] = useState(null)
   const [photoSubmitted, setPhotoSubmitted] = useState(false)
+  const [photoUploaded, setPhotoUploaded] = useState(false)
+  const [localPhoto, setLocalPhoto] = useState(null)
   // const [imageName, setImageName] = useState('')
   const username = useSelector((state) => state.user.username)
   const userID = useSelector((state) => state.user.userID)
   const orderNumber = useSelector((state) => state.order.orderNumber)
   const selectedTruck = useSelector((state) => state.truck.selectedTruck)
   const scannedContainer = useSelector((state) => state.picture.scannedContainer)
+  const orgCode = useSelector((state) => state.user.orgCode)
   
   
+  useEffect(() => {
+    async function getPhotoFromLocal() {
+      const item = await getItemById(id)
+      // console.log('item', item)
+      if (!item){
+        console.log(`no local photo for ${id}`)
+        return;
+      } 
+      console.log('item', item.image_name)
+      const {truck_image, image_name} = item;
+      setLocalPhoto(truck_image)
 
+      setPhotoSubmitted(true)
+      const photo = {
+        truck_id: selectedTruck, truck_image: image_name
+      }
+      setTruckPhoto(photo)
+    } 
+    
+
+    getPhotoFromLocal()
+  }, [])
 
   const {isLoading, data:container, error} = useQuery({
       queryKey: ['containers', orderNumber],
@@ -41,8 +65,9 @@ function TruckIDSubmit({id, onCloseModal}) {
       },
       select: (containers) => containers.find((container) => container.delivery_detail_id === id)
     })
-    
+
   const {delivery_detail_id, cont_name, cont_qty, cont_gross_wt, item_description, order_number, shipping_instructions} = container;
+
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -66,7 +91,7 @@ function TruckIDSubmit({id, onCloseModal}) {
     try {
       const res = await axios.post('http://localhost:8080', fd)
       const {data} = res
-      console.log('data', data)
+      // console.log('data', data)
       // setImageName(data)
       return data
     } catch (err) {
@@ -81,17 +106,19 @@ function TruckIDSubmit({id, onCloseModal}) {
         // console.log('file', file)
         const data = await convertToBase64(file)
         setPhoto(data)
+        const imageName = await convertForSubmit(file)
         // const id = crypto.randomUUID()
         const object = {
+          id: delivery_detail_id,
           user: username,
           orderNumber,
           container: cont_name,
           truck_id: selectedTruck,
           scanned: scannedContainer ? true : false,
-          truck_image: data
+          truck_image: data,
+          image_name: imageName
         }
         
-        const imageName = await convertForSubmit(file)
         
         const notif = addToDB(object)
         // console.log('test', notif)
@@ -103,7 +130,7 @@ function TruckIDSubmit({id, onCloseModal}) {
 
         // const truck_image = convertToBuffer(data)
 
-        // console.log('image name', imageName)
+        console.log('image name', imageName)
 
         const photo = {
           truck_id: selectedTruck, truck_image: imageName
@@ -120,18 +147,29 @@ function TruckIDSubmit({id, onCloseModal}) {
   }
 
   async function handleSubmit(truckPhoto) {
+    console.log(truckPhoto)
     const {truck_id, truck_image} = truckPhoto
     const user_id = userID
     try {
       const result = await submitTruckImage(truck_id, user_id, truck_image)
+      setPhotoUploaded(true)
+      // handleClose()
+      assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
+      deleteItemByID(id)
       onCloseModal()
     } catch (err) {
-      console.log('error submitting', err.message)
-      toast.error('error submitting', err.message)
+      console.log('error submitting', err.payload)
+      console.log('test', err)
+      toast.error(err.message)
     }
   }
     
+  // async function handleClose() {
+  //   if (!photoUploaded) return 'photo upload needed'
 
+  //   assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
+  //   onCloseModal()
+  // }
 
 
   return (
@@ -189,7 +227,7 @@ function TruckIDSubmit({id, onCloseModal}) {
           {/* <span className="w-5"></span> */}
           <input className="relative self-center hover:cursor-pointer" id="camera-input" type="file" accept="image/" capture='environment' onChange={handleCapture} />
           </div>
-          <img className="w-20 h-10 col-start-3 row-start-2" src={photo} />
+          <img className="w-20 h-10 col-start-3 row-start-2" src={localPhoto || photo} />
           {photoSubmitted && <Button type='secondary' onClick={() => handleSubmit(truckPhoto)}>Confirm</Button>}
         </div>
 

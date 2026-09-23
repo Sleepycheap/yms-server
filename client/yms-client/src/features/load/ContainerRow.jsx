@@ -75,7 +75,7 @@ function ContainerRow({container}) {
 
   return (
     <>
-    {isModalOpen && <Modal  onClose={() => setIsOpenModal(false)}><TruckIDSubmit id={delivery_detail_id} onCloseModal={() => setIsOpenModal(false)}/> </Modal>}
+    {isModalOpen && <Modal  onClose={() => setIsOpenModal(false)}><TruckIDSubmit id={delivery_detail_id} onCloseModal={() => setIsOpenModal(false)} assignContainer={assignContainer}/> </Modal>}
     <tr>
       <td>{order_number}</td>
       <td>{cont_name}</td>

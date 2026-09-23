@@ -63,15 +63,88 @@ import { join } from "node:path";
 import { Buffer } from "node:buffer";
 import { fileURLToPath } from "node:url";
 import { imageSize } from "image-size";
-const dirname = fileURLToPath(new URL("../uploads", import.meta.url));
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const imagePath = join(dirname, "Truck1.jpg");
 
-const otherPath = join(dirname, "available packages.png");
+const image2 = join(dirname, "Truck2.jpg");
 
-console.log(dirname);
+// const otherPath = join(dirname, "available packages.png");
 
-console.log(otherPath);
+// console.log(dirname);
+
+// console.log(otherPath);
+const imageBuffer = fs.readFileSync(image2);
+// console.log(typeof imageBuffer);
+
+const imageObject = {
+  truck_id: "2600429001T1",
+  user_id: 122452,
+  truck_image: "Truck2.jpg",
+};
+
+// const connection = await pool.getConnection();
+const test = await uploadTruckImage(imageObject);
+
+console.log(test);
+
+// const RecType = await connection.getDbObjectClass(
+//   "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.TRUCK_IMAGE_REC",
+// );
+
+// console.log(RecType._objType.attributes);
+
+// RecType._objType.attributes
+// [
+//   {
+//     name: 'TRUCK_ID',
+//     type: [DbType DB_TYPE_VARCHAR],
+//     maxSize: 30,
+//     typeName: 'VARCHAR2'
+//   },
+//   {
+//     name: 'USER_ID',
+//     type: [DbType DB_TYPE_NUMBER],
+//     precision: 0,
+//     scale: -127,
+//     typeName: 'NUMBER',
+//     converter: [Function: defaultNumberConverter]
+//   },
+//   {
+//     name: 'TRUCK_IMAGE',
+//     type: [DbType DB_TYPE_BLOB],
+//     typeName: 'BLOB'
+//   }
+// ]
+
+// const TableType = await connection.getDbObjectClass(
+//   "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.TRUCK_IMAGE_TBL",
+// );
+
+// const rec = new RecType({
+//   TRUCK_ID: "2600429001T1",
+//   USER_ID: 122452,
+//   TRUCK_IMAGE: imageBuffer,
+// });
+
+// const tbl = new TableType();
+
+// tbl.append(rec);
+
+// console.log(tbl);
+
+// async function testTypes() {
+//   const connection = await pool.getConnection();
+//   const ImageType = await connection.getDbObjectClass(
+//     "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.TRUCK_IMAGE_REC",
+//   );
+//   const TestType = await connection.getDbObjectClass(
+//     "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.G_LOADED_TRUCK_DETAILS_REC",
+//   );
+//   console.log(ImageType);
+// }
+
+// testTypes();
 
 // console.log(
 //   await getLoadingShippingDetails(
@@ -129,8 +202,8 @@ console.log(otherPath);
 // const imageBlob = new Blob([imagePath], { type: "image/jpg" });
 
 // console.log(imageBlob);
-const imageBuffer = fs.readFileSync(otherPath);
-console.log(imageBuffer);
+// const imageBuffer = fs.readFileSync(otherPath);
+// console.log(imageBuffer);
 
 // const imageObject = {
 //   TRUCK_ID: "2600429001T2",

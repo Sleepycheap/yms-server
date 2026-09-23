@@ -1,4 +1,4 @@
-import { openDb, getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById } from "../utils/indexedDb"
+import { openDb, getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID } from "../utils/indexedDb"
 import { useEffect, useState } from "react"
 import Button from "../ui/Button"
 import toast from "react-hot-toast"
@@ -16,7 +16,6 @@ function LocalStorageInterface() {
     setIsLoading(true)
     async function getItems() {
       const req = await getAllItems()
-      console.log('req', req)
       setItems(req)
     }
 
@@ -106,19 +105,25 @@ function LocalStorageInterface() {
     
   }
 
-  function handleGet() {
+  async function handleGet() {
     // const id = searchTerm
-    getItemById(1)
+    const item = await getItemById(122946514)
+    console.log(item)
   }
 
-  console.log('items', items)
+  async function handleDeleteOne() {
+    const result = await deleteItemByID(122946514)
+    console.log(result)
+  }
 
   return (
     <div>
       <h1>Interface for interacting with indexedDb </h1>
       <Button type='primary' onClick={handleOpen}>open db</Button>
       {/* <Button type='primary' onClick={handleGetStore}>get store</Button> */}
-      <Button type='primary' onClick={handleAdd}>add to db</Button>
+      {/* <Button type='primary' onClick={handleAdd}>add to db</Button>
+       */}
+      <Button type='primary' onClick={handleDeleteOne}>delete 1</Button>      
       <Button type='primary' onClick={handleDelete}>delete store</Button>
       <Button type='primary' onClick={handleOpenStore}>see store</Button>
       <Button type='primary' onClick={handleDeleteDb}>delete db</Button>

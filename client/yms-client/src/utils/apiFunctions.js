@@ -4,6 +4,14 @@ import axios from 'axios'
 const url = 'http://localhost:8080/api';
 const propUrl = 'http://localhost:8080/propagate'
 
+class ClientError extends Error {
+  constructor(message, data = {}) {
+    super(message);
+    this.code = data.code;
+    this.statusCode = data.statusCode || 500;
+    this.details = data.details || null;
+  }
+}
 
 export async function getUserID(upn) {
   const response = await axios.get(`${url}/userID/${upn}`)
@@ -129,12 +137,16 @@ export async function submitTruckImage(truck_id, user_id, truck_image) {
   try {
     const response = await axios.post(`${url}/truckPhoto`, {truck_id: truck_id, user_id: user_id, truck_image: truck_image}, {maxBodyLength: Infinity, maxContentLength: Infinity})
     const {data} = response
-    // const response = await uploadTruckImage(truck_id, user_id, truck_image)
-    console.log(`photo has successfully been submitted for ${truck_id}`)
     return data
   } catch (error) {
     const err = error.response.data
-    throw new Error(err)
+      throw new ClientError('Error submitting Photo. Make sure file is a correct image format', {
+        code: "Check Image Format Type",
+        details: err.details
+      })
+    // if (err.code !== 'NJS-011') {
+    //   throw new Error(err.message)
+    // }
   }
 }
 

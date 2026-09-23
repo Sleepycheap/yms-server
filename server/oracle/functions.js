@@ -17,6 +17,7 @@ oracledb.fetchAsBuffer = [oracledb.BLOB];
 
 // const packageName = "XXBBNA_WAREHOUSE_PROCESS_PKG";
 const pkg = process.env.PACKAGENAME;
+const typeDec = `INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG`;
 
 const userID = 122452;
 
@@ -73,26 +74,61 @@ const imageObject = {
 await uploadTruckImage(imageObject);
 */
 
+// export async function uploadTruckImage(imageObject) {
+//   const { truck_id, user_id, truck_image } = imageObject;
+//   const imagePath = join(dirname, truck_image);
+//   const imageBuffer = fs.readFileSync(imagePath);
+//   // console.log("ib", imageBuffer);
+
+//   try {
+//     const sql = `INSERT INTO XXBBNA_TRUCK_IMAGE (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) VALUES (:p1, :p2, :p3, SYSDATE, SYSDATE, :p3)`;
+//     const binds = {
+//       p1: truck_id,
+//       p2: { val: imageBuffer, type: oracledb.BUFFER, dir: oracledb.BIND_IN },
+//       p3: user_id,
+//     };
+//     const options = { autoCommit: true };
+//     const result = await connection.execute(sql, binds, options);
+//     return result;
+//   } catch (err) {
+//     console.log("there was an error uploading truck image", err.message);
+//   }
+// }
+
+// uploads truck image using proc, and returns status and success of operation
 export async function uploadTruckImage(imageObject) {
   const { truck_id, user_id, truck_image } = imageObject;
-  console.log("ti", truck_image);
   const imagePath = join(dirname, truck_image);
-  console.log("ip", dirname, imagePath);
   const imageBuffer = fs.readFileSync(imagePath);
-  console.log("ib", imageBuffer);
 
   try {
-    const sql = `INSERT INTO XXBBNA_TRUCK_IMAGE (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) VALUES (:p1, :p2, :p3, SYSDATE, SYSDATE, :p3)`;
-    const binds = {
-      p1: truck_id,
-      p2: { val: imageBuffer, type: oracledb.BUFFER, dir: oracledb.BIND_IN },
-      p3: user_id,
-    };
-    const options = { autoCommit: true };
-    const result = await connection.execute(sql, binds, options);
-    return result;
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_upload_truck_image(:truck_id, :image, :user_id, :status, :success);
+      END;`,
+      {
+        truck_id,
+        // truck_image,
+        image: {
+          val: imageBuffer,
+          type: oracledb.BUFFER,
+          dir: oracledb.BIND_IN,
+        },
+        user_id,
+        status: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        success: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_BOOLEAN },
+      },
+    );
+    return result.outBinds;
   } catch (err) {
-    console.log("there was an error uploading truck image", err.message);
+    const errorName = err.message.split(":")[0];
+    const errorMsg = err.message.split(":")[1];
+    const error = {
+      errorName,
+      errorMsg,
+    };
+    return error;
+    // When image is incorrect type there was an error uploading truck image NJS-011: encountered bind value and type mismatch
   }
 }
 
