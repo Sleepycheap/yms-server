@@ -13,13 +13,10 @@ import { Environment } from "../models/Environment.js";
 import { SinglePointOrgMap } from "../models/SinglePointOrgMap.js";
 import { Containers } from "../models/Containers.js";
 import { OrgCodes } from "../models/OrgCodes.js";
-import {
-  PopulateOrgCode,
-  PopulateScac,
-  PopulateTrucks,
-} from "../oracle/oracleQueries.js";
+import { PopulateOrgCode, PopulateScac, PopulateTrucks } from "./handler.js";
 import { ScacTable } from "../models/ScacTable.js";
 import { Trucks } from "../models/Trucks.js";
+import { Orders } from "../models/Orders.js";
 import { dropManyTables } from "./handler.js";
 
 const tables = [
@@ -30,6 +27,7 @@ const tables = [
   "IPConfiguration",
   "IsPhotoTaken",
   "Log",
+  "Orders",
   "OrgCodes",
   "ProductType",
   "ProductTypeAnswers",
@@ -60,6 +58,7 @@ export function init() {
     SignatureImg().create;
     SinglePointOrgMap().create;
     TruckImage().create;
+    Orders().create;
     OrgCodes().create;
     Trucks().create;
     console.log("All tables created");

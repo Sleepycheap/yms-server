@@ -1,8 +1,13 @@
 // import { createScacTable } from "../oracle/functions.js";
-import { GetTrucks } from "../oracle/oracleQueries.js";
+// import { GetTrucks } from "../oracle/oracleQueries.js";
 import { db } from "./database.js";
 import { pool } from "../oracle/pool.js";
-import { getAllContainersForOrder } from "../oracle/functions.js";
+import {
+  getAllContainersForOrder,
+  getOrgCodes as getCodes,
+  getScacCodesByOrg,
+  getTruckID,
+} from "../oracle/functions.js";
 
 /*
 INTEGER - Integer
@@ -371,26 +376,72 @@ export class TableMapping {
 //const map = new TableMapping(ProductTypeAnswers);
 //map.tableName returns TableName of table model passed into tablemapping function
 
-// export async function getUserDetails() {
-//   return {
-//     FirstName: await getFirstName(),
-//     LastName: await getLastName(),
-//     PrincipalName: await getPrincipalName(),
-//     domainName = await getDomainName()
-//   }
-// }
+//
+export async function PopulateOrgCode() {
+  const list = await getCodes();
+  console.log("list", list);
+  let changes = 0;
+  try {
+    for (let i = 0; i < list.length; i++) {
+      try {
+        const { ORGANIZATION_CODE } = list[i];
+        const { ORGANIZATION_ID } = list[i];
+        const result = insertIntoTable(
+          "OrgCodes",
+          `('${ORGANIZATION_ID}', '${ORGANIZATION_CODE}')`,
+        );
+        changes++;
+      } catch (err) {
+        console.log("Org Codes list error", err.message);
+      }
+    }
+  } catch (err) {
+    console.log("Org Codes fn error", err.message);
+  }
+  console.log(`Updated OrgCodes with ${changes} total changes`);
+}
 
-// export async function populateOrg() {
-//   const organizationCodeList = [];
-//   const orgResponse = await GetOrgResponse();
-//   for (let i = 0; i < orgResponse.length; i++) {
-//     const org_code = [i].orgCode;
-//     organizationCodeList.push(org_code)
-//   }
-//   organizationCodeList.splice(0, 0, org_code)
+export async function PopulateTrucks() {
+  const orgCodes = ["ANN", "VIS", "JAC", "MTY", "STJ", "RAI", "EVA"];
+  console.log("starting populate");
+  const obj = { org: "", truckid: "" };
+  const del = db.prepare("DELETE FROM Trucks");
+  del.run();
+  try {
+    for (let i = 0; i < orgCodes.length; i++) {
+      const trucks = await getTruckIDByOrg(orgCodes[i]);
+      const org = orgCodes[i];
+      for (let i = 0; i < trucks.length; i++) {
+        const { TRUCK_ID } = trucks[i];
+        const newObj = { ...obj, org: org, truckid: TRUCK_ID };
+        console.log("obj", newObj);
+        const values = `('${newObj.truckid}', '${newObj.org}')`;
+        console.log("values", values);
+        insertIntoTable("Trucks", values);
+        console.log(`populate finished for ${org}`);
+      }
+    }
+  } catch (err) {
+    console.log("error populating trucks", err.message);
+  }
+}
 
-//   /*
-//   Implement some function to get computer name of device. If device name matches Org Code, set that Org Code as default
-//   */
-
-// }
+export async function PopulateScac() {
+  const del = db.prepare("DELETE FROM ScacTable");
+  del.run();
+  const result = await getScacCodesByOrg();
+  console.log("result", result);
+  try {
+    for (let i = 0; i < result.length; i++) {
+      const { SCAC_CODE } = result[i];
+      const { CARRIER_NAME } = result[i];
+      // console.log(SCAC_CODE, CARRIER_NAME);
+      const values = `('${SCAC_CODE}', '${CARRIER_NAME.replace(/'/g, "")}')`;
+      console.log("values", values);
+      insertIntoTable("ScacTable", values);
+      // console.log("scac tables populated");
+    }
+  } catch (err) {
+    console.log("error populating scac", err.message);
+  }
+}

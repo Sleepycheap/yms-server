@@ -27,10 +27,13 @@ propagateRouter.post("/truckids", async (req, res) => {
   try {
     const del = db.prepare(`DELETE FROM Trucks`);
     del.run();
+    // const list = await getTruckID(org_code);
     const list = await getTruckID(org_code);
+    // console.log(list);
     for (let i = 0; i < list.length; i++) {
       const { TRUCK_ID } = list[i];
-      insertIntoTable("Trucks", `('${TRUCK_ID}')`);
+      // console.log(TRUCK_ID);
+      insertIntoTable("Trucks", `('${TRUCK_ID}', '${org_code}')`);
     }
     // console.log("result", result);
     res.json("successfully inserted truckids into local table");

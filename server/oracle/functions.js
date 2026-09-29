@@ -48,17 +48,65 @@ to display the image on frontend, do this:
     const img = `data:image/jpg;base64,${base64String}`
 */
 
-export async function getTruckImage(userId) {
+// export async function getTruckImage(userId) {
+//   try {
+//     const result = await connection.execute(
+//       `SELECT * FROM XXBBNA_TRUCK_IMAGE WHERE CREATED_BY = :id ORDER BY CREATION_DATE DESC`,
+//       [userId],
+//       { fetchInfo: { TRUCK_IMAGE: { type: oracledb.BUFFER } } },
+//     );
+//     const { rows } = result;
+//     return rows;
+//   } catch (err) {
+//     console.log("there was an error getting truck image", err.message);
+//   }
+// }
+
+// checks if there any images on the truck. Returns an object with exist boolean and an array of images
+
+/*
+This will allow the images to be displayed on front end if desired
+
+  async function handleGet() {
+    let array = []
+    const result = await getTruckImage(userID)
+    const {exist} = result;
+    const imgs = result.images;
+    for (let i = 0; i < imgs.length; i++) {
+      const {TRUCK_IMAGE} = imgs[i]
+      const bytes = new Uint8Array(TRUCK_IMAGE.data)
+      const base64String = bytes.toBase64();
+      const img = `data:image/jpg;base64,${base64String}`
+      array.push(img)
+    }
+    setImgSelected(true)
+    setImages(array)
+  }
+*/
+
+export async function getTruckImage(userID) {
   try {
     const result = await connection.execute(
-      `SELECT * FROM XXBBNA_TRUCK_IMAGE WHERE CREATED_BY = :id ORDER BY CREATION_DATE DESC`,
-      [userId],
-      { fetchInfo: { TRUCK_IMAGE: { type: oracledb.BUFFER } } },
+      `BEGIN
+        ${pkg}.xxbbna_get_truck_image(:user, :exist, :images);
+      END;`,
+      {
+        user: userID,
+        exist: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_BOOLEAN },
+        images: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
     );
-    const { rows } = result;
-    return rows;
+    const rImages = result.outBinds.images;
+    const imageRows = await rImages.getRows();
+    await rImages.close();
+    const e = result.outBinds.exist;
+    const outObj = {
+      exist: e,
+      images: imageRows,
+    };
+    return outObj;
   } catch (err) {
-    console.log("there was an error getting truck image", err.message);
+    console.log("there was an error getting image", err.message);
   }
 }
 
@@ -73,27 +121,6 @@ const imageObject = {
 };
 await uploadTruckImage(imageObject);
 */
-
-// export async function uploadTruckImage(imageObject) {
-//   const { truck_id, user_id, truck_image } = imageObject;
-//   const imagePath = join(dirname, truck_image);
-//   const imageBuffer = fs.readFileSync(imagePath);
-//   // console.log("ib", imageBuffer);
-
-//   try {
-//     const sql = `INSERT INTO XXBBNA_TRUCK_IMAGE (truck_id, truck_image, created_by, creation_date, last_update_date, last_updated_by) VALUES (:p1, :p2, :p3, SYSDATE, SYSDATE, :p3)`;
-//     const binds = {
-//       p1: truck_id,
-//       p2: { val: imageBuffer, type: oracledb.BUFFER, dir: oracledb.BIND_IN },
-//       p3: user_id,
-//     };
-//     const options = { autoCommit: true };
-//     const result = await connection.execute(sql, binds, options);
-//     return result;
-//   } catch (err) {
-//     console.log("there was an error uploading truck image", err.message);
-//   }
-// }
 
 // uploads truck image using proc, and returns status and success of operation
 export async function uploadTruckImage(imageObject) {
@@ -119,6 +146,7 @@ export async function uploadTruckImage(imageObject) {
         success: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_BOOLEAN },
       },
     );
+    // fs.unlink(imagePath);
     return result.outBinds;
   } catch (err) {
     const errorName = err.message.split(":")[0];
@@ -180,15 +208,14 @@ export async function verifyContainer(orderNo, cont) {
 
 // procedure example
 // returns Scac Codes based on organization
-export async function getScacCodesByOrg(orgCode) {
+export async function getScacCodesByOrg() {
   try {
     // oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT; moved to top to see if affects all functions
     const result = await connection.execute(
       `BEGIN
-      ${pkg}.xxbbna_warehouse_scac_code(:x_org_code, :x_scac_cur);
+      ${pkg}.xxbbna_warehouse_scac_code(:x_scac_cur);
       END;`,
       {
-        x_org_code: orgCode,
         x_scac_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
       },
     );
@@ -201,54 +228,23 @@ export async function getScacCodesByOrg(orgCode) {
   }
 }
 
-export function GetProductTypes() {
-  const query = `SELECT product_type_id, product_type from XXBM_TRKLOADVER_PRD_TYPE`;
-  return query;
-}
-
-export function GetCategoryProductTypes() {
-  const query = `SELECT CATEGORY_PRD_TYPE_REL_ID, CATEGORY, PRODUCT_TYPE_ID from XXBM_TRKLOADVER_CAT_TYPE`;
-  return query;
-}
-
-export function GetProductTypeQuestions() {
-  const query = `SELECT product_type_ques_id, product_type_id, question FROM XXBM_TRKLOADVER_PRD_TYPE_QN`;
-  return query;
-}
-
-export function GetProductTypeAnswers() {
-  const query = `SELECT product_type_answer_id, product_type_ques_id, answers FROM XXBM_TRKLOADVER_PRD_TYPE_ans`;
-  return query;
-}
-
-export function GetCatProdTypeRel() {
-  const query = `SELECT category_prd_type_rel_id, CATEGORY, product_type_id FROM XXBM_TRKLOADVER_CAT_TYPE`;
-  return query;
-}
-
-export function GetOrgCode() {
-  const query = `SELECT mp.organization_code, mp.organization_id
-    FROM   mtl_parameters mp
-    WHERE  mp.organization_code IN ('ANN', 'EVA', 'STJ', 'VIS', 'JAC', 'MTY', 'RAI')`;
-  return query;
-}
-
-export function GetScacCode() {
-  const query = `SELECT scac_code, carrier_name FROM (SELECT scac_code,
-                   carrier_name,
-                   CASE
-                     WHEN c.scac_code IN
-                          ('PSTO', 'SQCH', 'TFEJ', 'MAV1', 'MTLA', 'WSXI', 'WSXI', 'TMCD', 'PRIJ', 'SWIT', 'MTBC') THEN
-                      1
-                     ELSE
-                      2
-                   END name_order
-            FROM   apps.wsh_carriers_v C
-            WHERE  c.active = 'A'
-            AND    c.scac_code IS NOT NULL
-            --and
-            ORDER  BY 3, 2 ASC) x`;
-  return query;
+export async function getAnswers() {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_product_type_answers(:answers);
+      END;`,
+      {
+        answers: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const rs = result.outBinds.answers;
+    const rows = await rs.getRows();
+    await rs.close();
+    return rows;
+  } catch (err) {
+    console.log("error getting answers", err.message);
+  }
 }
 
 // returns all org codes
@@ -272,7 +268,7 @@ export async function getOrgCodes() {
 }
 
 // returns all truck id for specified org
-export async function getTruckIDByOrg(orgCode) {
+export async function getTruckID(orgCode) {
   try {
     const result = await connection.execute(
       `BEGIN
@@ -296,18 +292,23 @@ export async function getTruckIDByOrg(orgCode) {
 export async function validateOrder(orgCode, orderNumber) {
   try {
     const result = await connection.execute(
-      `SELECT DISTINCT ship_from_org_code, order_no FROM xxwsh_container_loading WHERE ship_from_org_code = :p1 AND order_no = :p2 `,
+      `BEGIN
+        :orderValid := ${pkg}.xxbbna_warehouse_valid_order(:org, :order);
+      END;`,
       {
-        p1: orgCode,
-        p2: orderNumber,
+        org: orgCode,
+        order: orderNumber,
+        orderValid: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_BOOLEAN },
       },
     );
-    const { rows } = result;
-    return rows;
+    const { outBinds } = result;
+    return outBinds;
   } catch (err) {
-    console.log("error validating order", err.message);
+    console.log("There was an error validating order", err.message);
   }
 }
+
+////
 
 /*
 this appears to be working
@@ -339,7 +340,6 @@ this appears to be working
 ]
 
 */
-
 export async function getLoadingShippingDetails(
   orgCode,
   orderNumber,
@@ -365,7 +365,7 @@ export async function getLoadingShippingDetails(
     );
     const rs = result.outBinds.p_order_details_cur;
     // let row;
-    const rows = await rs.getRows(1);
+    const rows = await rs.getRows();
     console.log("rows", rows);
     await rs.close();
     return rows;
@@ -374,27 +374,7 @@ export async function getLoadingShippingDetails(
   }
 }
 
-// export async function getTruckManifest(orgCode, truckID) {
-//   try {
-//     const result = await connection.execute(
-//       `BEGIN
-//         ${pkg}.xxbbna_truck_manifest_proc(:p_org_code, :p_truck, :p_truck_details_cur);
-//       END;`,
-//       {
-//         p_org_code: orgCode,
-//         p_truck: truckID,
-//         p_truck_details_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
-//       },
-//     );
-//     const rs = result.outBinds.p_truck_details_cur;
-//     const rows = await rs.getRows();
-//     await rs.close();
-//     return rows;
-//   } catch (err) {
-//     console.log("error getting truck manifest", err.message);
-//   }
-// }
-
+// returns report of items on truck
 export async function runTruckManifest(orgCode, truckID) {
   try {
     const result = await connection.execute(
@@ -404,17 +384,14 @@ export async function runTruckManifest(orgCode, truckID) {
       {
         org: orgCode,
         truck: truckID,
-        cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+        cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
       },
       {
         fetchArraySize: 1000,
       },
     );
-    // console.log(result);
     const resultSet = result.outBinds.cursor;
     const rows = await resultSet.getRows();
-    console.log("rows", rows);
-    console.log("internal", resultSet.metaData);
     await resultSet.close();
     return rows;
   } catch (err) {
@@ -423,14 +400,33 @@ export async function runTruckManifest(orgCode, truckID) {
 }
 
 // gets gross weight and gross qty from selected truck
+// export async function getLoadedTruckWeight(truckID) {
+//   try {
+//     const result = await connection.execute(
+//       `SELECT SUM(cont_qty) cont_qty, SUM(cont_gross_wt) cont_gross_wt FROM xxwsh_containers where truck_id_2 = :truckID`,
+//       { truckID },
+//     );
+//     const { rows } = result;
+//     return rows;
+//   } catch (err) {
+//     console.log("there was an error getting truck weight", err.message);
+//   }
+// }
+
 export async function getLoadedTruckWeight(truckID) {
   try {
     const result = await connection.execute(
-      `SELECT SUM(cont_qty) cont_qty, SUM(cont_gross_wt) cont_gross_wt FROM xxwsh_containers where truck_id_2 = :truckID`,
-      { truckID },
+      `BEGIN
+        ${pkg}.xxbbna_truck_weight_qty_proc(:truck, :weight, :qty);
+      END;`,
+      {
+        truck: truckID,
+        weight: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        qty: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
     );
-    const { rows } = result;
-    return rows;
+    const { outBinds } = result;
+    return outBinds;
   } catch (err) {
     console.log("there was an error getting truck weight", err.message);
   }
@@ -595,65 +591,65 @@ export async function getCustomerName(orderNumber) {
 }
 
 // gets truck id by orgcode
-export async function getTruckID(orgCode) {
-  try {
-    const result = await connection.execute(
-      `SELECT truck_id  FROM   (SELECT xts.truck_id
-    FROM   xxwsh_truck_shipment xts
-    WHERE  xts.ship_date IS NULL
-    AND    xts.shipment_type = 'I'
-    AND    EXISTS
-    (SELECT 1
-    FROM xxwsh_container_loading xcl,
-                    xxwsh_containers xc,
-                    wsh.wsh_delivery_details wdd
-                    WHERE  xcl.ship_from_org_code = :order_number
-                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
-                    AND    xc.order_no = xcl.order_no
-                    AND    xc.ship_from_org_code = xcl.ship_from_org_code
-                    AND    xc.cont_name = xcl.cont_name
-                    AND    xc.ship_set_name = xcl.ship_set_name
-                    AND    ((xcl.truck_id_1 = xts.truck_id AND xc.truck_id_1 = xcl.truck_id_1) OR
-                    (xcl.staged_truck_id = xts.truck_id AND xc.staged_truck_id = xcl.staged_truck_id))
-                    AND    wdd.delivery_detail_id = xc.delivery_detail_id
-                    AND    wdd.released_status = 'Y')
-                    UNION
-                    SELECT xts.truck_id
-                    FROM   xxwsh_truck_shipment xts
-                    WHERE  xts.ship_date IS NULL
-                    AND    xts.shipment_type = 'S'
-                    AND    EXISTS (SELECT 1
-                    FROM   xxwsh_container_loading xcl
-                    WHERE  xcl.ship_set_name LIKE '%' || :order_number
-                    AND    xcl.truck_id_2 = xts.truck_id
-                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y')
-                    UNION -- direct, no single point
-                    SELECT xts.truck_id
-                    FROM   xxwsh_truck_shipment xts
-                    WHERE  xts.ship_date IS NULL
-                    AND    xts.shipment_type = 'S'
-                    AND    EXISTS (SELECT 1
-                    FROM   xxwsh_container_loading xcl,
-                    xxwsh_containers xc,
-                    wsh.wsh_delivery_details wdd
-                    WHERE  xcl.ship_from_org_code = :order_number
-                    AND    xcl.truck_id_2 = xts.truck_id
-                    AND    xcl.ship_set_name IS NULL
-                    AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
-                    AND    xc.order_no = xcl.order_no
-                    AND    xc.ship_from_org_code = xcl.ship_from_org_code
-                    AND    xc.cont_name = xcl.cont_name
-                    AND    xc.ship_set_name IS NULL
-                    AND    wdd.delivery_detail_id = xc.delivery_detail_id
-                    AND    wdd.released_status = 'Y'))`,
-      [orgCode],
-    );
-    const { rows } = result;
-    return rows;
-  } catch (err) {
-    console.log("There was an error getting truck IDs", err.message);
-  }
-}
+// export async function getTruckID(orgCode) {
+//   try {
+//     const result = await connection.execute(
+//       `SELECT truck_id  FROM   (SELECT xts.truck_id
+//     FROM   xxwsh_truck_shipment xts
+//     WHERE  xts.ship_date IS NULL
+//     AND    xts.shipment_type = 'I'
+//     AND    EXISTS
+//     (SELECT 1
+//     FROM xxwsh_container_loading xcl,
+//                     xxwsh_containers xc,
+//                     wsh.wsh_delivery_details wdd
+//                     WHERE  xcl.ship_from_org_code = :order_number
+//                     AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
+//                     AND    xc.order_no = xcl.order_no
+//                     AND    xc.ship_from_org_code = xcl.ship_from_org_code
+//                     AND    xc.cont_name = xcl.cont_name
+//                     AND    xc.ship_set_name = xcl.ship_set_name
+//                     AND    ((xcl.truck_id_1 = xts.truck_id AND xc.truck_id_1 = xcl.truck_id_1) OR
+//                     (xcl.staged_truck_id = xts.truck_id AND xc.staged_truck_id = xcl.staged_truck_id))
+//                     AND    wdd.delivery_detail_id = xc.delivery_detail_id
+//                     AND    wdd.released_status = 'Y')
+//                     UNION
+//                     SELECT xts.truck_id
+//                     FROM   xxwsh_truck_shipment xts
+//                     WHERE  xts.ship_date IS NULL
+//                     AND    xts.shipment_type = 'S'
+//                     AND    EXISTS (SELECT 1
+//                     FROM   xxwsh_container_loading xcl
+//                     WHERE  xcl.ship_set_name LIKE '%' || :order_number
+//                     AND    xcl.truck_id_2 = xts.truck_id
+//                     AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y')
+//                     UNION -- direct, no single point
+//                     SELECT xts.truck_id
+//                     FROM   xxwsh_truck_shipment xts
+//                     WHERE  xts.ship_date IS NULL
+//                     AND    xts.shipment_type = 'S'
+//                     AND    EXISTS (SELECT 1
+//                     FROM   xxwsh_container_loading xcl,
+//                     xxwsh_containers xc,
+//                     wsh.wsh_delivery_details wdd
+//                     WHERE  xcl.ship_from_org_code = :order_number
+//                     AND    xcl.truck_id_2 = xts.truck_id
+//                     AND    xcl.ship_set_name IS NULL
+//                     AND    NVL(xcl.btlr_ship_confirm, 'N') != 'Y'
+//                     AND    xc.order_no = xcl.order_no
+//                     AND    xc.ship_from_org_code = xcl.ship_from_org_code
+//                     AND    xc.cont_name = xcl.cont_name
+//                     AND    xc.ship_set_name IS NULL
+//                     AND    wdd.delivery_detail_id = xc.delivery_detail_id
+//                     AND    wdd.released_status = 'Y'))`,
+//       [orgCode],
+//     );
+//     const { rows } = result;
+//     return rows;
+//   } catch (err) {
+//     console.log("There was an error getting truck IDs", err.message);
+//   }
+// }
 
 export async function populateTrucks(orgcode) {
   const list = await getTruckID(orgcode);
@@ -675,12 +671,13 @@ This would be called by query.getRows()
 export async function getAllOrdersByOrg(orgCode) {
   try {
     const query = await connection.execute(
-      // `SELECT DISTINCT order_number, shipping_org FROM XXBM_PICK_STATUS_REPORT_VW WHERE released_status = 'Y' AND SHIPPING_ORG = :SHIPPING_ORG`,
-      `SELECT DISTINCT order_number, shipping_org FROM XXBM_PICK_STATUS_REPORT_VW WHERE SHIPPING_ORG = :SHIPPING_ORG`,
+      `SELECT order_no, ship_from_org_code, truck_id_2 from XXWSH_CONTAINER_LOADING where ship_from_org_code = :orgcode ORDER BY creation_date DESC`,
       [orgCode],
       { resultSet: true },
     );
-    return query.resultSet;
+    const { resultSet } = query;
+    const results = resultSet.getRows(20);
+    return results;
   } catch (err) {
     console.log("error getting orders", err.message);
   }
@@ -738,3 +735,51 @@ export async function loadVerificationType() {
   );
   const test = new VerifyType({});
 }
+
+// export async function GetOrgCode(req, res) {
+//   try {
+//     const connection = await pool.getConnection();
+//     const query = proc.GetOrgCode();
+//     const { rows } = await connection.execute(query);
+//     return rows;
+//     await connection.close();
+//   } catch (err) {
+//     res.send({ error: err.message });
+//   }
+// }
+// populates local tables with org code data
+
+/*
+
+export function GetProductTypes() {
+  const query = `SELECT product_type_id, product_type from XXBM_TRKLOADVER_PRD_TYPE`;
+  return query;
+}
+
+export function GetCategoryProductTypes() {
+  const query = `SELECT CATEGORY_PRD_TYPE_REL_ID, CATEGORY, PRODUCT_TYPE_ID from XXBM_TRKLOADVER_CAT_TYPE`;
+  return query;
+}
+
+export function GetProductTypeQuestions() {
+  const query = `SELECT product_type_ques_id, product_type_id, question FROM XXBM_TRKLOADVER_PRD_TYPE_QN`;
+  return query;
+}
+
+export function GetProductTypeAnswers() {
+  const query = `SELECT product_type_answer_id, product_type_ques_id, answers FROM XXBM_TRKLOADVER_PRD_TYPE_ans`;
+  return query;
+}
+
+export function GetCatProdTypeRel() {
+  const query = `SELECT category_prd_type_rel_id, CATEGORY, product_type_id FROM XXBM_TRKLOADVER_CAT_TYPE`;
+  return query;
+}
+
+export function GetOrgCode() {
+  const query = `SELECT mp.organization_code, mp.organization_id
+    FROM   mtl_parameters mp
+    WHERE  mp.organization_code IN ('ANN', 'EVA', 'STJ', 'VIS', 'JAC', 'MTY', 'RAI')`;
+  return query;
+}
+  */

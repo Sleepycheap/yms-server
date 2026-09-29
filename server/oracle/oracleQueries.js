@@ -9,7 +9,7 @@ import {
   getOrgCodes,
 } from "../db/handler.js";
 import { CategoryProductRel } from "../models/CategoryProductRel.js";
-import { getTruckID } from "./functions.js";
+// import { getTruckID } from "./functions.js";
 
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
@@ -97,21 +97,21 @@ export async function PopulateScac() {
   }
 }
 
-export async function GetTrucks(orgCode) {
-  let list = [];
-  try {
-    // const connection = await pool.getConnection();
-    // const query = proc.GetTruckID(orgCode);
-    const query = await getTruckID(orgCode);
-    for (let i = 0; i < query.length; i++) {
-      const { TRUCK_ID } = query[i];
-      list.push(TRUCK_ID);
-    }
-    return list;
-  } catch (err) {
-    console.log("error", err.message);
-  }
-}
+// export async function GetTrucks(orgCode) {
+//   let list = [];
+//   try {
+//     // const connection = await pool.getConnection();
+//     // const query = proc.GetTruckID(orgCode);
+//     const query = await getTruckID(orgCode);
+//     for (let i = 0; i < query.length; i++) {
+//       const { TRUCK_ID } = query[i];
+//       list.push(TRUCK_ID);
+//     }
+//     return list;
+//   } catch (err) {
+//     console.log("error", err.message);
+//   }
+// }
 
 async function getTrucksPre(orgcode) {
   try {

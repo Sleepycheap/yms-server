@@ -108,7 +108,7 @@ function TruckSelection() {
     {scanQR && (
       <div className="grid grid-rows-2 grid-cols-3">
         <div className="row-start-1 col-start-2">
-          <BarcodeScanner setResult={setResult} result={result} />
+          <BarcodeScanner setResult={setResult} result={result} stopScan={stopScan} />
         </div>
         <div className="row-start-2 col-start-2">
           <Button type='primary' onClick={stopScan}>Go Back</Button>
@@ -149,7 +149,7 @@ function TruckSelection() {
                   <option value="">
                     {!selectedTruck ? 'Please select a truck ID' : selectedTruck}
                   </option>
-                  {trucks.map((truck, index) => (
+                  {trucks && trucks.map((truck, index) => (
                     <option value={truck} key={index}>{truck}</option>
                   ))}
               </select>

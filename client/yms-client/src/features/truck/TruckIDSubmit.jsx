@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux"
-import { getContainerByID, getContainers, loadContainer, submitTruckImage, testPicPath } from "../utils/apiFunctions";
+import { getContainerByID, getContainers, loadContainer, submitTruckImage, testPicPath } from "../../utils/apiFunctions";
 import { useEffect } from "react";
-import qrlogo from '../assets/QrCode.png'
+import qrlogo from '../../assets/QrCode.png'
 // import check from '../assets/checkmark.jpg'
-import ScanTruckBarcode from "./ScanTruckBarcode";
+import ScanTruckBarcode from "../../components/ScanTruckBarcode";
 import { useState } from "react";
 import styles from './TruckIDSubmit.module.css'
-import { openDb, getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID } from "../utils/indexedDb"
-import Button from "../ui/Button";
+import { getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID } from "../../utils/indexedDb"
+import Button from "../../ui/Button";
 import toast from "react-hot-toast";
 import { Buffer } from "node:buffer";
 import axios from "axios";
@@ -37,7 +37,7 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
   useEffect(() => {
     async function getPhotoFromLocal() {
       const item = await getItemById(id)
-      // console.log('item', item)
+      console.log('item', item)
       if (!item){
         console.log(`no local photo for ${id}`)
         return;
@@ -175,7 +175,7 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
   return (
     <>
     {scanning && <ScanTruckBarcode onClose={() =>setScanning(false)} />}
-    {!scanning && <div className="w-200">
+    {!scanning && <div className="w-250">
       {/* <button onClick={handleDelete}>delete db</button>
       <br></br>
       <button onClick={handleRetrieveFromIndex}>get photos</button>
@@ -213,14 +213,14 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
           <h1 className="col-start-3 underline">Take/Upload a Photo</h1>
         </div>
 
-        <div className="flex  w-30 relative left-18">
+        <div className="flex w-30 relative left-18">
           <span className="self-center">
           {scannedContainer ? '✅' : ''  }
           </span>
           <button type='button' className="bg-gray-50 w-10 hover:cursor-pointer hover:shadow-2xl/30 hover:shadow-stone-900 hover:ring-2 hover:ring-gray-600 relative left-8" onClick={() => setScanning(true)} ><img src={qrlogo}></img></button>
         </div>
 
-        <div className="relative left-30 w-100 flex justify-between">
+        <div className="relative left-30 w-130 flex justify-between">
           <div className="grid ">
           <label className="relative 
            self-center col-start-1">Take/upload a Photo:</label>
@@ -228,7 +228,8 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
           <input className="relative self-center hover:cursor-pointer" id="camera-input" type="file" accept="image/" capture='environment' onChange={handleCapture} />
           </div>
           <img className="w-20 h-10 col-start-3 row-start-2" src={localPhoto || photo} />
-          {photoSubmitted && <Button type='secondary' onClick={() => handleSubmit(truckPhoto)}>Confirm</Button>}
+          {/* <span className="w-200"></span> */}
+          {photoSubmitted && <Button type='secondary'  onClick={() => handleSubmit(truckPhoto)}>Confirm</Button>}
         </div>
 
       </div>  

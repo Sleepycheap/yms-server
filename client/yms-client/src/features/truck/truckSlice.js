@@ -7,7 +7,8 @@ const initialState = {
   trailerNumber: '',
   generatedTruck: '',
   truckWeight: '',
-  truckQty: ''
+  truckQty: '',
+  truckImageUploaded: false
 }
 
 const truckSlice = createSlice({
@@ -37,6 +38,9 @@ const truckSlice = createSlice({
     },
     setTruckQty(state, action) {
       state.truckQty = action.payload
+    },
+    setTruckImageUploaded(state, action) {
+      state.truckImageUploaded = action.payload
     }
   },
 })
@@ -49,7 +53,8 @@ export const {
   addTruckID,
   setGeneratedTruck,
   setTruckWeight,
-  setTruckQty
+  setTruckQty,
+  setTruckImageUploaded
 } = truckSlice.actions;
 
 export default truckSlice.reducer;

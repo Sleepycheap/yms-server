@@ -5,7 +5,9 @@ const initialState = {
   scannedQRCode: '',
   scanBarCode: false,
   scannedContainer: '',
-  scannedObject: null
+  scannedObject: null,
+  uploadedImages: [],
+  photoCount: 0
 }
 
 const pictureSlice = createSlice({
@@ -26,11 +28,17 @@ const pictureSlice = createSlice({
     },
     setScannedObject(state, action) {
       state.scannedObject = action.payload
+    },
+    setUploadedImages(state, action) {
+      state.uploadedImages = [...state.uploadedImages, action.payload]
+    },
+    setPhotoCount(state, action) {
+      state.photoCount = state.photoCount + action.payload
     }
   }
 })
 
-export const {setScannedTruck, setScannedQRCode, setScanBarCode, setScannedContainer, setScannedObject} = pictureSlice.actions;
+export const {setScannedTruck, setScannedQRCode, setScanBarCode, setScannedContainer, setScannedObject, setUploadedImages, setPhotoCount} = pictureSlice.actions;
 
 export default pictureSlice.reducer;
 

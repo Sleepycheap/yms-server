@@ -10,5 +10,5 @@ export function Trucks() {
   };
 }
 
-dropTable("Trucks");
-Trucks().create;
+// dropTable("Trucks");
+// Trucks().create;

@@ -1,8 +1,13 @@
 // import dotenv from "dotenv";
 import axios from 'axios'
+// import { populateTrucks } from '../../../../server/oracle/functions';
 // dotenv.config({ path: "../server/.env" });
 const url = 'http://localhost:8080/api';
+// const url = 'https://40a7-136-33-191-11.ngrok-free.app/api'
 const propUrl = 'http://localhost:8080/propagate'
+// const propUrl = 'https://40a7-136-33-191-11.ngrok-free.app/propagate'
+
+// axios.defaults.headers.common['ngrok-skip-browser-warning'] = '1'
 
 class ClientError extends Error {
   constructor(message, data = {}) {
@@ -25,8 +30,20 @@ export async function getTruckImage(userid) {
   return data
 }
 
+/*
+, {headers: { 
+    'ngrok-skip-browser-warning': '1' 
+  }}
+*/
+
+export async function populateTruckIDs(org_code) {
+  const response = await axios.post(`${propUrl}/truckids`, {org_code})
+  const {data} = response
+  return data
+}
+// get trucks from sqlite
 export async function getTrucks(org_code) {
-  const response = await axios.get(`${url}/trucks?org_code=${org_code}`)
+  const response = await axios.get(`${url}/trucks?org_code=${org_code}` )
   const {data} = response;
   return data;
 }

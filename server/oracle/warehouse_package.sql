@@ -295,7 +295,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     --      Functions: This procedure select all the records in WSH_CARRIERS table
     --
 ----------------------------------------------------------------------------------------------------------------------
-    PROCEDURE xxbbna_warehouse_scac_code(x_org_code IN VARCHAR2, x_scac_cur OUT SYS_REFCURSOR);
+    PROCEDURE xxbbna_warehouse_scac_code(x_scac_cur OUT SYS_REFCURSOR);
     ----------------------------------------------------------------------------------------------------------------------
     --      Name: XXBBNA_WAREHOUSE_ORG_CODE
     --
@@ -328,7 +328,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     --
 ----------------------------------------------------------------------------------------------------------------------
     FUNCTION xxbbna_warehouse_valid_order(p_org_code IN VARCHAR2, p_order_number IN NUMBER)
-        RETURN VARCHAR2;
+        RETURN BOOLEAN;
 ----------------------------------------------------------------------------------------------------------------------
     --      Name: XXBBNA_LOADING_SHIPPING_PROC_M
     --
@@ -378,7 +378,7 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     --        Query extracted from   Package Loading Report
     --
 ----------------------------------------------------------------------------------------------------------------------
-    PROCEDURE xxbbna_truck_weight_qty_proc(p_org IN VARCHAR2, p_truck IN VARCHAR2, p_truck_weight OUT NUMBER, p_truck_quantity OUT NUMBER, p_stagged_weight OUT NUMBER);
+    PROCEDURE xxbbna_truck_weight_qty_proc(p_truck IN VARCHAR2, p_truck_weight OUT NUMBER, p_truck_quantity OUT NUMBER);
 
 ----------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------
@@ -431,7 +431,18 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
 ----------------------------------------------------------------------------------------------------------------------
     PROCEDURE xxbbna_upload_truck_image(p_truck_id IN VARCHAR2, p_truck_image IN xxbbna_truck_image.truck_image%type, p_user_id IN NUMBER, x_status OUT VARCHAR2, x_success OUT BOOLEAN);
 
- ----------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+/*
+  Name: xxbbna_get_truck_image
+
+  Output parameters:
+  x_imageExists Boolean confirming if truck has any images
+  x_images returns cursor of images for specified truck
+  
+*/
+----------------------------------------------------------------------------------------------------------------------
+PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR);
+----------------------------------------------------------------------------------------------------------------------
     --      Name: xxbbna_category_questions
     --
     --    Output parameters:

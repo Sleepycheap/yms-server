@@ -123,7 +123,7 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   --      Functions: This procedure select all the records in WSH_CARRIERS table
   --
   ----------------------------------------------------------------------------------------------------------------------
-  PROCEDURE xxbbna_warehouse_scac_code(x_org_code IN VARCHAR2, x_scac_cur OUT SYS_REFCURSOR) IS
+  PROCEDURE xxbbna_warehouse_scac_code(x_scac_cur OUT SYS_REFCURSOR) IS
   BEGIN
     OPEN x_scac_cur FOR 
     SELECT scac_code, carrier_name
@@ -163,7 +163,7 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
     -- BULK   COLLECT
     -- INTO   l_org_code
     OPEN x_org_cur FOR
-    SELECT mp.organization_code
+    SELECT mp.organization_code, mp.organization_id
     FROM   mtl_parameters mp
     WHERE  mp.organization_code IN ('ANN', 'EVA', 'STJ', 'VIS', 'JAC', 'MTY', 'RAI');
     -- x_org_table := l_org_code;
@@ -260,14 +260,15 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   --
   ----------------------------------------------------------------------------------------------------------------------
   FUNCTION xxbbna_warehouse_valid_order(p_org_code     IN VARCHAR2,
-                                        p_order_number IN NUMBER) RETURN VARCHAR2 IS
+                                        p_order_number IN NUMBER) RETURN BOOLEAN IS
     --
     -- Local variable declaration
     --
-    l_is_valid      VARCHAR2(1);
-    v_ishold_exists VARCHAR2(1) := 'U'; --H=hold exist,U=Hold not exist
+    l_is_valid      VARCHAR2(3);
+    l_valid_status BOOLEAN;
   BEGIN
     l_is_valid := 'N';
+    l_valid_status := false;
 
     SELECT 'Y'
     INTO   l_is_valid
@@ -283,21 +284,28 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
             WHERE  order_no = p_order_number
             AND    ship_from_org_code = p_org_code);
 
-    IF l_is_valid = 'Y' THEN
-      v_ishold_exists := xxcustom_order_credit_check(p_order_number, p_org_code);
+    -- IF l_is_valid = 'Y' THEN
+    --   v_ishold_exists := xxcustom_order_credit_check(p_order_number, p_org_code);
 
-      IF v_ishold_exists = 'Y' THEN
-        l_is_valid := 'H';
-      ELSE
-        l_is_valid := 'U';
-      END IF;
+    --   IF v_ishold_exists = 'Y' THEN
+    --     l_is_valid := 'H';
+    --   ELSE
+    --     l_is_valid := 'U';
+    --   END IF;
+    -- END IF;
+
+    IF l_is_valid = 'Y' THEN
+      l_valid_status := true;
+    ELSIF l_is_valid = 'N' THEN
+      l_valid_status := false;
     END IF;
 
-    RETURN l_is_valid;
+
+    RETURN l_valid_status;
   EXCEPTION
     WHEN others THEN
       dbms_output.put_line('Exception ------ ' || sqlerrm);
-      RETURN l_is_valid;
+      RETURN l_valid_status;
   END xxbbna_warehouse_valid_order;
 
   ----------------------------------------------------------------------------------------------------------------------
@@ -1300,40 +1308,22 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
   --        Query extracted from   Package Loading Report
   --
   ----------------------------------------------------------------------------------------------------------------------
-  PROCEDURE xxbbna_truck_weight_qty_proc(p_org            IN VARCHAR2,
-                                         p_truck          IN VARCHAR2,
+  PROCEDURE xxbbna_truck_weight_qty_proc(p_truck          IN VARCHAR2,
                                          p_truck_weight   OUT NUMBER,
-                                         p_truck_quantity OUT NUMBER,
-                                         p_stagged_weight OUT NUMBER) IS
+                                         p_truck_quantity OUT NUMBER) IS
     lv_truck_weight   NUMBER := 0;
     lv_truck_quantity NUMBER := 0;
-    lv_stagged_weight NUMBER := 0;
     p_org_id          NUMBER := 0;
   BEGIN
-    SELECT SUM(tr.cont_qty) cont_qty, SUM(tr.cont_gross_wt) cont_gross_wt
+    SELECT SUM(cont_qty) cont_qty, SUM(cont_gross_wt) cont_gross_wt
     INTO   lv_truck_quantity, lv_truck_weight
     FROM   (SELECT NVL(xc.cont_qty, 0) cont_qty, NVL(xc.cont_gross_wt, 0) cont_gross_wt
             FROM   xxwsh_containers xc
-            WHERE  xc.truck_id_2 = p_truck
-            UNION ALL
-            SELECT NVL(xc.cont_qty, 0) cont_qty, NVL(xc.cont_gross_wt, 0) cont_gross_wt
-            FROM   xxwsh_containers xc
-            WHERE  xc.truck_id_1 = p_truck
-            AND    xc.truck_id_2 IS NULL) tr;
-
-    SELECT SUM(tr.cont_gross_wt) cont_gross_wt
-    INTO   lv_stagged_weight
-    FROM   (SELECT NVL(xc.cont_gross_wt, 0) cont_gross_wt
-            FROM   xxwsh_containers xc
-            WHERE  1 = 1
-            AND    xc.staged_truck_id = p_truck
-            AND    xc.truck_id_1 IS NULL
-            AND    xc.truck_id_1 IS NULL) tr;
+            WHERE  xc.truck_id_2 = p_truck);
 
     p_truck_weight   := NVL(lv_truck_weight, 0);
     p_truck_quantity := NVL(lv_truck_quantity, 0);
-    p_stagged_weight := NVL(lv_stagged_weight, 0);
-    dbms_output.put_line(p_truck_weight || '           ' || p_truck_quantity || '           ' || p_stagged_weight);
+    dbms_output.put_line(p_truck_weight || '           ' || p_truck_quantity || '           ' );
   EXCEPTION
     WHEN others THEN
       dbms_output.put_line(sqlerrm);
@@ -1507,15 +1497,165 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
   --        Query extracted from   Package Loading Report
   --
   ----------------------------------------------------------------------------------------------------------------------
---   PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
+PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
+                                       p_truck             IN VARCHAR2,
+                                       p_truck_details     OUT SYS_REFCURSOR) IS
+    -- l_truck_details g_truck_manifest_tbl;
+    l_prc           VARCHAR2(100) := 'xxbbna_truck_manifest_proc';
+
+
+  BEGIN
+
+    --log(l_prc,'START');
+    --log(l_prc,'p_organization_code=' || p_organization_code || ', p_truck=' || p_truck);
+
+    IF fnd_global.user_id < 0 THEN
+      mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
+    END IF;
+
+    OPEN p_truck_details FOR
+      SELECT ORGANIZATION,
+             description,
+             container_name,
+             truck_id,
+             --order_by_cont_name,
+             NVL(SUM(shipped_qty), 0) shipped_qty,
+             NVL(SUM(cont_gross_wt), 0) extended_wt,
+             compass_order_no order_number
+      --oe_number
+      FROM   (SELECT '123' order_number,
+                     oh.order_number compass_order_no,
+                     oh.attribute1 project_name,
+                     oh.attribute2 oe_number,
+                     wdd.cust_po_number purchase_order,
+                     LTRIM(RTRIM(hp.party_name)) customer_name,
+                     mp.organization_code plant_info,
+                     msi.segment1 part_number,
+                     xxbm_bsl_get_brand_desc(msi.description, xxbm_bsl_get_brand(oh.order_number)) description,
+                     ol.ordered_quantity quantity_ordered,
+                     mp.organization_code origination_plant,
+                     DECODE(p_organization_code, NULL, 'ALL', p_organization_code) ORGANIZATION,
+                     xcl.cont_name container_name,
+                     --DECODE(xcl.truck_id_2, NULL, NVL(xcl.truck_id_1, 'xxxx'), xcl.truck_id_2) truck_id,
+                     NVL(xcl.truck_id_2, NVL(xcl.truck_id_1, xcl.staged_truck_id)) truck_id, --added on 03-MAY-2018 by abhallam
+                     ol.attribute16 part_mark,
+                     ol.attribute20 erection_mark,
+                     REPLACE(TRANSLATE(xcl.cont_name, '1234567890', '0000000000'), '0') order_by_cont_name,
+
+                     --
+                     (SELECT TO_NUMBER(ph.segment1)
+                      FROM   apps.po_requisition_headers ph, apps.po_requisition_lines pl
+                      WHERE  ph.requisition_header_id = pl.requisition_header_id
+                      AND    ph.segment1 = ol.orig_sys_document_ref
+                      AND    ol.orig_sys_line_ref = TO_CHAR(pl.line_num)
+                      AND    ROWNUM <= 1) requisition_no,
+                     --
+                     DECODE(wdd.released_status, 'Y', wdd.requested_quantity, 'C', wdd.requested_quantity, 0) shipped_qty,
+                     --
+                     DECODE(wdd.released_status, 'B', wdd.requested_quantity, 0) backordered_qty,
+                     --
+                     wdd.requested_quantity ordered_qty,
+                     xc.cont_gross_wt
+              FROM   wsh.wsh_delivery_details          wdd,
+                     apps.mtl_sys_items_sn          msi,
+                     apps.oe_order_headers_all             oh,
+                     apps.oe_order_lines_all               ol,
+                     apps.xxwsh_containers             xc,
+                     xxwsh_container_loading xcl,
+                     --apps.ra_customers                 rc, PR00100 R12 Upgrade
+                     hz_cust_accounts    hca,
+                     hz_parties          hp,
+                     apps.mtl_parameters mp
+              WHERE  wdd.source_header_id = oh.header_id
+                    --AND :p_allow_report_to_run = 1
+              AND    (wdd.requested_quantity > 0 OR wdd.released_status != 'D')
+              AND    wdd.inventory_item_id = msi.inventory_item_id
+              AND    oh.header_id = ol.header_id
+              AND    ol.line_id = wdd.source_line_id
+              AND    ol.inventory_item_id = msi.inventory_item_id
+              AND    msi.organization_id = oh.org_id
+                    --AND rc.customer_id = wdd.customer_id
+              AND    hca.cust_account_id = wdd.customer_id
+              AND    hp.party_id = hca.party_id
+              AND    mp.organization_id = ol.ship_from_org_id
+              AND    wdd.delivery_detail_id = xc.delivery_detail_id
+              AND    xc.cont_name = xcl.cont_name
+              AND    xc.order_no = xcl.order_no
+              AND    NVL(xc.truck_id_1, 'YY') = NVL(xcl.truck_id_1, 'YY')
+              AND    NVL(xc.truck_id_2, 'YY') = NVL(xcl.truck_id_2, 'YY')
+              AND    NVL(xcl.staged_truck_id, 'YY') = NVL(xcl.staged_truck_id, 'YY')
+              AND    xc.ship_from_org_code = xcl.ship_from_org_code
+              AND    NOT msi.segment1 LIKE 'SS%'
+              AND    xc.order_no = oh.order_number
+                    --AND    DECODE(UPPER(xcl.truck_id_2), NULL, UPPER(xcl.truck_id_1), UPPER(xcl.truck_id_2)) = UPPER(p_truck)   --lp_truck_qry
+              AND    UPPER(p_truck) IS NOT NULL
+              AND    UPPER(p_truck) IN (xcl.truck_id_1, xcl.truck_id_2, xcl.staged_truck_id) --30-apr-2018 - abhallam
+                    --AND OH.ORDER_NUMBER='|| ':P_ORDER_NO--lp_order_qry
+              AND    (mp.organization_code = p_organization_code
+                    --OR xc.ship_set_name LIKE '%' || p_organization_code)
+                    ))
+      GROUP  BY order_number,
+                compass_order_no,
+                project_name,
+                purchase_order,
+                requisition_no,
+                customer_name,
+                plant_info,
+                ORGANIZATION,
+                origination_plant,
+                part_number,
+                description,
+                part_mark,
+                erection_mark,
+                container_name,
+                truck_id,
+                order_by_cont_name,
+                oe_number;
+
+    -- OPEN cur_truck_det(p_organization_code, p_truck);
+
+    -- FETCH cur_truck_det BULK COLLECT
+    --   INTO l_truck_details;
+
+    -- CLOSE cur_truck_det;
+
+    -- p_truck_details := l_truck_details;
+
+    -- dbms_output.put_line(p_truck_details);
+
+    --log(l_prc,'END. p_truck_details.count=' || p_truck_details.count);
+
+  EXCEPTION
+    WHEN others THEN
+      dbms_output.put_line(sqlerrm);
+      --log(l_prc,'Error: ' || sqlerrm);
+  END xxbbna_truck_manifest_proc;
+-- PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
 --                                        p_truck             IN VARCHAR2,
---                                        p_truck_details_cur     OUT SYS_REFCURSOR) IS
---     -- l_truck_details g_truck_manifest_tbl;
---     -- l_prc           VARCHAR2(100) := 'xxbbna_truck_manifest_proc';
--- BEGIN
+--                                        p_org_out OUT VARCHAR2,
+--                                        p_description OUT VARCHAR2,
+--                                        p_container_name OUT VARCHAR2,
+--                                        p_truck_id OUT VARCHAR2,
+--                                        p_shipping_qty OUT NUMBER,
+--                                        p_extended_wt OUT NUMBER,
+--                                        p_order_number OUT NUMBER
+--                                         ) IS
+
+--   l_org_out NUMBER;
+--   l_description VARCHAR2(100);
+--   l_container_name VARCHAR2(100);
+--   l_truck_id VARCHAR2(30);
+--   l_shipping_qty NUMBER;
+--   l_extended_wt NUMBER;
+--   l_order_number NUMBER;
+
 
 --   BEGIN
---     OPEN p_truck_details_cur FOR
+
+--     IF fnd_global.user_id < 0 THEN
+--     mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
+--     END IF;
+
 --       SELECT ORGANIZATION,
 --              description,
 --              container_name,
@@ -1525,6 +1665,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
 --              NVL(SUM(cont_gross_wt), 0) extended_wt,
 --              compass_order_no order_number
 --       --oe_number
+--       INTO l_org_out, l_description, l_container_name, l_truck_id, l_shipping_qty, l_extended_wt, l_order_number
 --       FROM   (SELECT '123' order_number,
 --                      oh.order_number compass_order_no,
 --                      oh.attribute1 project_name,
@@ -1546,7 +1687,7 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
 
 --                      --
 --                      (SELECT TO_NUMBER(ph.segment1)
---                       FROM   apps.po_requisition_headers_all ph, apps.po_requisition_lines_all pl
+--                       FROM   apps.po_requisition_headers ph, apps.po_requisition_lines pl
 --                       WHERE  ph.requisition_header_id = pl.requisition_header_id
 --                       AND    ph.segment1 = ol.orig_sys_document_ref
 --                       AND    ol.orig_sys_line_ref = TO_CHAR(pl.line_num)
@@ -1613,157 +1754,24 @@ PROCEDURE xxbbna_loading_shipping_proc_m(p_org          IN VARCHAR2,
 --                 truck_id,
 --                 order_by_cont_name,
 --                 oe_number;
---   END;
---   BEGIN
---     IF fnd_global.user_id < 0 THEN
---       mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
---     END IF;
---   END;  
 
---     -- OPEN cur_truck_det(p_organization_code, p_truck);
 
---     -- FETCH cur_truck_det BULK COLLECT
---     --   INTO l_truck_details;
+--   p_org_out := l_org_out;
+--   p_description := l_description;
+--   p_container_name := l_container_name;
+--   p_truck_id := l_truck_id;
+--   p_shipping_qty := l_shipping_qty;
+--   p_extended_wt := l_extended_wt;
+--   p_order_number := l_order_number;
 
---     -- CLOSE cur_truck_det;
 
---     -- p_truck_details := l_truck_details;
 
---     --log(l_prc,'END. p_truck_details.count=' || p_truck_details.count);
 
 --   EXCEPTION
 --     WHEN others THEN
 --       dbms_output.put_line(sqlerrm);
 --       --log(l_prc,'Error: ' || sqlerrm);
 --   END xxbbna_truck_manifest_proc;
-PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
-                                       p_truck             IN VARCHAR2,
-                                       p_truck_details  OUT SYS_REFCURSOR ) IS
-  BEGIN
-
-    IF fnd_global.user_id < 0 THEN
-    mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_organization_code));
-    END IF;
-
-    OPEN p_truck_details FOR
-      SELECT ORGANIZATION,
-             description,
-             container_name,
-             truck_id,
-             --order_by_cont_name,
-             NVL(SUM(shipped_qty), 0) shipped_qty,
-             NVL(SUM(cont_gross_wt), 0) extended_wt,
-             compass_order_no order_number
-      --oe_number
-      FROM   (SELECT '123' order_number,
-                     oh.order_number compass_order_no,
-                     oh.attribute1 project_name,
-                     oh.attribute2 oe_number,
-                     wdd.cust_po_number purchase_order,
-                     LTRIM(RTRIM(hp.party_name)) customer_name,
-                     mp.organization_code plant_info,
-                     msi.segment1 part_number,
-                     xxbm_bsl_get_brand_desc(msi.description, xxbm_bsl_get_brand(oh.order_number)) description,
-                     ol.ordered_quantity quantity_ordered,
-                     mp.organization_code origination_plant,
-                     DECODE(p_organization_code, NULL, 'ALL', p_organization_code) ORGANIZATION,
-                     xcl.cont_name container_name,
-                     --DECODE(xcl.truck_id_2, NULL, NVL(xcl.truck_id_1, 'xxxx'), xcl.truck_id_2) truck_id,
-                     NVL(xcl.truck_id_2, NVL(xcl.truck_id_1, xcl.staged_truck_id)) truck_id, --added on 03-MAY-2018 by abhallam
-                     ol.attribute16 part_mark,
-                     ol.attribute20 erection_mark,
-                     REPLACE(TRANSLATE(xcl.cont_name, '1234567890', '0000000000'), '0') order_by_cont_name,
-
-                     --
-                     (SELECT TO_NUMBER(ph.segment1)
-                      FROM   apps.po_requisition_headers ph, apps.po_requisition_lines pl
-                      WHERE  ph.requisition_header_id = pl.requisition_header_id
-                      AND    ph.segment1 = ol.orig_sys_document_ref
-                      AND    ol.orig_sys_line_ref = TO_CHAR(pl.line_num)
-                      AND    ROWNUM <= 1) requisition_no,
-                     --
-                     DECODE(wdd.released_status, 'Y', wdd.requested_quantity, 'C', wdd.requested_quantity, 0) shipped_qty,
-                     --
-                     DECODE(wdd.released_status, 'B', wdd.requested_quantity, 0) backordered_qty,
-                     --
-                     wdd.requested_quantity ordered_qty,
-                     xc.cont_gross_wt
-              FROM   wsh.wsh_delivery_details          wdd,
-                     apps.mtl_system_items_vl          msi,
-                     apps.oe_order_headers             oh,
-                     apps.oe_order_lines               ol,
-                     apps.xxwsh_containers             xc,
-                     xxwsh_container_loading xcl,
-                     --apps.ra_customers                 rc, PR00100 R12 Upgrade
-                     hz_cust_accounts    hca,
-                     hz_parties          hp,
-                     apps.mtl_parameters mp
-              WHERE  wdd.source_header_id = oh.header_id
-                    --AND :p_allow_report_to_run = 1
-              AND    (wdd.requested_quantity > 0 OR wdd.released_status != 'D')
-              AND    wdd.inventory_item_id = msi.inventory_item_id
-              AND    oh.header_id = ol.header_id
-              AND    ol.line_id = wdd.source_line_id
-              AND    ol.inventory_item_id = msi.inventory_item_id
-              AND    msi.organization_id = oh.org_id
-                    --AND rc.customer_id = wdd.customer_id
-              AND    hca.cust_account_id = wdd.customer_id
-              AND    hp.party_id = hca.party_id
-              AND    mp.organization_id = ol.ship_from_org_id
-              AND    wdd.delivery_detail_id = xc.delivery_detail_id
-              AND    xc.cont_name = xcl.cont_name
-              AND    xc.order_no = xcl.order_no
-              AND    NVL(xc.truck_id_1, 'YY') = NVL(xcl.truck_id_1, 'YY')
-              AND    NVL(xc.truck_id_2, 'YY') = NVL(xcl.truck_id_2, 'YY')
-              AND    NVL(xcl.staged_truck_id, 'YY') = NVL(xcl.staged_truck_id, 'YY')
-              AND    xc.ship_from_org_code = xcl.ship_from_org_code
-              AND    NOT msi.segment1 LIKE 'SS%'
-              AND    xc.order_no = oh.order_number
-                    --AND    DECODE(UPPER(xcl.truck_id_2), NULL, UPPER(xcl.truck_id_1), UPPER(xcl.truck_id_2)) = UPPER(p_truck)   --lp_truck_qry
-              AND    UPPER(p_truck) IS NOT NULL
-              AND    UPPER(p_truck) IN (xcl.truck_id_1, xcl.truck_id_2, xcl.staged_truck_id) --30-apr-2018 - abhallam
-                    --AND OH.ORDER_NUMBER='|| ':P_ORDER_NO--lp_order_qry
-              AND    (mp.organization_code = p_organization_code
-                    --OR xc.ship_set_name LIKE '%' || p_organization_code)
-                    ))
-      GROUP  BY order_number,
-                compass_order_no,
-                project_name,
-                purchase_order,
-                requisition_no,
-                customer_name,
-                plant_info,
-                ORGANIZATION,
-                origination_plant,
-                part_number,
-                description,
-                part_mark,
-                erection_mark,
-                container_name,
-                truck_id,
-                order_by_cont_name,
-                oe_number;
-
-
-
-
-
-    -- p_truck_details := l_truck_details;
-
-    -- OPEN p_truck_details(p_organization_code, p_truck);
-
-
-    -- CLOSE cur_truck_det;
-
-    -- p_truck_details := l_truck_details;
-
-    --log(l_prc,'END. p_truck_details.count=' || p_truck_details.count);
-
-  EXCEPTION
-    WHEN others THEN
-      dbms_output.put_line(sqlerrm);
-      --log(l_prc,'Error: ' || sqlerrm);
-  END xxbbna_truck_manifest_proc;
   ----------------------------------------------------------------------------------------------------------------------
   --      Name: XXBM_PRODUCT_TYPE
   --
@@ -2394,8 +2402,31 @@ PROCEDURE xxbbna_truck_manifest_proc(p_organization_code IN VARCHAR2,
       -- l_status := x_status;
       -- l_success := x_success;
   END xxbbna_upload_truck_image;  
+-------------------------------------------
+/*
+Name: xxbbna_get_truck_image
+x_imagesExist BOOLEAN
+x_images cursor  
+*/
+----
+PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR) IS
+  -- x_imageExists BOOLEAN;
+BEGIN 
 
+  OPEN x_images FOR
+  SELECT truck_image FROM xxbbna_truck_image WHERE created_by = p_user_id ORDER BY creation_date DESC;
 
+  IF x_images IS NOT NULL THEN
+  x_imagesExist := true;
+  ELSIF x_images IS NULL THEN
+  x_imagesExist := false;
+  END IF;
+
+EXCEPTION
+  WHEN others THEN
+  x_imagesExist := false;
+  dbms_output.put_line(sqlerrm);
+END xxbbna_get_truck_image;
 
 
 

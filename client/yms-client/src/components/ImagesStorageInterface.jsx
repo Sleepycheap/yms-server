@@ -1,26 +1,24 @@
-import { getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID, openDatabase, deleteObjectStore } from "../utils/indexedDb"
-// import { indexed } from "../utils/indexedDb"
+import { getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID, openDatabase, deleteObjectStore, iterateImages } from "../utils/truckImagesDB"
 import { useEffect, useState } from "react"
 import Button from "../ui/Button"
 import toast from "react-hot-toast"
 import Loader from "../ui/Loader"
 
-function LocalStorageInterface() {
+function ImagesStorageInterface() {
   const [store, setStore] = useState(null)
   const [photo, setPhoto] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  // const index = indexed()
 
   useEffect(() => {
     setIsLoading(true)
     async function getItems() {
-      // openDatabase()
-
 
       const req = await getAllItems()
+      // const req = await iterateImages()
+      // console.log('req', req)
       setItems(req)
     }
 
@@ -58,10 +56,9 @@ function LocalStorageInterface() {
 }
 
 
-  async function handleOpen() {
+  function handleOpen() {
+    console.log('test')
     openDatabase()
-    
-
   }
 
   function handleGetStore() {
@@ -71,13 +68,13 @@ function LocalStorageInterface() {
 
   async function handleOpenStore() {
     const s = await getObjectStore()
-    // console.log()
     console.log('store', s)
   }
 
   function handleAdd() {
-    const id = crypto.randomUUID()
+    const id = [122452, 2600429001, '2600429001T1']
     const object = {
+      id,
       user: 'anthony vauther',
       orderNumber: 2600429001,
       container: '10M',
@@ -89,12 +86,14 @@ function LocalStorageInterface() {
   }
 
   async function handleDelete() {
+    // console.log('delete')
     const result = await deleteObjectStore()
     console.log(result)
   }
 
   function handleDeleteDb() {
-    deleteDB('YMSClient')
+    console.log('delete db')
+    deleteDB()
   }
 
   function handleSearch(e) {
@@ -114,25 +113,30 @@ function LocalStorageInterface() {
   }
 
   async function handleGet() {
-    // const id = searchTerm
-    const item = await getItemById(122946514)
+    const id = [122452, '2600429001', '2600429001T1']
+    const item = await getItemById(id)
     console.log(item)
   }
 
   async function handleDeleteOne() {
-    const result = await clearObjectStore()
+    const result = await deleteItemByID(122946514)
     console.log(result)
+  }
+
+  function handleCursor() {
+    console.log('items', items)
   }
 
   return (
     <div>
       <h1>Interface for interacting with indexedDb </h1>
+      <Button type='primary' onClick={handleCursor}>see items</Button>
       <Button type='primary' onClick={handleOpen}>open db</Button>
       {/* <Button type='primary' onClick={handleGetStore}>get store</Button> */}
-      {/* <Button type='primary' onClick={handleAdd}>add to db</Button>
-       */}
-      <Button type='primary' onClick={handleDeleteOne}>clear store</Button>      
-      <Button type='primary' onClick={handleDelete}>delete store</Button>
+      <Button type='primary' onClick={handleAdd}>add to db</Button>
+      
+      {/* <Button type='primary' onClick={handleDeleteOne}>delete 1</Button>       */}
+      {/* <Button type='primary' onClick={handleDelete}>delete store</Button> */}
       <Button type='primary' onClick={handleOpenStore}>see store</Button>
       <Button type='primary' onClick={handleDeleteDb}>delete db</Button>
       <Button type='primary' onClick={handleAll}>get all</Button>
@@ -146,23 +150,25 @@ function LocalStorageInterface() {
       {!isLoading && <table>
         <thead>
           <tr>
+            <th>id</th>
             <th>user</th>
             <th>order number</th>
             <th>container</th>
             <th>truckID</th>
-            <th>scanned</th>
-            <th>photo</th>
+            {/* <th>scanned</th>
+            <th>photo</th> */}
           </tr>
         </thead>
         <tbody>
           {items.map((item, index) => (
             <tr key={index}>
+              <td>{item.id}</td>
               <td>{item.user}</td>
               <td>{item.orderNumber}</td>
               <td>{item.container}</td>
               <td>{item.truckID}</td>
-              <td>{item.scanned}</td>
-              <td><img src={item.truck_image || item.photo} className="w-20"></img></td>
+              {/* <td>{item.scanned}</td> */}
+              {/* <td><img src={item.truck_image || item.photo} className="w-20"></img></td> */}
             </tr>
           ))}
         </tbody>
@@ -171,4 +177,4 @@ function LocalStorageInterface() {
   )
 }
 
-export default LocalStorageInterface
+export default ImagesStorageInterface

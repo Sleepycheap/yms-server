@@ -59,6 +59,25 @@
   width: 50%
 }
 
+.title_button {
+    font-size: 1.5rem; 
+  line-height: calc(2 / 1.5);
+  background-color: oklch(55.4% 0.135 66.442);
+  width: 50%;
+}
+
+:hover.title_button {
+  cursor: pointer;
+}
+
+/* .title button {
+  color: green;
+}
+
+:hover.title button {
+  cursor: pointer
+} */
+
 .info {
   font-size: 1.5rem;
   line-height: calc(2 / 1.5);

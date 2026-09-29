@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "push": "npm run build && pa app push"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://balanced-fully-moccasin.ngrok-free.app/",
   "dependencies": {
     "@mantine/core": "^9.5.2",
     "@microsoft/power-apps": "^1.2.13",

@@ -1,7 +1,6 @@
 import Webcam from "react-webcam";
 import Button from "../ui/Button";
 import Canvas from '../components/Canvas'
-import {createWorker} from 'tesseract.js'
 import {useState, useRef, useCallback, useEffect} from 'react'
 import { useSelector } from "react-redux";
 import { setScannedTruck } from "../features/pictures/pictureSlice";
@@ -95,19 +94,6 @@ function Camera({setTakePhoto}) {
         // setPreProcess(canvasRef.current)
         console.log('processed', canvasRef.current)
       
-        setIsLoading(true)
-    
-        
-        try {
-          const worker = await createWorker("eng");
-          const {data: { text },} = await worker.recognize(image);
-          console.log('extractedText', text)
-          setExtractedText(text)
-        } catch (err) {
-          console.log('error recognizing text', err.message)
-        } finally {
-          setIsLoading(false)
-        }
     
       }, [webcamRef, setImgSrc]);
 

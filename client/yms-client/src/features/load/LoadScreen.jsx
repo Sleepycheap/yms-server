@@ -4,25 +4,27 @@ import styles from './LoadScreen.module.css'
 import { useEffect } from "react"
 import axios from 'axios'
 import { setCustomer } from "../order/orderSlice"
-import { setTruckWeight, setTruckQty } from "../truck/truckSlice"
+import { setTruckWeight, setTruckQty, setTruckImageUploaded } from "../truck/truckSlice"
 import { setScreen } from "../appLayout/layoutSlice"
 import { useState } from "react"
 // import Containers from "./Containers"
 import ContainerTable from "./ContainerTable"
 import { useNavigate } from "react-router-dom"
-import { getCustomerName, getWeight, loadContainer } from "../../utils/apiFunctions"
+import { getCustomerName, getWeight, loadContainer, getTruckImage } from "../../utils/apiFunctions"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import Loader from "../../ui/Loader"
 import toast from "react-hot-toast"
 import ScanTruckBarcode from "../../components/ScanTruckBarcode"
 import Camera from "../../components/Camera"
 import { setScannedContainer } from "../pictures/pictureSlice"
+import ManualEntry from './ManualEntry'
 
 function LoadScreen() {
-  const [manualAssign, setManualAssign] = useState('')
+  const [manualAssign, setManualAssign] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState('')
+  const [contName, setContName] = useState(null)
   // const [takePhoto, setTakePhoto] = useState(false)
   const scannedContainer = useSelector((state) => state.picture.scannedContainer)
   const orgCode = useSelector((state) => state.user.orgCode)
@@ -40,25 +42,60 @@ function LoadScreen() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    setIsLoading(true)
+    async function getCustomerData() {
+      const result = await getCustomerName(orderNumber)
+      dispatch(setCustomer(result))
+      setIsLoading(false)
+
+      const imageExist = await getTruckImage(userID)
+      const {exist} = imageExist
+      if (exist) {
+        dispatch(setTruckImageUploaded(true))
+        console.log('truck has image')
+      }
+
+    }
+  
+    getCustomerData()
+  }, [])
+
+
   const queryClient = useQueryClient()
 
   const {isLoading: loadingTruck, data: truckInfo, error: truckError} = useQuery({
     queryKey: ['truckInfo', selectedTruck],
     queryFn: async () => {
       const result = await getWeight(selectedTruck)
-      const {CONT_QTY, CONT_GROSS_WT} = result[0];
-      const data = {CONT_QTY, CONT_GROSS_WT}
+      const {qty, weight} = result;
+      const data = {qty, weight}
       // console.log()
       return data
     }
   })
+
+  const {isLoading: loadingContainer, data: container, error: containerError } = useQuery({
+    queryKey: ['containers', orderNumber],
+    queryFn: async () => {
+      const data = await getContainers(orderNumber)
+      return data
+    },
+    enabled: manualAssign,
+    select: (containers) => containers.find((container) => container.cont_name === scannedContainer.split('|')[2])
+  })
+
+  
+  // const {order_number, cont_name } = container;
+
 
   const {isLoading: assigning, mutate: assignContainer, isError, error: assignError} = useMutation({
   mutationFn: ({order_number, cont_name, orgCode, selectedTruck, userID}) => {
     return loadContainer(order_number, cont_name, orgCode, selectedTruck, userID);
   },
   onSuccess: () => {
-    // toast.success(`${cont_name} successfully loaded onto ${selectedTruck}`)
+    toast.success(`${cont_name} successfully loaded onto ${selectedTruck}`)
+    dispatch(setScannedContainer(null))
 
     queryClient.invalidateQueries({
       queryKey: ['containers']
@@ -74,16 +111,6 @@ function LoadScreen() {
 })
 
 
-  useEffect(() => {
-    setIsLoading(true)
-    async function getCustomerData() {
-      const result = await getCustomerName(orderNumber)
-      dispatch(setCustomer(result))
-      setIsLoading(false)
-    }
-
-    getCustomerData()
-  }, [])
 
   function handleNavigate() {
     navigate('/')
@@ -91,47 +118,18 @@ function LoadScreen() {
 
   function handleChange(e) {
     dispatch(setScannedContainer(e))
+    const truckBarCodeRegEx = /^[A-Z]{3}[|][0-9]{10,}[|][a-zA-Z0-9]/gm
+    if (truckBarCodeRegEx.test(scannedContainer)) {
+      setManualAssign(true)
+    }
+
   }
 
-  function handleAssign() {
-    assignContainer
-    // assignContainer({'2600429001', '35J', })
-    // const scannedContainerRegex = /.{3}\|.{10}\|/gm
-    // // console.log(scannedContainerRegex.test(scannedContainer))
-    // const org_code = scannedContainer.split('|')[0]
-    // const order_number = scannedContainer.split('|')[1].split('|')[0]
-    // const cont_name = scannedContainer.split('|')[2]
-    // console.log(order_number, org_code, cont_name)
+  async function handleManualAssign() {
+    // const {order_number, cont_name} = container;
+    // console.log(container)
+    // assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
   }
-
-  // async function handleAssign() {
-  //   const scannedContainerRegex = /.{3}\|.{10}\|/gm
-  //   console.log('assign test')
-  //   if (scannedContainerRegex.test(scannedContainer)) {
-  //     const org_code = scannedContainer.split('|')[0]
-  //     const order_number = scannedContainer.split('|')[1].split('|')[0]
-  //     const cont_name = scannedContainer.split('|')[2]
-  //     // console.log(order_number, cont_name, org_code, selectedTruck, userID)
-  //     // const load = await loadContainer(order_number, cont_name, org_code, selectedTruck, userID)
-  //     assignContainer({order_number, cont_name, org_code, selectedTruck, userID})
-  //     // toast.success(`${cont_name} has been loaded onto ${selectedTruck}`)
-  //   } else {
-  //     if (
-  //       !scannedContainerRegex.test(scannedContainer)
-  //     ) {
-  //       toast.error(`${scannedContainer} is NOT valid!`)
-  //     } 
-  //   }
-  // }
-
-  // function handleScanTruck() {
-    
-  //   // console.log(scanQR)
-  // }
-
-  // function handleTest() {
-  //   console.log('test', scannedContainer)
-  // }
 
    
   if (loadingTruck) return <Loader text={'load screen'}/>
@@ -170,15 +168,17 @@ function LoadScreen() {
         </div>
         <div className='flex border border-slate-800 justify-between row-start-1 col-start-2'>
           <p className={styles.title}>Total Weight</p>
-          <p className={styles.info}>{truckInfo.CONT_GROSS_WT}</p>
+          <p className={styles.info}>{truckInfo.weight}</p>
         </div>
         <div className='flex border border-slate-800 justify-between row-start-2 col-start-2'>
           <p className={styles.title}>Total Qty</p>
-          <p className={styles.info}>{truckInfo.CONT_QTY}</p>
+          <p className={styles.info}>{truckInfo.qty}</p>
         </div>
         <div className='flex border border-slate-800 justify-between row-start-1 col-start-3'>
-          <p className={styles.title}>Manual Entry</p>
-          <input type='text' value={scannedContainer} onChange={(e) => handleChange(e.target.value)} className={styles.manual}></input>
+          {!manualAssign && <label className={styles.title}>Manual Entry</label>}
+          {/* {manualAssign && < ManualEntry contName={container} /> } */}
+          <input type='text' value={scannedContainer ? scannedContainer : ''} onChange={(e) => handleChange(e.target.value)} className={styles.manual}></input>
+          {manualAssign && <ManualEntry />}
           {/* <button className="hover:cursor-pointer" onClick={handleAssign}>Assign truck ID</button> */}
         </div>
         <div className='flex border border-slate-800 justify-between row-start-2 col-start-3'>

@@ -7,7 +7,7 @@ import Button from '../../ui/Button';
 import toast from 'react-hot-toast';
 import Modal from '../../ui/Modal';
 import ScanTruckBarcode from '../../components/ScanTruckBarcode';
-import TruckIDSubmit from '../../components/TruckIDSubmit';
+import TruckIDSubmit from '../truck/TruckIDSubmit';
 
 
 

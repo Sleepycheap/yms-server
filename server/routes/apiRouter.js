@@ -25,8 +25,9 @@ import {
   getUnpickedContainersForOrder,
   getTruckImage,
   uploadTruckImage,
+  getAllOrdersByOrg,
 } from "../oracle/functions.js";
-import { getText } from "../utils/tesseractOcr.js";
+// import { getText } from "../utils/tesseractOcr.js";
 import { getCustomerName } from "../oracle/functions.js";
 
 const apiRouter = express.Router();
@@ -59,14 +60,33 @@ apiRouter.get("/userID/:username", async (req, res) => {
   }
 });
 
+apiRouter.get("/orders/:orgcode", async (req, res) => {
+  const { orgcode } = req.params;
+  try {
+    const result = await getAllOrdersByOrg(orgcode);
+    res.json(result);
+  } catch (err) {
+    res.status(404).json({ "there was an error getting orders": err.message });
+  }
+});
+
 // get truck image by user
+// apiRouter.get("/truckPhoto/:userid", async (req, res) => {
+//   const { userid } = req.params;
+//   try {
+//     const result = await getTruckImage(userid);
+//     const { TRUCK_IMAGE } = result[0];
+//     const data = result[0];
+//     res.json({ TRUCK_IMAGE, data: data });
+//   } catch (err) {
+//     res.json(err.message);
+//   }
+// });
 apiRouter.get("/truckPhoto/:userid", async (req, res) => {
   const { userid } = req.params;
   try {
     const result = await getTruckImage(userid);
-    const { TRUCK_IMAGE } = result[0];
-    const data = result[0];
-    res.json({ TRUCK_IMAGE, data: data });
+    res.json(result);
   } catch (err) {
     res.json(err.message);
   }
@@ -228,38 +248,6 @@ apiRouter.get("/details/:order_no", async (req, res) => {
   }
 });
 
-// // gets order details for containers that have been assigned a truck id
-// apiRouter.get("/loaded/:order_no", async (req, res) => {
-//   const { order_no } = req.params;
-//   try {
-//     const details = await getOrderDetailsLoaded(order_no);
-//     res.json(details);
-//   } catch (err) {
-//     res.json({ "there was an error getting order details": err.message });
-//   }
-// });
-
-// apiRouter.get("/test/:order", async (req, res) => {
-//   const { order } = req.params;
-//   try {
-//     const details = await getOrderDetailsLoaded(order);
-//     res.json(details);
-//   } catch (err) {
-//     res.json({ "there was an error getting order details": err.message });
-//   }
-// });
-
-// gets order details for containers that have been assigned a truck id
-// apiRouter.get("/details/unpicked/:order_no", async (req, res) => {
-//   const { order_no, unpicked } = req.params;
-//   try {
-//     const details = await getOrderDetailsUnpicked(order_no);
-//     res.json(details);
-//   } catch (err) {
-//     res.json({ "there was an error getting order details": err.message });
-//   }
-// });
-
 // gets all truckIDs for requested org
 apiRouter.get("/trucks", async (req, res) => {
   const { org_code } = req.query;
@@ -328,7 +316,7 @@ apiRouter.get("/verifyOrder/:orgCode/:orderNumber", async (req, res) => {
   const { orgCode, orderNumber } = req.params;
   try {
     const result = await validateOrder(orgCode, orderNumber);
-    if (result.length === 0) {
+    if (!result.orderValid) {
       res.json({
         "This Order does not belong to this Organization": result,
         order_verified: false,

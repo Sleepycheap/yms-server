@@ -1,7 +1,7 @@
 import sql from "sql-template-tag";
-import { pool } from "./pool.js";
+// import { pool } from "./pool.js";
 
-const connection = await pool.getConnection();
+// const connection = await pool.getConnection();
 
 export async function createGetIPPlant() {
   const result = connection.execute(`

@@ -5,9 +5,10 @@ import fs from "node:fs";
 import "dotenv/config";
 import bodyParser from "body-parser";
 import cors from "cors";
+import ngrok from "@ngrok/ngrok";
 import { createTable, dropManyTables } from "./db/handler.js";
-// import { init } from "./db/populateSQL.js";
-import oracleRouter from "./routes/oracle.js";
+import { init } from "./db/populateSQL.js";
+// import oracleRouter from "./routes/oracle.js";
 import apiRouter from "./routes/apiRouter.js";
 import propagateRouter from "./routes/propagate.js";
 import morgan from "morgan";
@@ -55,15 +56,9 @@ app.set("view engine", "ejs");
 // PopulateOrgCode();
 // PopulateTrucks()
 
-// function init(tables) {
-//   try {
-//   } catch (err) {
-//     console.log("there was an error starting the app", err.message);
-//   }
-// }
 // init();
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.listen(port, (err) => {
   if (err) {
@@ -71,6 +66,26 @@ app.listen(port, (err) => {
   }
   console.log("YMS Server running on port", port);
 });
+
+// if (process.env.NODE_ENV === "development") {
+//   (async function () {
+//     const listener = await ngrok.forward({
+//       addr: port,
+//       authtoken: process.env.NGROK_AUTHTOKEN,
+//       domain: process.env.NGROK_DOMAIN,
+//     });
+//     console.log(`Ingress established at ${listener.url()}`);
+//   })();
+// }
+
+// (async function () {
+//   const listener = await ngrok.forward({
+//     addr: port,
+//     authtoken: process.env.NGROK_AUTHTOKEN,
+//     domain: process.env.NGROK_DOMAIN,
+//   });
+//   console.log(`Ingress established at ${listener.url()}`);
+// })();
 
 // app.get("/", (req, res) => {
 //   res.status(200).send("You are connected to the backend");
@@ -83,7 +98,7 @@ app.all("/", function (req, res, next) {
     next());
 });
 
-app.use("/oracle", oracleRouter);
+// app.use("/oracle", oracleRouter);
 app.use("/api", apiRouter);
 app.use("/propagate", propagateRouter);
 

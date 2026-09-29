@@ -13,6 +13,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
+    "@ngrok/ngrok": "^1.7.0",
     "async": "^3.2.6",
     "axios": "^1.18.1",
     "better-sqlite3": "^13.0.3",
@@ -32,7 +33,6 @@
     "react-webcam": "^7.2.0",
     "read-chunk": "^5.0.0",
     "sql-template-tag": "^5.2.1",
-    "tesseract.js": "^7.0.0",
     "winston": "^3.19.0"
   }
 }

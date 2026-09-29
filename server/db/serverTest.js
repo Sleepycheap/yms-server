@@ -15,7 +15,6 @@ import {
   updateTruckID,
   getAllContainersForOrder,
   getCustomerName,
-  getTruckID,
   populateTrucks,
   getAllOrdersByOrg,
   creditCheck,
@@ -24,11 +23,12 @@ import {
   // runOrderOnHold,
   getUserID,
   uploadTruckImage,
-  getTruckImage,
   // truckImageTable,
   getUnpickedContainersForOrder,
   runTruckManifest,
   getPromiseDate,
+  getAnswers,
+  getTruckImage,
 } from "../oracle/functions.js";
 
 import {
@@ -44,14 +44,17 @@ import {
   getScacCodes,
   getContainersByOrder,
   getContainerByID,
+  PopulateScac,
+  PopulateTrucks,
+  PopulateOrgCode,
 } from "./handler.js";
 
 import { db } from "./database.js";
-import {
-  GetTrucks,
-  PopulateTrucks,
-  PopulateScac,
-} from "../oracle/oracleQueries.js";
+// import {
+//   GetTrucks,
+//   PopulateTrucks,
+//   PopulateScac,
+// } from "../oracle/oracleQueries.js";
 import { getWeight } from "../../client/yms-client/src/utils/apiFunctions.js";
 import oracledb from "oracledb";
 
@@ -83,10 +86,50 @@ const imageObject = {
   truck_image: "Truck2.jpg",
 };
 
-// const connection = await pool.getConnection();
-const test = await uploadTruckImage(imageObject);
+// console.log(await validateOrder("ANN", 2600429001));
 
-console.log(test);
+// console.log(await getLoadedTruckWeight("2600429001T1"));
+
+// console.log(await getTruckIDByOrg("STJ"));
+
+// console.log(await PopulateScac());
+
+// console.log(await PopulateTrucks());
+
+const test = await getTruckImage(122452);
+console.log(test.exist);
+
+// const test = "Bryan's Express";
+
+// console.log(RegExp.escape(test));
+
+// console.log(await PopulateOrgCode());
+
+// console.log(await getTruckID("STJ"));
+
+// console.log(await getAllOrdersByOrg("STJ"));
+
+// console.log(await runTruckManifest("STJ", "2600177405T1"));
+
+// console.log(
+//   await getLoadingShippingDetails(
+//     "STJ",
+//     2600177405,
+//     "2600177405T1",
+//     "S",
+//     "STJ",
+//     "JUNE-06-26",
+//   ),
+// );
+
+// console.log(await getPromiseDate(2600177405));
+
+// console.log(await getAnswers());
+
+// const connection = await pool.getConnection();
+// const test = await uploadTruckImage(imageObject);
+
+// console.log(test);
 
 // const RecType = await connection.getDbObjectClass(
 //   "INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG.TRUCK_IMAGE_REC",
