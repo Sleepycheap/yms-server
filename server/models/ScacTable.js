@@ -1,5 +1,5 @@
 import { createTable } from "../db/handler.js";
-import { GetScac } from "../oracle/oracleQueries.js";
+import { GetScac } from "../archived/oracleQueries.js";
 
 export function ScacTable() {
   return {

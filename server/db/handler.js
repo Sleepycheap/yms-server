@@ -3,7 +3,7 @@
 import { db } from "./database.js";
 import { pool } from "../oracle/pool.js";
 import {
-  getAllContainersForOrder,
+  getPickedContainersForOrder,
   getOrgCodes as getCodes,
   getScacCodesByOrg,
   getTruckID,
@@ -106,7 +106,7 @@ export async function getOrderDetailsUnpicked(orderNumber) {
 // populates local tables with container data from Oracle
 export async function populateContainersByOrder(orderNumber) {
   let changes = 0;
-  const containers = await getAllContainersForOrder(orderNumber);
+  const containers = await getPickedContainersForOrder(orderNumber);
   try {
     for (let i = 0; i < containers.length; i++) {
       const {

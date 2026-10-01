@@ -1,13 +1,17 @@
 import express from "express";
 // import { GetOrgCode } from "../oracle/procedures";
-import { PopulateOrgCode } from "../oracle/oracleQueries.js";
+// import { PopulateOrgCode } from "../oracle/oracleQueries.js";
 import {
-  getAllContainersForOrder,
+  getPickedContainersForOrder,
   getTruckID,
   getUnpickedContainersForOrder,
 } from "../oracle/functions.js";
 import { db } from "../db/database.js";
-import { getContainersByOrder, insertIntoTable } from "../db/handler.js";
+import {
+  getContainersByOrder,
+  insertIntoTable,
+  PopulateOrgCode,
+} from "../db/handler.js";
 import logger from "../utils/logger.js";
 
 const propagateRouter = express.Router();
@@ -48,7 +52,7 @@ propagateRouter.post("/containers", async (req, res) => {
   try {
     const del = db.prepare("DELETE FROM Containers");
     del.run();
-    const list = await getAllContainersForOrder(order_number);
+    const list = await getPickedContainersForOrder(order_number);
     const unpicked = await getUnpickedContainersForOrder(order_number);
 
     for (let i = 0; i < list.length; i++) {

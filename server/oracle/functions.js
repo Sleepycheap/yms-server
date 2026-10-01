@@ -84,14 +84,15 @@ This will allow the images to be displayed on front end if desired
   }
 */
 
-export async function getTruckImage(userID) {
+export async function getTruckImage(userID, truckID) {
   try {
     const result = await connection.execute(
       `BEGIN
-        ${pkg}.xxbbna_get_truck_image(:user, :exist, :images);
+        ${pkg}.xxbbna_get_truck_image(:user, :truck, :exist, :images);
       END;`,
       {
         user: userID,
+        truck: truckID,
         exist: { dir: oracledb.BIND_OUT, type: oracledb.DB_TYPE_BOOLEAN },
         images: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
       },
@@ -538,7 +539,29 @@ export async function updateTruckID(
 }
 
 // gets all picked/loaded containers for specific order
-export async function getAllContainersForOrder(orderNumber) {
+// export async function getPickedContainersForOrder(orderNumber) {
+//   try {
+//     console.log("getting containers...");
+//     const query = await connection.execute(
+//       `
+//       BEGIN
+//         ${pkg}.xxbbna_warehouse_picked_containers(:order, :containers);
+//       END;`,
+//       {
+//         order: orderNumber,
+//         containers: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+//       },
+//     );
+//     const { containers } = query.outBinds;
+//     const rows = await containers.getRows();
+//     await containers.close();
+//     return rows;
+//   } catch (err) {
+//     console.log("there was an error getting picked containers", err.message);
+//   }
+// }
+
+export async function getPickedContainersForOrder(orderNumber) {
   try {
     const result = await connection.execute(
       // `SELECT a.delivery_detail_id, a.cont_name, b.item_description, a.cont_qty, a.cont_gross_wt, a.direct_truck, a.order_number, b.shipping_instructions FROM XXBM_PICK_STATUS_REPORT_VW a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_number = :order_number ORDER BY cont_name`,
@@ -552,7 +575,7 @@ export async function getAllContainersForOrder(orderNumber) {
   }
 }
 
-// get unpicked containers?
+// // get unpicked containers?
 export async function getUnpickedContainersForOrder(orderNumber) {
   try {
     console.log("getting containers...");
@@ -566,6 +589,54 @@ export async function getUnpickedContainersForOrder(orderNumber) {
     console.log("there was an error fetching unpicked containers", err.message);
   }
 }
+// export async function getUnpickedContainersForOrder(orderNumber) {
+//   try {
+//     console.log("getting containers...");
+//     const query = await connection.execute(
+//       `BEGIN
+//         ${pkg}.xxbbna_warehouse_unpicked_containers(:order, :containers);
+//       END;`,
+//       {
+//         order: orderNumber,
+//         containers: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+//       },
+//     );
+//     const { containers } = query.outBinds;
+//     const rows = await containers.getRows();
+//     await containers.close();
+//     return rows;
+//   } catch (err) {
+//     console.log("error getting unpicked containers", err.message);
+//   }
+// }
+
+// export async function getContainers(orderNumber) {
+//   try {
+//     const result = await connection.execute(
+//       `
+//       BEGIN
+//         ${pkg}.xxbbna_get_containers_for_order(:order, :picked, :unpicked);
+//       END;`,
+//       {
+//         order: orderNumber,
+//         picked: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+//         unpicked: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+//       },
+//     );
+//     const { picked, unpicked } = result.outBinds;
+//     const pickedRows = await picked.getRows();
+//     picked.close();
+//     const unpickedRows = await unpicked.getRows();
+//     unpicked.close();
+//     const containers = {
+//       picked: pickedRows,
+//       unpicked: unpickedRows,
+//     };
+//     return containers;
+//   } catch (err) {
+//     console.log("there was an error getting containers", err.message);
+//   }
+// }
 
 // gets name of customer on order
 export async function getCustomerName(orderNumber) {

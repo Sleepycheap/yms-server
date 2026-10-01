@@ -171,7 +171,25 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
     WHEN others THEN
       dbms_output.put_line('Exception ------ ' || sqlerrm);
   END xxbbna_warehouse_org_code;
+------------------------------------------
+/*
+Name: xxbbna_get_containers_for_order
+Output parameters: x_containers returns all containers for order
+*/
+PROCEDURE xxbbna_get_containers_for_order(p_order_number IN NUMBER, x_picked_containers OUT SYS_REFCURSOR, x_unpicked_containers OUT SYS_REFCURSOR) IS
+BEGIN
+    OPEN x_picked_containers FOR
+    SELECT delivery_detail_id, order_no, cont_name, total_cont_qty AS cont_qty, total_gross_wt AS cont_gross_wt, ship_from_org_code, truck_id_2, ship_set_name, item_description, organization_id 
+    FROM (SELECT a.delivery_detail_id, a.order_no, a.cont_name, SUM(a.cont_qty) OVER (partition by a.cont_name) AS total_cont_qty, SUM(a.cont_gross_wt) OVER (partition by a.cont_name) AS total_gross_wt, a.ship_from_org_code, a.truck_id_2, a.ship_set_name, b.item_description, b.organization_id, ROW_NUMBER() OVER (PARTITION BY a.cont_name ORDER BY a.cont_name ASC) as rn FROM xxwsh_containers a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_no = p_order_number) WHERE rn = 1;
 
+    OPEN x_unpicked_containers FOR 
+    SELECT c.delivery_detail_id, c.order_number AS order_no, c.cont_name, c.cont_qty AS total_cont_qty, c.cont_gross_wt AS total_gross_wt, c.shipping_org AS ship_from_org_code, c.direct_truck as truck_id_2, b.shipping_instructions AS ship_set_name, b.item_description, b.organization_id
+    FROM XXBM_PICK_STATUS_REPORT_VW c, wsh_delivery_details b WHERE c.delivery_detail_id = b.delivery_detail_id AND c.order_number = p_order_number AND c.cont_name IS NULL ORDER BY cont_name;  
+
+    EXCEPTION
+    WHEN others THEN
+      dbms_output.put_line('Exception ------ ' || sqlerrm);
+END xxbbna_get_containers_for_order;
   ---------------------------------------------------------------------------------------------------------------------
   --      Name: XXBBNA_WAREHOUSE_TRUCK_ID
   --
@@ -249,6 +267,38 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
     WHEN others THEN
       dbms_output.put_line('Exception ------ ' || sqlerrm);
   END xxbbna_warehouse_truck_id;
+-----------------------------------
+/*
+Name: xxbbna_warehouse_picked_containers
+Returns cursor of picked containers by order number
+*/
+PROCEDURE xxbbna_warehouse_picked_containers(p_order_number IN NUMBER, x_picked_containers OUT SYS_REFCURSOR) IS
+
+BEGIN
+  OPEN x_picked_containers FOR
+  SELECT delivery_detail_id, order_no, cont_name, total_cont_qty AS cont_qty, total_gross_wt AS cont_gross_wt, ship_from_org_code, truck_id_2, ship_set_name, item_description, organization_id FROM (SELECT a.delivery_detail_id, a.order_no, a.cont_name, SUM(a.cont_qty) OVER (partition by a.cont_name) AS total_cont_qty, SUM(a.cont_gross_wt) OVER (partition by a.cont_name) AS total_gross_wt, a.ship_from_org_code, a.truck_id_2, a.ship_set_name, b.item_description, b.organization_id, ROW_NUMBER() OVER (PARTITION BY a.cont_name ORDER BY a.cont_name ASC) as rn FROM xxwsh_containers a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_no = p_order_number ) WHERE rn = 1;
+
+EXCEPTION
+WHEN others THEN
+  dbms_output.put_line('Exception ------ ' || sqlerrm);
+END xxbbna_warehouse_picked_containers;
+
+-----------------------------------
+/*
+Name: xxbbna_warehouse_unpicked_containers
+Returns cursor of picked containers by order number
+*/
+PROCEDURE xxbbna_warehouse_unpicked_containers(p_order_number IN NUMBER, x_unpicked_containers OUT SYS_REFCURSOR) IS
+
+BEGIN
+  OPEN x_unpicked_containers FOR
+  SELECT a.delivery_detail_id, a.cont_name, b.item_description, a.direct_truck, a.order_number, b.shipping_instructions FROM XXBM_PICK_STATUS_REPORT_VW a, wsh_delivery_details b WHERE a.delivery_detail_id = b.delivery_detail_id AND a.order_number = p_order_number AND a.cont_name IS NULL ORDER BY cont_name;
+
+EXCEPTION
+WHEN others THEN
+  dbms_output.put_line('Exception ------ ' || sqlerrm);
+END xxbbna_warehouse_unpicked_containers;
+
 
   ----------------------------------------------------------------------------------------------------------------------
   --      Name: XXBBNA_WAREHOUSE_VALID_ORDER
@@ -2409,12 +2459,12 @@ x_imagesExist BOOLEAN
 x_images cursor  
 */
 ----
-PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR) IS
+PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, p_truck_id IN VARCHAR2, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR) IS
   -- x_imageExists BOOLEAN;
 BEGIN 
 
   OPEN x_images FOR
-  SELECT truck_image FROM xxbbna_truck_image WHERE created_by = p_user_id ORDER BY creation_date DESC;
+  SELECT truck_image FROM xxbbna_truck_image WHERE created_by = p_user_id AND truck_id = p_truck_id ORDER BY creation_date DESC;
 
   IF x_images IS NOT NULL THEN
   x_imagesExist := true;

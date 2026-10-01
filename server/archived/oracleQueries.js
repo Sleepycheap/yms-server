@@ -1,5 +1,5 @@
 import oracledb from "oracledb";
-import { pool } from "./pool.js";
+import { pool } from "../oracle/pool.js";
 import * as proc from "./procedures.js";
 import {
   createProductType,

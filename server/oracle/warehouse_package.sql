@@ -117,6 +117,27 @@ FUNCTION AfterReport RETURN BOOLEAN;
         truck_image   BLOB
     );
 
+    TYPE containers_rec IS RECORD(
+        delivery_detail_id NUMBER,
+        order_no NUMBER,
+        cont_name VARCHAR2(100),
+        total_cont_qty NUMBER,
+        total_gross_wt NUMBER,
+        ship_from_org_code VARCHAR2(10),
+        truck_id_2 VARCHAR2(100),
+        ship_set_name VARCHAR2(100),
+        item_description VARCHAR2(240),
+        organization_id NUMBER
+    );
+
+    -- TYPE unpicked_containers_rec IS RECORD(
+    --     delivery_detail_id NUMBER,
+    --     order_no NUMBER,
+    --     cont_name VARCHAR2(100),
+    --     cont_qty NUMBER,
+
+    -- )
+
    /* TYPE g_questions_record IS RECORD(
         category_id     INTERFACE.xxbbna_category_questions.category_id%TYPE,
         category_type   INTERFACE.xxbbna_category_questions.category_type%TYPE,
@@ -203,6 +224,10 @@ FUNCTION AfterReport RETURN BOOLEAN;
 
     -- Global table type declaration for diffenent output
     --
+
+    TYPE containertable IS TABLE OF containers_rec
+        INDEX BY BINARY_INTEGER;
+
     TYPE scactable IS TABLE OF g_scac_record
         INDEX BY BINARY_INTEGER;
 
@@ -318,7 +343,22 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     PROCEDURE xxbbna_warehouse_truck_id(x_org_code IN VARCHAR2, x_truck_id_cur OUT SYS_REFCURSOR);
 
 ----------------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------------
+/*
+Name: xxbbna_warehouse_picked_containers
+Output parameters:
+Returns all picked containers for order
+*/
+------------------------------------
+PROCEDURE xxbbna_warehouse_picked_containers(p_order_number IN NUMBER, x_picked_containers OUT SYS_REFCURSOR);
+----------------------------------------
+/*
+Name: xxbbna_warehouse_unpicked_containers
+Returns all unpicked containers for order
+*/
+------------------------------------------------------
+PROCEDURE xxbbna_warehouse_unpicked_containers(p_order_number IN NUMBER, x_unpicked_containers OUT SYS_REFCURSOR);
+
+---------------------------------------------------------------------------------------------------------------------
     --      Name: XXBBNA_WAREHOUSE_VALID_ORDER
     --
     --    Output parameters:
@@ -438,10 +478,10 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
   Output parameters:
   x_imageExists Boolean confirming if truck has any images
   x_images returns cursor of images for specified truck
-  
+
 */
 ----------------------------------------------------------------------------------------------------------------------
-PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR);
+PROCEDURE xxbbna_get_truck_image(p_user_id IN NUMBER, p_truck_id IN VARCHAR2, x_imagesExist OUT BOOLEAN, x_images OUT SYS_REFCURSOR);
 ----------------------------------------------------------------------------------------------------------------------
     --      Name: xxbbna_category_questions
     --

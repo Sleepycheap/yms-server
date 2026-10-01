@@ -13,6 +13,11 @@ import apiRouter from "./routes/apiRouter.js";
 import propagateRouter from "./routes/propagate.js";
 import morgan from "morgan";
 import multer from "multer";
+import containerRouter from "./routes/containerRouter.js";
+import truckRouter from "./routes/truckRouter.js";
+import userRouter from "./routes/userRouter.js";
+import orderRouter from "./routes/orderRouter.js";
+import verifyRouter from "./routes/verifyRouter.js";
 // import logger from "./utils/logger.js";
 // import pino, { destination } from "pino";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -101,6 +106,12 @@ app.all("/", function (req, res, next) {
 // app.use("/oracle", oracleRouter);
 app.use("/api", apiRouter);
 app.use("/propagate", propagateRouter);
+
+app.use("/trucks", truckRouter);
+app.use("/containers", containerRouter);
+app.use("/user", userRouter);
+app.use("/orders", orderRouter);
+app.use("/verify", verifyRouter);
 
 app.get("/", (req, res) => {
   const uploadsDirectory = uploadPath;

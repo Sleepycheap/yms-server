@@ -21,7 +21,7 @@ import {
   getUserID,
   getOperatingUnitID,
   validateOrder,
-  getAllContainersForOrder,
+  getPickedContainersForOrder,
   getUnpickedContainersForOrder,
   getTruckImage,
   uploadTruckImage,

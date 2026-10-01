@@ -3,7 +3,7 @@ import axios from "axios";
 
 import {
   getOrgCodes,
-  getTruckIDByOrg,
+  // getTruckIDByOrg,
   getOperatingUnitID,
   validateOrder,
   getLoadingShippingDetails,
@@ -13,7 +13,7 @@ import {
   // runContainerValidation,
   // runShowTruck,
   updateTruckID,
-  getAllContainersForOrder,
+  // getAllContainersForOrder,
   getCustomerName,
   populateTrucks,
   getAllOrdersByOrg,
@@ -29,6 +29,8 @@ import {
   getPromiseDate,
   getAnswers,
   getTruckImage,
+  // getContainers,
+  getPickedContainersForOrder,
 } from "../oracle/functions.js";
 
 import {
@@ -96,8 +98,18 @@ const imageObject = {
 
 // console.log(await PopulateTrucks());
 
-const test = await getTruckImage(122452);
-console.log(test.exist);
+const test = await getTruckImage(122452, "2600429001T1");
+console.log(test);
+
+// const test = await getContainers(2600429001);
+
+// console.log(test.unpicked);
+
+// const test = await getPickedContainersForOrder(2600429001);
+// console.log(test);
+
+// const test = await getUnpickedContainersForOrder(2600429001);
+// console.log(test);
 
 // const test = "Bryan's Express";
 
