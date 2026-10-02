@@ -1,6 +1,6 @@
 import { Outlet, useNavigation } from "react-router-dom"
 import Header from './Header'
-import Loader from "./Loader"
+import Loader from "../components/Loader"
 import { useSelector } from "react-redux"
 // import TruckFooter from "./TruckFooter"
 import { useState } from "react"

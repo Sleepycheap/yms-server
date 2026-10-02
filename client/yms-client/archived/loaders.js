@@ -1,4 +1,4 @@
-import { getTrucks } from "./apiFunctions";
+import { getTrucks } from "../src/utils/apiFunctions";
 
 export async function truckLoader({params}) {
   const {orgcode} = params;

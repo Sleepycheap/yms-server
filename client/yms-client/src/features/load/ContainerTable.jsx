@@ -1,16 +1,11 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { getContainers, getScacCodes } from '../../utils/apiFunctions'
-import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import Loader from '../../ui/Loader'
-import styled from 'styled-components'
+import {useQuery } from '@tanstack/react-query'
+import { getContainers} from '../../utils/apiFunctions'
+import { useSelector} from 'react-redux'
+import Loader from '../../components/Loader'
 import ContainerRow from './ContainerRow'
 import styles from './ContainerTable.module.css'
-import TableOptions from '../../components/TableOptions'
+import TableOptions from './TableOptions'
 import { useSearchParams } from 'react-router-dom'
-// import Spinner from '../../components/Spinner'
-
-
 
 function LoadTable() { 
   const orderNumber = useSelector((state) => state.order.orderNumber)

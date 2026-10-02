@@ -34,8 +34,12 @@ import { loadContainer, getTrucks, verifyOrder } from "./src/utils/apiFunctions.
 // const test = await getTrucks('ANN')
 // console.log(test)
 
-const test = await verifyOrder('ANN', 2600429001)
-console.log(test)
+// const test = await verifyOrder('ANN', 2600429001)
+// console.log(test)
+
+import { getScacCodes } from "./src/utils/apiFunctions.js";
+
+console.log(await getScacCodes())
 
 // const test = await loadContainer(  2600429001,
 //   "10M",

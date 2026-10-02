@@ -1,31 +1,24 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 import { getContext } from "@microsoft/power-apps/app";
-import { setOrg } from "../features/truck/truckSlice.js";
-import Loader from './Loader.jsx'
+import Loader from '../components/Loader.jsx'
 import TruckSelection from "../features/truck/TruckSelection.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "./Button.jsx";
 import { getPosition } from "../utils/getPosition.js";
 import { determineClosestPlant } from "../utils/geoLocation.js";
 import {updateName, updateOrgCode, setDate, setUserID} from '../features/user/userSlice.js'
-import Login from "../features/user/Login.jsx";
-import Webcam from 'react-webcam'
-import TakePicture from "../components/Camera.jsx";
-import CreateTruck from "../features/truck/CreateTruck.jsx";
 import { getUserID } from "../utils/apiFunctions.js";
+import toast from "react-hot-toast";
+import Error from "../ui/Error.jsx";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedOrg, setSelectedOrg] = useState('')
-  const [takePhoto, setTakePhoto] = useState(false)
   const [createTruck, setCreateTruck] = useState(false);
+  const [loadError, setLoadError] = useState(false)
   const username = useSelector((state) => state.user.username)
   const orgCode = useSelector((state) => state.user.orgCode)
 
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   useEffect(() => {
     if(username === '') {
@@ -44,6 +37,12 @@ function Home() {
         const {userPrincipalName} = ctx.user;
 
         const ID = await getUserID(userPrincipalName)
+        if (ID.failed) {
+          toast.error('Error 500: cannot access server')
+          setLoadError(true)
+          setIsLoading(false)
+          return;
+        }
 
         dispatch(setUserID(ID))
         
@@ -79,14 +78,17 @@ function Home() {
 
   return (
     <div className="md:m-10">
-      <Button to='tests'>Click me</Button>
+      {/* <Button to='tests'>Click me</Button> */}
     {isLoading && (
       <Loader />
     )}
-    {!isLoading && (
+    {!isLoading && !loadError && (
       <>
       <TruckSelection />
       </>
+    )}
+    {!isLoading && loadError && (
+      <Error />
     )}
     </div>
   )

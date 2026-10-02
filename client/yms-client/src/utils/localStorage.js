@@ -1,2 +1,0 @@
-// localforage.setDriver(localforage.INDEXEDDB)
-

@@ -1,9 +1,9 @@
 import Webcam from "react-webcam";
-import Button from "../ui/Button";
-import Canvas from '../components/Canvas'
+import Button from "../../components/Button";
+import Canvas from '../../components/Canvas'
 import {useState, useRef, useCallback, useEffect} from 'react'
 import { useSelector } from "react-redux";
-import { setScannedTruck } from "../features/pictures/pictureSlice";
+import { setScannedTruck } from "./pictureSlice";
 import { useDispatch } from "react-redux";
 
 

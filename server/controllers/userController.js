@@ -1,9 +1,9 @@
 import { getUserID } from "../oracle/functions.js";
 
 export async function getUser(req, res) {
-  const { username } = req.params;
+  const { upn } = req.params;
   try {
-    const result = await getUserID(username);
+    const result = await getUserID(upn);
     const { USER_ID } = result[0];
     res.json(USER_ID);
   } catch (err) {

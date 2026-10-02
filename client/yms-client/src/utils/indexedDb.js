@@ -6,16 +6,17 @@ const {indexedDB} = window;
 
 // console.log('indexedDB')
 
-const storeExists = async () => {
+export const storeExists = async () => {
   return new Promise((resolve) => {
     const req = indexedDB.open('YMSClient')
     req.onsuccess = () => {
       db = req.result
-      console.log('db', db)
+      const {version} = db
       const exists = db.objectStoreNames.contains('truckPhotos')
-      console.log('store', db.objectStoreNames.length)
+      const results = {exists, version}
+      console.log(results)
       db.close()
-      resolve(true)
+      resolve(results)
     }
     req.onerror = () => resolve(false)
   })
@@ -38,7 +39,6 @@ const getCurrentVersion = async () => {
 //creates db if first time opening
 //otherwise accesses db and sets to db
 export const openDb = async (version) => {
-  // console.log('open test')
   const req = indexedDB.open(dbName, version)
   req.onsuccess = function(e) {
     db = this.result;
@@ -62,7 +62,8 @@ export const openDb = async (version) => {
 }
 
 export const openDatabase = async (s) => {
-  const exists = await storeExists('truckPhotos', 'YMSClient')
+  const result = await storeExists('truckPhotos', 'YMSClient')
+  const {exists} = result
   console.log(`${'truckPhotos'} and ${'YMSClient'} exists`, exists)
   if (!exists || db.objectStoreNames.length === 0) {
     const currentVersion = await getCurrentVersion('YMSClient')
@@ -135,46 +136,52 @@ export const deleteObjectStore = async () => {
 export function deleteItemByID(id) {
   let msg 
   return new Promise((resolve, reject) => {
-    const tx = db.transaction('truckPhotos', 'readwrite')
-    const store = tx.objectStore('truckPhotos')
-    const req = store.delete(id)
-
-    req.onsuccess = function() {
-      msg = `Item ${id} successfully deleted`
-      console.log(msg)
-      resolve(msg)
-    }
-    req.onerror = function(e) {
-      msg = `Error deleting item: ${e.target.error}`
-      console.log(msg)
-      reject(err)
+    const req = indexedDB.open(dbName)
+    req.onsuccess = function(e) {
+      db = this.result;
+      const tx = db.transaction('truckPhotos', 'readwrite')
+      const store = tx.objectStore('truckPhotos')
+      const del = store.delete(id)
+      
+      del.onsuccess = function() {
+        msg = `Item ${id} successfully deleted`
+        console.log(msg)
+        resolve(msg)
+      }
+      del.onerror = function(e) {
+        msg = `Error deleting item: ${e.target.error}`
+        console.log(msg)
+        reject(err)
+      }
     }
   })
 }
 
 // adds item to db
-export function addToDB(object) {
-  // openDatabase()
+export async function addToDB(object) {
   return new Promise((resolve, reject) => {
-
-    const tx = db.transaction('truckPhotos', 'readwrite')
-    const store = tx.objectStore('truckPhotos')
-    let req
-    let msg
-    try {
-      req = store.add(object)
-    } catch (e) {
-      throw e
-    }
+    const req = indexedDB.open(dbName)
     req.onsuccess = function(e) {
-      console.log('insertion to indexedDB successful')
-      const msg = {success: true, data: object}
-      resolve(msg)
-    }
-    req.onerror = function() {
-      console.error('error adding to indexedDB', this.error)
-      msg = this.error
-      reject(msg)
+      db = this.result;
+      const tx = db.transaction('truckPhotos', 'readwrite')
+      const store = tx.objectStore('truckPhotos')
+      let add
+      let msg
+      try {
+        add = store.add(object)
+      } catch (e) {
+        throw e
+      }
+      add.onsuccess = function(e) {
+        console.log('insertion to indexedDB successful')
+        const msg = {success: true, data: object}
+        resolve(msg)
+      }
+      add.onerror = function() {
+        console.error('error adding to indexedDB', this.error)
+        msg = this.error
+        reject(msg)
+      }
     }
   })
 }
@@ -203,27 +210,30 @@ export function deleteDB() {
 // currently only looking at container index
 export function getItemByIndex(item) {
   return new Promise((resolve, reject) => {
-    const tx = db.transaction('truckPhotos', 'readonly')
-    const store = tx.objectStore('truckPhotos')
-    const index = store.index('container')
-    const req = index.get(item)
-    
-    req.onsuccess = (e) => {
-      resolve(e.target.result)
-    }
-    req.onerror = (e) => {
-      reject(e.target.error)
+    const req = indexedDB.open(dbName)
+    req.onsuccess = function(e) {
+      db = this.result;
+      const tx = db.transaction('truckPhotos', 'readonly')
+      const store = tx.objectStore('truckPhotos')
+      const index = store.index('container')
+      const get = index.get(item)
+      
+      get.onsuccess = (e) => {
+        resolve(e.target.result)
+      }
+      get.onerror = (e) => {
+        reject(e.target.error)
+      }
     }
   })
 }
 
 // gets all items
-export function getAllItems() {
-  // openDatabase()
+export async function getAllItems() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open('YMSClient')
-    req.onsuccess = (e) => {
-      db = req.result
+    req.onsuccess = function(e)  {
+      db = this.result
       const tx = db.transaction(['truckPhotos'], 'readonly');
       const store = tx.objectStore('truckPhotos');
       const all = store.getAll()

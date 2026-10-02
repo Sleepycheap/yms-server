@@ -7,14 +7,15 @@ import axios from "axios"
 // import {BarcodeScanner, useScanning, useCamera, useStreamState, useTorch, BarcodeScannerProvider} from 'react-barcode-scanner' 
 // import ScannerControls from "../components/ScannerControls"
 import {useZxing} from 'react-zxing'
-import Camera from "../components/Camera"
-import Counter from "./Counter"
-import Modal from "./Modal"
-import ScanTruckBarcode from "../components/ScanTruckBarcode"
-import LocalStorageInterface from "../components/LocalStorageInterface"
-import ImagesStorageInterface from "../components/ImagesStorageInterface"
+import Camera from "../features/pictures/Camera"
+// import Counter from "/Counter"
+// import Modal from "../ui/Modal"
+import ScanTruckBarcode from "../features/load/ScanTruckBarcode"
+import LocalStorageInterface from "../ui/LocalStorageInterface"
+import ImagesStorageInterface from "../ui/ImagesStorageInterface"
 import { getTruckImage } from "../utils/apiFunctions"
 import { useSelector } from "react-redux"
+// import {add, getAll} from '../utils/localStorage'
 
 // import { insideCircle, distanceTo, toLatLon, getLongitude } from "geolocation-utils";
 
@@ -41,20 +42,26 @@ function Tests() {
   }
 
   return (
-    // <LocalStorageInterface />
+    <LocalStorageInterface />
+    // <>
+    // <button onClick={() => add()}>click me</button>
+    // <br></br>
+    // <button onClick={getAll}>Get</button>
+    // </>
+    // <p>test</p>
     // <ImagesStorageInterface />
-    <div>
-      <h1>Image example</h1>
-      <button onClick={handleGet}>get image</button>
-      <ul>
+    // <div>
+    //   <h1>Image example</h1>
+    //   <button onClick={handleGet}>get image</button>
+    //   <ul>
 
-      {imgSelected && images.map((image, index) => (
-        <li key={index}>
-        <img src={image} className="w-20"></img>
-        </li>
-      ))}
-      </ul>
-    </div>
+    //   {imgSelected && images.map((image, index) => (
+    //     <li key={index}>
+    //     <img src={image} className="w-20"></img>
+    //     </li>
+    //   ))}
+    //   </ul>
+    // </div>
   )
   
 }

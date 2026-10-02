@@ -3,6 +3,6 @@ import { getUser } from "../controllers/userController.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/:username", getUser);
+userRouter.get("/:upn", getUser);
 
 export default userRouter;

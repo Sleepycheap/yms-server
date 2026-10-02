@@ -3,10 +3,10 @@ import styles from './ContainerRow.module.css'
 import { useSelector } from 'react-redux';
 import { unloadContainer, loadContainer, getWeight } from '../../utils/apiFunctions';
 import { useState } from 'react';
-import Button from '../../ui/Button';
+import Button from '../../components/Button';
 import toast from 'react-hot-toast';
-import Modal from '../../ui/Modal';
-import ScanTruckBarcode from '../../components/ScanTruckBarcode';
+import Modal from '../../components/Modal';
+import ScanTruckBarcode from './ScanTruckBarcode';
 import TruckIDSubmit from '../truck/TruckIDSubmit';
 
 
@@ -76,14 +76,14 @@ function ContainerRow({container}) {
   return (
     <>
     {isModalOpen && <Modal  onClose={() => setIsOpenModal(false)}><TruckIDSubmit id={delivery_detail_id} onCloseModal={() => setIsOpenModal(false)} assignContainer={assignContainer}/> </Modal>}
-    <tr>
+    <tr className='z-1'>
       <td>{order_number}</td>
       <td>{cont_name}</td>
       <td>{item_description}</td>
       <td>{cont_qty}</td>
       <td>{cont_gross_wt}</td>
       <td>{shipping_instructions}</td>
-      <td><button className='hover:cursor-pointer'  onClick={() => setIsOpenModal(true)}>{direct_truck ? direct_truck : 'click'}</button></td>
+      <td className='bg-amber-600 text-stone-200  hover:cursor-pointer hover:drop-shadow-lg/100 hover:drop-shadow-amber-800' ><button   onClick={() => setIsOpenModal(true)} className='hover:cursor-pointer' >{direct_truck ? direct_truck : 'Load'}</button></td>
       <td><button className='hover:cursor-pointer' onClick={() => unassignContainer({order_number, cont_name, orgCode, direct_truck, userID})} disabled={removing}>{direct_truck ? 'unload' : ''}</button></td>
 
     </tr>

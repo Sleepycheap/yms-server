@@ -7,15 +7,18 @@ const {indexedDB} = window;
 
 // console.log('truckImagesDB')
 
-const storeExists = async () => {
+export const storeExists = async () => {
   return new Promise((resolve) => {
     const req = indexedDB.open(dbName)
     req.onsuccess = () => {
       db = req.result
+      const {version} = db
       const exists = db.objectStoreNames.contains('images')
+      const results = {exists, version}
+      console.log(results)
+
       db.close()
-      console.log('exists', exists)
-      resolve(exists)
+      resolve(results)
     }
     req.onerror = () => resolve(false)
   })
@@ -38,9 +41,7 @@ const getCurrentVersion = async () => {
 //creates db if first time opening
 //otherwise accesses db and sets to db
 export const openDb = async (version) => {
-  return new Promise((resolve, reject) => {
-
-    const req = indexedDB.open(dbName, version)
+  const req = indexedDB.open(dbName, version)
     req.onsuccess = function(e) {
       db = this.result;
       console.log('open indexedDB done')
@@ -48,26 +49,23 @@ export const openDb = async (version) => {
     
     req.onerror = function (e) {
       console.log('opendb error: ', e.target.errorCode)
-      reject(e.target.errorCode)
     }
     
     req.onupgradeneeded = function (e) {
       console.log('opendb.onupgradeneeded')
-      // id is 'delivery_detail_id' of containers
       const store = e.currentTarget.result.createObjectStore(
         'images', {keyPath: 'id'}
       )
       store.createIndex('truck_idx', 'truck_id')
     }
-  })
 }
 
 
 export const openDatabase = async () => {
-  const exists = await storeExists(storeName, dbName)
-  console.log('exists', exists)
-  if (exists === false) {
-    console.log('does not exist')
+  const result = await storeExists(storeName, dbName)
+  const {exists} = result;
+  console.log(`${storeName} and ${dbName} exists:`, exists)
+  if (!exists) {
     const currentVersion = await getCurrentVersion(dbName)
     const version = currentVersion + 1;
     return await openDb(version)
@@ -83,6 +81,7 @@ export function getObjectStore() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName)
     req.onsuccess = function(e) {
+      db = this.result
       const tx = db.transaction(['images'], 'readonly')
       const store = tx.objectStore('images')
       resolve(store)
@@ -135,7 +134,6 @@ export const deleteObjectStore = async () => {
 
 // deletes one item by its ID
 export function deleteItemByID(id) {
-  console.log('id', id)
   let msg 
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName)

@@ -21,6 +21,15 @@ const typeDec = `INTERFACE.XXBBNA_WAREHOUSE_PROCESS_PKG`;
 
 const userID = 122452;
 
+class ServerError extends Error {
+  constructor(message, data = {}) {
+    super(message);
+    this.code = data.code;
+    this.statusCode = data.statusCode || 500;
+    this.details = data.details || null;
+  }
+}
+
 // function example
 // returns Org ID
 export async function getOperatingUnitID(orgCode) {
@@ -162,16 +171,68 @@ export async function uploadTruckImage(imageObject) {
 }
 
 // returns userID from oracle using email address
-export async function getUserID(userPrincipalName) {
+export async function getUserID(upn) {
   try {
     const result = await connection.execute(
-      `select * from applsys.fnd_user where email_address = :email`,
-      [userPrincipalName],
+      `BEGIN
+        ${pkg}.xxbbna_warehouse_user_id(:email, :userinfo);
+      END;`,
+      {
+        email: upn,
+        userinfo: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
     );
-    const { rows } = result;
+    const { userinfo } = result.outBinds;
+    const rows = await userinfo.getRows();
+    await userinfo.close();
     return rows;
   } catch (err) {
-    console.log("error getting user ID", err.message);
+    throw new ServerError("Cannot retrieve User ID", {
+      code: "Server Error",
+      statusCode: 500,
+      details: "ORA-12170",
+    });
+  }
+}
+
+export async function getUserName(userID) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+      :username  := ${pkg}.xxbbna_warehouse_user_name(:user);
+      END;`,
+      {
+        user: userID,
+        userName: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+      },
+    );
+    const { userName } = result.outBinds;
+    const name = userName.split("@")[0].split(".").join(" ");
+    return name;
+  } catch (err) {
+    console.log("there was an error getting username", err.message);
+  }
+}
+
+export async function getLoaderName(truckID) {
+  try {
+    const result = await connection.execute(
+      `BEGIN
+        ${pkg}.xxbbna_warehouse_order_loaded_by(:truck, :loadername);
+      END;`,
+      {
+        truck: truckID,
+        loadername: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+    );
+    const { loadername } = result.outBinds;
+    const rows = await loadername.getRows(1);
+    const { EMAIL_ADDRESS } = rows[0];
+    const name = EMAIL_ADDRESS.split("@")[0].split(".").join(" ");
+    await loadername.close();
+    return name;
+  } catch (err) {
+    console.log("error getting LoaderName", err.message);
   }
 }
 

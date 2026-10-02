@@ -1,0 +1,40 @@
+.main {
+  display: grid;
+  overflow-y: auto;
+  min-height: 100vh;
+  background-color: oklch(86.9% 0.005 56.366); /*stone-300*/
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "content"
+    "content"
+}
+
+.header {
+  display: grid;
+  border: 1px solid oklch(20.8% 0.042 265.755);
+  /* height: 20%; */
+  grid-template-columns: auto 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-area: header;
+  position: sticky;
+}
+
+.content{
+  display: grid;
+  border: 2px solid green;
+  grid-area: content;
+  grid-template-rows: 1fr auto;
+}
+
+.content_header {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  grid-template-columns: auto auto auto auto;
+  border: 2px solid blue;
+  height: 20%;  
+}
+
+.content_body {
+  border: 2px solid red;
+}

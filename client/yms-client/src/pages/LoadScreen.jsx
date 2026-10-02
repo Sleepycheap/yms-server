@@ -1,23 +1,22 @@
-import Button from "../../ui/Button"
+import Button from "../components/Button"
 import { useSelector, useDispatch } from "react-redux"
 import styles from './LoadScreen.module.css'
 import { useEffect } from "react"
 import axios from 'axios'
-import { setCustomer } from "../order/orderSlice"
-import { setTruckWeight, setTruckQty, setTruckImageUploaded } from "../truck/truckSlice"
-import { setScreen } from "../appLayout/layoutSlice"
+import { setCustomer } from "../features/order/orderSlice"
+import { setTruckWeight, setTruckQty, setTruckImageUploaded } from "../features/truck/truckSlice"
+import { setScreen } from "../features/appLayout/layoutSlice"
 import { useState } from "react"
 // import Containers from "./Containers"
-import ContainerTable from "./ContainerTable"
+import ContainerTable from "../features/load/ContainerTable"
 import { useNavigate } from "react-router-dom"
-import { getCustomerName, getWeight, loadContainer, getTruckImage } from "../../utils/apiFunctions"
+import { getCustomerName, getWeight, loadContainer, getTruckImage, getContainers } from "../utils/apiFunctions"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import Loader from "../../ui/Loader"
+import Loader from "../components/Loader"
 import toast from "react-hot-toast"
-import ScanTruckBarcode from "../../components/ScanTruckBarcode"
-import Camera from "../../components/Camera"
-import { setScannedContainer } from "../pictures/pictureSlice"
-import ManualEntry from './ManualEntry'
+import ScanTruckBarcode from "../features/load/ScanTruckBarcode"
+import Camera from "../features/pictures/Camera"
+import { setScannedContainer } from "../features/pictures/pictureSlice"
 
 function LoadScreen() {
   const [manualAssign, setManualAssign] = useState(false)
@@ -49,7 +48,7 @@ function LoadScreen() {
       dispatch(setCustomer(result))
       setIsLoading(false)
 
-      const imageExist = await getTruckImage(userID)
+      const imageExist = await getTruckImage(userID, selectedTruck)
       const {exist} = imageExist
       if (exist) {
         dispatch(setTruckImageUploaded(true))
@@ -112,8 +111,8 @@ function LoadScreen() {
 
 
 
-  function handleNavigate() {
-    navigate('/')
+  function handleComplete() {
+    navigate('/complete')
   }
 
   function handleChange(e) {
@@ -125,11 +124,6 @@ function LoadScreen() {
 
   }
 
-  async function handleManualAssign() {
-    // const {order_number, cont_name} = container;
-    // console.log(container)
-    // assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
-  }
 
    
   if (loadingTruck) return <Loader text={'load screen'}/>
@@ -168,22 +162,18 @@ function LoadScreen() {
         </div>
         <div className='flex border border-slate-800 justify-between row-start-1 col-start-2'>
           <p className={styles.title}>Total Weight</p>
-          <p className={styles.info}>{truckInfo.weight}</p>
+          <p className={styles.info}>{truckInfo.weight ? truckInfo.weight : ''}</p>
         </div>
         <div className='flex border border-slate-800 justify-between row-start-2 col-start-2'>
           <p className={styles.title}>Total Qty</p>
-          <p className={styles.info}>{truckInfo.qty}</p>
-        </div>
-        <div className='flex border border-slate-800 justify-between row-start-1 col-start-3'>
-          {!manualAssign && <label className={styles.title}>Manual Entry</label>}
-          {/* {manualAssign && < ManualEntry contName={container} /> } */}
-          <input type='text' value={scannedContainer ? scannedContainer : ''} onChange={(e) => handleChange(e.target.value)} className={styles.manual}></input>
-          {manualAssign && <ManualEntry />}
-          {/* <button className="hover:cursor-pointer" onClick={handleAssign}>Assign truck ID</button> */}
+          <p className={styles.info}>{truckInfo.qty ? truckInfo.qty : ''}</p>
         </div>
         <div className='flex border border-slate-800 justify-between row-start-2 col-start-3'>
           <p className={styles.title}>Add Order</p>
           <p className={styles.info}></p>
+        </div>
+        <div className="row-start-4 col-start-3 flex border border-slate-800">
+          <button className="hover:cursor-pointer hover:drop-shadow-lg/100 hover:drop-shadow-green-900 w-full bg-emerald-700 text-stone-200" onClick={handleComplete}>Complete Truck</button>
         </div>
         
       </div>

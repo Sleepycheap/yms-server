@@ -2,7 +2,9 @@
 import axios from 'axios'
 // import { populateTrucks } from '../../../../server/oracle/functions';
 // dotenv.config({ path: "../server/.env" });
-const url = 'http://localhost:8080/api';
+const apiUrl = 'http://localhost:8080/api';
+
+const url = 'http://localhost:8080'
 // const url = 'https://40a7-136-33-191-11.ngrok-free.app/api'
 const propUrl = 'http://localhost:8080/propagate'
 // const propUrl = 'https://40a7-136-33-191-11.ngrok-free.app/propagate'
@@ -19,13 +21,22 @@ class ClientError extends Error {
 }
 
 export async function getUserID(upn) {
-  const response = await axios.get(`${url}/userID/${upn}`)
-  const {data} = response;
-  return data
+  try {
+    const response = await axios.get(`${url}/user/${upn}`)
+    const {data} = response;
+    return data
+  } catch (err) {
+    console.log('error getting userID', err.message)
+    const error = {
+      msg: err.message,
+      failed: true 
+    }
+    return error
+  }
 }
 
-export async function getTruckImage(userid) {
-  const response = await axios.get(`${url}/truckPhoto/${userid}`)
+export async function getTruckImage(userid, truckID) {
+  const response = await axios.get(`${url}/trucks/photos/${userid}/${truckID}`)
   const {data} = response
   return data
 }
@@ -81,19 +92,19 @@ export async function getUnloadedContainers(orderNumber) {
 
 
 export async function getWeight(truckid) {
-  const response = await axios.get(`${url}/getweight/${truckid}`)
+  const response = await axios.get(`${url}/trucks/weight/${truckid}`)
   const {data} = response;
   return data
 }
 
 export async function getCustomerName(orderNumber) {
-  const response = await axios.get(`${url}/customer/${orderNumber}`)
+  const response = await axios.get(`${url}/orders/customer/${orderNumber}`)
   const {data} = response;
   return data
 }
 
 export async function verifyOrder(orgCode, orderNumber) {
-  const response = await axios.get(`${url}/verifyOrder/${orgCode}/${orderNumber}`)
+  const response = await axios.post(`${url}/verify/verifyOrder`, {orgCode, orderNumber})
   const {data} = response;
   return data; 
 };

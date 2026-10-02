@@ -2,15 +2,26 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"
-import { loadContainer } from "../utils/apiFunctions";
+import styles from './Submit.module.css'
+import { loadContainer } from "../../utils/apiFunctions";
+import { createPortal } from "react-dom";
+import e from "cors";
 
-function Submit({container, setSubmit}) {
+function Submit({container}) {
   const orgCode = useSelector((state) => state.user.orgCode)
-  const {cont_name, item_description, cont_qty, cont_gross_wt, direct_truck, order_number, shipping_instructions} = container;
   const userID = useSelector((state) => state.user.userID)
   const selectedTruck = useSelector((state) => state.truck.selectedTruck)
-
   const queryClient = useQueryClient()
+  
+  let cont_name;
+  let order_number;
+  
+
+  if (container) {
+    cont_name = container.cont_name;
+    order_number = container.order_number
+  }
+
 
 
   const {isLoading: assigning, mutate: assignContainer, status, } = useMutation({
@@ -34,19 +45,17 @@ function Submit({container, setSubmit}) {
     onError: (err) => toast.error(err.message) 
   })
 
-  function handleClick() {
-    setSubmit(false)
+  function handleClick(e) {
+    e.preventDefault();
+    console.log('loading..')
+    // console.log(order_number)
+    assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
   }
 
   return (
-    <div>
-      {/* <p>{container.order_number}</p>
-      <p>{container.cont_name}</p>
-      <p>{container.cont_qty}</p>
-      <p>{container.cont_gross_wt}</p> */}
-      <button onClick={() => assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})}>Submit</button>
-      <button onClick={handleClick}>Go Back</button>
-    </div>
+    <>
+      <button type='submit' form='scan-submit' className="border-2 border-black hover:cursor-pointer" onClick={handleClick}>Scan Submit</button>
+    </>
   )
 }
 

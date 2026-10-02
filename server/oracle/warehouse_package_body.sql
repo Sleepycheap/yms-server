@@ -26,93 +26,132 @@ create or replace PACKAGE BODY "XXBBNA_WAREHOUSE_PROCESS_PKG" AS
   --
   ----------------------------------------------------------------------------------------------------------------------
 
-  g_pkg VARCHAR2(100) := 'xxbbna_warehouse_process_pkg';
+g_pkg VARCHAR2(100) := 'xxbbna_warehouse_process_pkg';
 
-  PROCEDURE LOG(p_prc IN VARCHAR2, p_msg IN VARCHAR2) IS
-    pragma autonomous_transaction;
-    l_sid VARCHAR2(50);
-  BEGIN
+PROCEDURE LOG(p_prc IN VARCHAR2, p_msg IN VARCHAR2) IS
+  pragma autonomous_transaction;
+  l_sid VARCHAR2(50);
+BEGIN
 
-    SELECT SYS_CONTEXT('USERENV', 'SID') INTO l_sid FROM dual;
+  SELECT SYS_CONTEXT('USERENV', 'SID') INTO l_sid FROM dual;
 
-    INSERT INTO apps.bbna_log_table
-    VALUES
-      (apps.bbna_log_table_s.nextval, g_pkg, p_prc, 'sid=' || l_sid || '. ' || p_msg, SYSDATE);
-    COMMIT;
-  EXCEPTION
-    WHEN others THEN
-      NULL;
-  END LOG;
-  --changes end - abhallam
+  INSERT INTO apps.bbna_log_table
+  VALUES
+    (apps.bbna_log_table_s.nextval, g_pkg, p_prc, 'sid=' || l_sid || '. ' || p_msg, SYSDATE);
+  COMMIT;
+EXCEPTION
+  WHEN others THEN
+    NULL;
+END LOG;
 
-  FUNCTION xxbbna_get_operating_unit_id(p_org_code VARCHAR2) RETURN NUMBER IS
-    x_org_id NUMBER := 0;
-  BEGIN
-    SELECT organization_id INTO x_org_id FROM mtl_parameters WHERE organization_code = p_org_code;
+--------------
+PROCEDURE xxbbna_warehouse_user_id(p_email_address IN VARCHAR2, x_user_info OUT SYS_REFCURSOR) IS
+BEGIN
+  open x_user_info FOR
+  select * from applsys.fnd_user where email_address = p_email_address;
 
+EXCEPTION
+  WHEN others THEN
+  dbms_output.put_line('Exception ------ ' || sqlerrm);
+END xxbbna_warehouse_user_id;
+
+----------
+FUNCTION xxbbna_warehouse_user_name(p_user_id NUMBER) RETURN VARCHAR2 IS
+  x_user_name VARCHAR2(100);
+BEGIN
+  SELECT email_address INTO x_user_name from applsys.fnd_user where user_id = p_user_id;
+
+  RETURN x_user_name;
+EXCEPTION
+  WHEN others THEN
+  dbms_output.put_line('Exception ------ ' || sqlerrm);
+END xxbbna_warehouse_user_name;
+-------------
+PROCEDURE xxbbna_warehouse_order_loaded_by(p_truck_id IN VARCHAR2, x_loader_name OUT SYS_REFCURSOR) IS
+  l_loader_name VARCHAR2(100);
+  l_loaded_by VARCHAR2(100);
+BEGIN
+
+  OPEN x_loader_name FOR
+  select a.email_address from applsys.fnd_user a, XXWSH_CONTAINER_LOADING b where a.user_id = b.direct_truck_loaded_by AND b.truck_id_2 = p_truck_id;
+
+EXCEPTION
+  WHEN others THEN
+  dbms_output.put_line('Exception ------ ' || sqlerrm); 
+END xxbbna_warehouse_order_loaded_by;
+----
+
+FUNCTION xxbbna_get_operating_unit_id(p_org_code VARCHAR2) RETURN NUMBER IS
+  x_org_id NUMBER := 0;
+BEGIN
+  SELECT organization_id INTO x_org_id FROM mtl_parameters WHERE organization_code = p_org_code;
+
+  RETURN x_org_id;
+EXCEPTION
+  WHEN others THEN
+    dbms_output.put_line('Exception ------ ' || sqlerrm);
     RETURN x_org_id;
-  EXCEPTION
-    WHEN others THEN
-      dbms_output.put_line('Exception ------ ' || sqlerrm);
-      RETURN x_org_id;
-  END xxbbna_get_operating_unit_id;
+END xxbbna_get_operating_unit_id;
+----------
 
-  FUNCTION xxbbna_get_operating_inv_id(p_org_code VARCHAR2) RETURN NUMBER IS
-    x_org_inv_id NUMBER := 0;
-  BEGIN
-    SELECT x.organization_id
-    INTO   x_org_inv_id
-    FROM   mtl_parameters x
-    WHERE  organization_code = p_org_code;
+FUNCTION xxbbna_get_operating_inv_id(p_org_code VARCHAR2) RETURN NUMBER IS
+  x_org_inv_id NUMBER := 0;
+BEGIN
+  SELECT x.organization_id
+  INTO   x_org_inv_id
+  FROM   mtl_parameters x
+  WHERE  organization_code = p_org_code;
 
+  RETURN x_org_inv_id;
+EXCEPTION
+  WHEN others THEN
+    dbms_output.put_line('Exception ------ ' || sqlerrm);
     RETURN x_org_inv_id;
-  EXCEPTION
-    WHEN others THEN
-      dbms_output.put_line('Exception ------ ' || sqlerrm);
-      RETURN x_org_inv_id;
-  END xxbbna_get_operating_inv_id;
+END xxbbna_get_operating_inv_id;
+------------------
 
-  FUNCTION get_ip_plant(p_value_set IN VARCHAR2, p_flex_value IN VARCHAR2) RETURN VARCHAR2 IS
-  v_description VARCHAR2(100);
-  BEGIN
-    SELECT ffv.description
-    INTO   v_description
-    FROM   applsys.fnd_flex_value_sets ffs, apps.fnd_flex_values_vl ffv
-    WHERE  ffs.flex_value_set_name = p_value_set
-    AND    ffs.flex_value_set_id = ffv.flex_value_set_id
-    AND    ffv.flex_value = p_flex_value;
+FUNCTION get_ip_plant(p_value_set IN VARCHAR2, p_flex_value IN VARCHAR2) RETURN VARCHAR2 IS
+v_description VARCHAR2(100);
+BEGIN
+  SELECT ffv.description
+  INTO   v_description
+  FROM   applsys.fnd_flex_value_sets ffs, apps.fnd_flex_values_vl ffv
+  WHERE  ffs.flex_value_set_name = p_value_set
+  AND    ffs.flex_value_set_id = ffv.flex_value_set_id
+  AND    ffv.flex_value = p_flex_value;
 
+  RETURN v_description;
+EXCEPTION
+  WHEN no_data_found THEN
+    v_description := 'No data';
     RETURN v_description;
-  EXCEPTION
-    WHEN no_data_found THEN
-      v_description := 'No data';
-      RETURN v_description;
-    WHEN others THEN
-      dbms_output.put_line('ERROR: ' || sqlerrm);
-      RETURN NULL;
-  END get_ip_plant;
+  WHEN others THEN
+    dbms_output.put_line('ERROR: ' || sqlerrm);
+    RETURN NULL;
+END get_ip_plant;
+----------------------
 
-  FUNCTION beforereport(p_org_code IN VARCHAR2) RETURN BOOLEAN IS
-  BEGIN
-    p_conc_request_id := apps.fnd_global.conc_request_id;
-    mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_org_code));
-    RETURN TRUE;
-  END beforereport;
+FUNCTION beforereport(p_org_code IN VARCHAR2) RETURN BOOLEAN IS
+BEGIN
+  p_conc_request_id := apps.fnd_global.conc_request_id;
+  mo_global.set_policy_context('S', xxbbna_get_operating_unit_id(p_org_code));
+  RETURN TRUE;
+END beforereport;
 
-  FUNCTION afterreport RETURN BOOLEAN IS
-    l_req_id NUMBER;
-    --xml_layout boolean;
-  BEGIN
-    l_req_id := fnd_request.submit_request(APPLICATION => 'XDO',
-                                           PROGRAM     => 'XDOBURSTREP',
-                                           description => NULL,
-                                           start_time  => NULL,
-                                           sub_request => FALSE,
-                                           argument1   => NULL,
-                                           argument2   => p_conc_request_id,
-                                           argument3   => 'Y');
-    RETURN TRUE;
-  END afterreport;
+FUNCTION afterreport RETURN BOOLEAN IS
+  l_req_id NUMBER;
+  --xml_layout boolean;
+BEGIN
+  l_req_id := fnd_request.submit_request(APPLICATION => 'XDO',
+                                          PROGRAM     => 'XDOBURSTREP',
+                                          description => NULL,
+                                          start_time  => NULL,
+                                          sub_request => FALSE,
+                                          argument1   => NULL,
+                                          argument2   => p_conc_request_id,
+                                          argument3   => 'Y');
+  RETURN TRUE;
+END afterreport;
 
   ----------------------------------------------------------------------------------------------------------------------
   --      Name: XXBBNA_WAREHOUSE_SCAC_CODE

@@ -1,23 +1,20 @@
 import Webcam from "react-webcam";
-import Button from "../ui/Button";
-import Canvas from '../components/Canvas'
+import Button from "../src/ui/Button";
+import Canvas from '../src/components/Canvas'
 import {useState, useRef, useCallback, useEffect} from 'react'
 import { useSelector } from "react-redux";
-import { setScannedContainer, setScannedTruck } from "../features/pictures/pictureSlice";
+import { setScannedContainer, setScannedTruck } from "../src/features/pictures/pictureSlice";
 import { useDispatch } from "react-redux";
 import { useZxing } from "react-zxing";
-import { useNavigate } from "react-router-dom";
-import confirmBeep from '../assets/Bleep.wav'
 
 
 
 
-function ScanTruckBarcode({onClose}) {
+function ScanTruckBarcode({onCloseModal}) {
   const canvasRef = useRef(null)
   // const [takePhoto, setTakePhoto] = useState(true)
-  const [scanResult, setScanResult] = useState('')
-  const [scanConfirm, setScanConfirm] = useState(false)
-  const [imgSrc, setImgSrc] = useState(null)
+  const [result, setResult] = useState('')
+  const [imgSrc, setImgSrc] = useState('')
   const [videoConstraints, setVideoConstraints] = useState({
     width: {ideal: 1920},
     height: {ideal : 1080},
@@ -30,105 +27,22 @@ function ScanTruckBarcode({onClose}) {
   const webcamRef = useRef(null)
   const {ref} = useZxing({
     onDecodeResult(result) {
-      setScanConfirm(true)
-      setScanResult(result.rawValue)
+      // capture()
+      setResult(result.rawValue)
       dispatch(setScannedContainer(result.rawValue))
-      capture()
-      // handleScan()
       // handleScanTruck()
       
       // setScanQR(false)
     }
   })
 
-  const navigate = useNavigate()
+
+  
 
   useEffect(() => {
   setCanvasElement(canvasRef.current)
     // console.log('canvas', canvasRef)
   }, [])
-  
-
-  
-  const capture = useCallback(async () => {
-    playConfirm()
-    
-    const imageSrc = webcamRef.current.getScreenshot(); // base64 data url
-    
-    setImgSrc(imageSrc)
-    dispatch(setScannedTruck(imageSrc))
-    // setPreProcess(canvasRef.current)
-    // console.log('processed', canvasRef.current)
-    
-    
-    
-          
-  }, [webcamRef, setImgSrc]);
-            
-  function clearPhoto() {
-    dispatch(setScannedTruck(null))
-    setExtractedText('')
-    setImgSrc(null)
-  }
-          
-  function handleScan() {
-    const result = scanResult;
-    dispatch(setScannedContainer(result))
-  }
-
-  function playConfirm() {
-    const audio = new Audio(confirmBeep)
-    audio.play();
-  }
-
-  function handleReScan() {
-    setScanConfirm(false)
-    setScanResult('')
-    dispatch(setScannedContainer(''))
-    setImgSrc(null)
-  }
-
-  // function handleClick() {
-    //   setIsOpenModal((show) => (!show))
-    // }
-    
-    // function handleConstraints() {
-    //   if (videoConstraints.facingMode === 'user') {
-    //     setVideoConstraints({
-    //       width: {ideal: 1920},
-    //       height: {ideal : 1080},
-    //       facingMode: {exact: "environment"}})
-    //     } else {
-    //       setVideoConstraints({
-    //         width: {ideal: 1920},
-    //         height: {ideal : 1080},
-    //         facingMode: 'user'
-    //       })
-    //     }
-    //   }
-                
-    //videoConstraints={videoConstraints}
-                
-  return (
-    <div>
-    {imgSrc && <div className="justify-self-center">
-      <img src={imgSrc} />
-      <p>Result: {scanResult}</p>
-      <button onClick={handleReScan}>Re-scan</button>
-      </div>}
-      {!imgSrc && <div id='camera-screen' className="grid grid-rows-4 grid-cols-3 md:grid-cols-3 md:grid-rows-3 h-120 py-10">
-        <div className={imgSrc ?  "hidden" :  "w-40 lg:w-120 justify-self-center lg:row-span-2 col-start-2 row-start-1" }>
-          <video ref={ref} muted playsInline className="hidden" />
-          <Webcam  audio={false} ref={webcamRef} screenshotFormat="image/jpeg" imageSmoothing={true} screenshotQuality={1} className={scanConfirm ? "border-5 border-yellow-400" : ''} />
-        </div>
-
-      </div>}
-    </div>
-  )
-}
-
-export default ScanTruckBarcode
-
 
   // function processImage(image) {
   //     return new Promise((resolve) => {
@@ -182,3 +96,69 @@ export default ScanTruckBarcode
   //       return processedDataUrl
   //     })
   //   }
+  
+      
+      const capture = useCallback(async () => {
+        const imageSrc = webcamRef.current.getScreenshot(); // base64 data url
+    
+        // const image = await processImage(imageSrc)
+        setImgSrc(imageSrc)
+        dispatch(setScannedTruck(imageSrc))
+        // setPreProcess(canvasRef.current)
+        console.log('processed', canvasRef.current)
+      
+        // stopCamera()
+    
+        
+    
+      }, [webcamRef, setImgSrc]);
+
+  function clearPhoto() {
+    dispatch(setScannedTruck(null))
+    setExtractedText('')
+    setImgSrc(null)
+  }
+
+  // function handleClick() {
+  //   setIsOpenModal((show) => (!show))
+  // }
+
+  function handleConstraints() {
+  if (videoConstraints.facingMode === 'user') {
+    setVideoConstraints({
+      width: {ideal: 1920},
+      height: {ideal : 1080},
+      facingMode: {exact: "environment"}})
+  } else {
+    setVideoConstraints({
+      width: {ideal: 1920},
+      height: {ideal : 1080},
+      facingMode: 'user'
+    })
+  }
+}
+
+
+  return (
+    <div id='camera-screen' className="grid grid-rows-4 grid-cols-3 md:grid-cols-3 md:grid-rows-3 h-160 py-10">
+        <div className={imgSrc ?  "hidden" :  "w-40 lg:w-120 justify-self-center lg:row-span-2 col-start-2 row-start-1" }>
+          <video ref={ref} muted playsInline className="hidden" />
+          <Webcam  audio={false} ref={webcamRef} screenshotFormat="image/jpeg" imageSmoothing={true} screenshotQuality={1} videoConstraints={videoConstraints}/>
+        </div>
+        <div id='buttons' className="col-start-2 row-start-4  grid gap-5 justify-center">
+          <span className="flex justify-around"><Button type='primary' onClick={capture}>Take Picture</Button><Button type='small' onClick={handleConstraints}>Front/Rear Camera</Button> </span>
+          {/* <Button type='small' onClick={clearPhoto}>Re-take Photo</Button> */}
+          <Button type='small' onClick={onCloseModal}>Done with pictures</Button>
+        </div>
+        <div className={imgSrc ? "w-40 lg:w-120 justify-self-center lg:row-span-2 col-start-2 row-start-1" : ""}>
+          <canvas ref={canvasRef}  className="hidden"/>
+          {imgSrc &&  scannedTruck !== null && (
+            <img src={scannedTruck} className="justify-self-center w-120" />
+          )}
+          <p>{result}</p>
+        </div>
+      </div>
+  )
+}
+
+export default ScanTruckBarcode

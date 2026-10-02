@@ -1,10 +1,10 @@
-import Button from "../../ui/Button"
+import Button from "../../components/Button"
 import axios from 'axios'
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setTrailerNumber, setGeneratedTruck, setSelectedTruck } from "./truckSlice"
 
-const url = 'http://localhost:8080/api'
+// const url = 'http://localhost:8080/api'
 
 function CreateTruck({setCreateTruck}) {
   const [scacCodes, setScacCodes] = useState([])
@@ -19,10 +19,11 @@ function CreateTruck({setCreateTruck}) {
   useEffect(() => {
     async function getScacCodes() {
       try {
-        const response = await axios.get(`${url}/scaccodes`);
-        const {data} = response;
-        console.log('data', data)
-        setScacCodes(data)
+        // const response = await axios.get(`${url}/scaccodes`);
+        const response = await getScacCodes()
+        // const {data} = response;
+        // console.log('data', data)
+        setScacCodes(response)
       } catch (err) {
         console.log('scac error', err.message)
       }

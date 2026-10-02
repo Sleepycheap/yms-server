@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from "react-redux"
-import ScanTruckBarcode from "../components/ScanTruckBarcode"
+import ScanTruckBarcode from "./ScanTruckBarcode"
 import { useNavigate } from "react-router-dom"
 // import { setScannedObject } from "../features/pictures/pictureSlice"
 import {useState, useRef, useCallback, useEffect} from 'react'
-import { setScannedContainer, setScannedTruck, setScannedObject } from "../features/pictures/pictureSlice";
+import { setScannedContainer, setScannedTruck, setScannedObject } from "../pictures/pictureSlice";
 import {useZxing} from 'react-zxing'
 import Webcam from "react-webcam"
-import confirmBeep from '../assets/Bleep.wav'
-import errorBeep from '../assets/Beep.wav'
+import confirmBeep from '../../assets/Bleep.wav'
+import errorBeep from '../../assets/Beep.wav'
 import toast from "react-hot-toast"
-import Button from "../ui/Button";
+import Button from "../../components/Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { loadContainer } from "../../utils/apiFunctions";
+
+
 
 
 function ScannerInterface({onCloseModal, containers}) {
@@ -18,6 +22,7 @@ function ScannerInterface({onCloseModal, containers}) {
   const [scanResult, setScanResult] = useState('')
   const [scanConfirm, setScanConfirm] = useState(false)
   const [imgSrc, setImgSrc] = useState(null)
+  const [contName, setContName] = useState('')
   const [videoConstraints, setVideoConstraints] = useState({
     width: {ideal: 1920},
     height: {ideal : 1080},
@@ -26,9 +31,12 @@ function ScannerInterface({onCloseModal, containers}) {
   const [extractedText, setExtractedText] = useState('')
   const [canvasElement, setCanvasElement] = useState(null)
   const scannedTruck = useSelector((state) => state.picture.scannedTruck)
+  const selectedTruck = useSelector((state) => state.truck.selectedTruck)
   const scannedContainer = useSelector((state) => state.picture.scannedContainer)
+  const orgCode = useSelector((state) => state.user.orgCode)
   const dispatch = useDispatch();
   const webcamRef = useRef(null)
+  const userID = useSelector((state) => state.user.userID)
   const {ref} = useZxing({
     onDecodeResult(result) {
       setScanConfirm(true)
@@ -40,12 +48,40 @@ function ScannerInterface({onCloseModal, containers}) {
 
   const navigate = useNavigate()
 
+  const queryClient = useQueryClient()
+  
+
   useEffect(() => {
   setCanvasElement(canvasRef.current)
     // console.log('canvas', canvasRef)
   }, [])
   
 
+  const {isLoading: assigning, mutate: assignContainer, status, } = useMutation({
+  mutationFn: ({order_number, cont_name, orgCode, selectedTruck, userID}) => {
+    return loadContainer(order_number, cont_name, orgCode, selectedTruck, userID);
+  },
+  onSuccess: ()  => {
+    toast.success(`${cont_name} successfully loaded onto ${selectedTruck}`)
+
+        
+      queryClient.invalidateQueries({
+        queryKey: ['containers']
+      }),
+        
+      queryClient.invalidateQueries({
+        queryKey: ['truckInfo']
+      })
+  
+        
+  },
+  onError: (err) => toast.error(err.message) 
+  })
+
+  
+  const filter = containers.filter((container) => container.cont_name === contName)
+
+  const {order_number, cont_name} = filter
   
   const capture = useCallback(async () => {
     playConfirm()
@@ -54,9 +90,9 @@ function ScannerInterface({onCloseModal, containers}) {
     
     setImgSrc(imageSrc)
     dispatch(setScannedTruck(imageSrc))
-
-
-
+    setContName(scannedContainer.split('|')[2])
+    // console.log(cont_name)
+    assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
     onCloseModal()          
   }, [webcamRef, setImgSrc]);
             

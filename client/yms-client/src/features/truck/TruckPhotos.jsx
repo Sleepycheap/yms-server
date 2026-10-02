@@ -1,43 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux"
-import { getContainerByID, getContainers, loadContainer, submitTruckImage, testPicPath } from "../../utils/apiFunctions";
+import { submitTruckImage } from "../../utils/apiFunctions";
 import { useEffect } from "react";
-import qrlogo from '../../assets/QrCode.png'
-// import check from '../assets/checkmark.jpg'
-import ScanTruckBarcode from "../../components/ScanTruckBarcode";
 import { useState } from "react";
-import styles from './TruckIDSubmit.module.css'
-import { getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID, openDatabase, deleteObjectStore } from "../../utils/truckImagesDB"
-import Button from "../../ui/Button";
-import { setUploadedImages, setPhotoCount } from "../pictures/pictureSlice";
+import { addToDB, deleteByID, getItemByIndex } from "../../utils/imagesStorage";
+import Button from "../../components/Button";
+import { setPhotoCount } from "../pictures/pictureSlice";
 import toast from "react-hot-toast";
-import { Buffer } from "node:buffer";
 import axios from "axios";
 
 function TruckPhotos({onCloseModal}) {
-  const [truckPhoto, setTruckPhoto] = useState(null)
-  const [scanning, setScanning] = useState(false)
   const [photo, setPhoto] = useState(null)
-  const [photoSubmitted, setPhotoSubmitted] = useState(false)
   const [photoUploaded, setPhotoUploaded] = useState(false)
-  const [localPhoto, setLocalPhoto] = useState(null)
-  // const [photoCount, setPhotoCount] = useState(0);
   const [images, setImages] = useState([])
   const username = useSelector((state) => state.user.username)
   const userID = useSelector((state) => state.user.userID)
   const orderNumber = useSelector((state) => state.order.orderNumber)
   const selectedTruck = useSelector((state) => state.truck.selectedTruck)
-  const scannedContainer = useSelector((state) => state.picture.scannedContainer)
   const orgCode = useSelector((state) => state.user.orgCode)
-  const uploadedImages = useSelector((state) => state.picture.uploadedImages)
   const photoCount = useSelector((state) => state.picture.photoCount)
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    let array = []
     async function getPhotoFromLocal() {
-      // const id = [userID, orderNumber, selectedTruck]
       const item = await getItemByIndex(selectedTruck)
       if (!item){
         console.log(`no local photo for ${selectedTruck}`)
@@ -102,22 +87,6 @@ function TruckPhotos({onCloseModal}) {
 
         
         const notif = await addToDB( object)
-        const imageData = notif.data;
-
-        const {truck_image} = imageData;
-
-        function convertToBuffer(data) {
-          const b = Buffer.from(data, 'base64');
-          return b
-        }
-
-        const photo = {
-          truck_id: selectedTruck, truck_image: imageName
-        }
-
-
-        setPhotoSubmitted(true)
-        setTruckPhoto(photo)
         const items = await getItemByIndex(selectedTruck)
         setImages(items)
       }
@@ -132,8 +101,8 @@ function TruckPhotos({onCloseModal}) {
       const {truck_id, image_name, id} = items[i]
       const user_id = userID
       try {
-        const result = await submitTruckImage(truck_id, user_id, image_name)
-        deleteItemByID(id)
+        await submitTruckImage(truck_id, user_id, image_name)
+        deleteByID(id)
         const item = await getItemByIndex(selectedTruck)
         setImages(item)
       } catch (err) {
@@ -142,11 +111,12 @@ function TruckPhotos({onCloseModal}) {
         toast.error(err.message)
       }
     }
+    toast.success('Images successfully uploaded!')
     onCloseModal()
   }
 
   async function handleRemove(id) {
-    const del = deleteItemByID(id)
+    deleteByID(id)
     const item = await getItemByIndex(selectedTruck)
     setImages(item)
   }
@@ -155,7 +125,7 @@ function TruckPhotos({onCloseModal}) {
     <div>
       <div className="grid">
         <h1 >Submit Truck Images for upload to {selectedTruck}</h1>
-        <input className=" hover:cursor-pointer" id="camera-input" type="file" accept="image/" capture='environment' onChange={handleCapture} />
+        <input className=" hover:cursor-pointer" id="camera-input" type="file" multiple accept="image/" capture='environment' onChange={handleCapture} />
       </div>
       <br></br>
       <h1 className="text-center">{photoUploaded ? 'Images ready to be uploaded' : 'Images ready to upload will appear here'}</h1>

@@ -1,24 +1,16 @@
 import {createHashRouter, RouterProvider} from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './index.css'
 import AppLayout from './ui/AppLayout'
 import Error from './ui/Error'
-import Home from './ui/Home'
-import LoadScreen from './features/load/LoadScreen'
-import TruckIDs from './features/truck/TruckIDs'
-import { getTrucks } from './utils/apiFunctions'
-import { truckLoader } from './utils/loaders'
-import Login from './features/user/Login'
-import Tests from './ui/Tests'
-import BarcodeScanner from './components/BarcodeScanner'
-// import LoadTable from './features/load/LoadTable'
-import Spinner from './components/Spinner'
+import Home from './pages/Home'
+import LoadScreen from './pages/LoadScreen'
+import Tests from './pages/Tests'
+import LoadVerification from './pages/LoadVerification'
 import { Toaster } from 'react-hot-toast'
-import Counter from './ui/Counter'
-import ScannerInterface from './pages/ScannerInterface'
-// import axios from 'axios'
+import 'dotenv/config'
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,28 +39,21 @@ const router = createHashRouter([
       errorElement: <Error />
     },
     {
-      path: '/truckids/:orgcode',
-      element: <TruckIDs />,
-      errorElement: <Error />,
-      loader: truckLoader,
-    },
-    {
-      path: '/scanner',
-      element: <ScannerInterface />
-    },
-    {
       path: '/tests',
       element: <Tests/>
     },
     {
       path: 'error',
       element: <Error />
+    },
+    {
+      path: '/complete',
+      element: <LoadVerification />
     }
 
   ]
 }
 ])
-
 
 function App() {
   return (

@@ -31,6 +31,8 @@ import {
   getTruckImage,
   // getContainers,
   getPickedContainersForOrder,
+  getUserName,
+  getLoaderName,
 } from "../oracle/functions.js";
 
 import {
@@ -70,23 +72,23 @@ import { fileURLToPath } from "node:url";
 import { imageSize } from "image-size";
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
-const imagePath = join(dirname, "Truck1.jpg");
+// const imagePath = join(dirname, "Truck1.jpg");
 
-const image2 = join(dirname, "Truck2.jpg");
+// const image2 = join(dirname, "Truck2.jpg");
 
 // const otherPath = join(dirname, "available packages.png");
 
 // console.log(dirname);
 
 // console.log(otherPath);
-const imageBuffer = fs.readFileSync(image2);
-// console.log(typeof imageBuffer);
+// const imageBuffer = fs.readFileSync(image2);
+// // console.log(typeof imageBuffer);
 
-const imageObject = {
-  truck_id: "2600429001T1",
-  user_id: 122452,
-  truck_image: "Truck2.jpg",
-};
+// const imageObject = {
+//   truck_id: "2600429001T1",
+//   user_id: 122452,
+//   truck_image: "Truck2.jpg",
+// };
 
 // console.log(await validateOrder("ANN", 2600429001));
 
@@ -98,8 +100,16 @@ const imageObject = {
 
 // console.log(await PopulateTrucks());
 
-const test = await getTruckImage(122452, "2600429001T1");
-console.log(test);
+// const test = await getTruckImage(122452, "2600429001T1");
+// console.log(test);
+
+// console.log(await getUserID("anthony.vauthier@bsbna.com"));
+
+// console.log(await runTruckManifest("ANN", "2600429001T1"));
+
+// console.log(await getUserName(122452));
+
+console.log(await getLoaderName("2600429001T1"));
 
 // const test = await getContainers(2600429001);
 

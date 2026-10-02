@@ -1,18 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux"
-import { getContainerByID, getContainers, loadContainer, submitTruckImage, testPicPath } from "../../utils/apiFunctions";
+import { getContainers,  submitTruckImage } from "../../utils/apiFunctions";
+import { addToDB, getItemById, deleteByID } from "../../utils/truckPhotoStorage";
 import { useEffect } from "react";
 import qrlogo from '../../assets/QrCode.png'
-// import check from '../assets/checkmark.jpg'
-import ScanTruckBarcode from "../../components/ScanTruckBarcode";
+import ScanTruckBarcode from "../load/ScanTruckBarcode";
 import { useState } from "react";
-import styles from './TruckIDSubmit.module.css'
-import { getObjectStore, clearObjectStore, addToDB, deleteDB, getItemByIndex, getAllItems, getItemById, deleteItemByID } from "../../utils/indexedDb"
-import Button from "../../ui/Button";
+import Button from "../../components/Button";
 import toast from "react-hot-toast";
 import { Buffer } from "node:buffer";
 import axios from "axios";
-// import { saveToBrowser } from "../utils/indexedDb";
 
 /*
 This component will allow the user to confirm the information of the container being submitted is correct, and allow either barcode scanning, or camera/photo upload
@@ -25,7 +22,6 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
   const [photoSubmitted, setPhotoSubmitted] = useState(false)
   const [photoUploaded, setPhotoUploaded] = useState(false)
   const [localPhoto, setLocalPhoto] = useState(null)
-  // const [imageName, setImageName] = useState('')
   const username = useSelector((state) => state.user.username)
   const userID = useSelector((state) => state.user.userID)
   const orderNumber = useSelector((state) => state.order.orderNumber)
@@ -35,14 +31,13 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
   
   
   useEffect(() => {
-    async function getPhotoFromLocal() {
+    async function getPhotoFromLocal() {      
+
       const item = await getItemById(id)
-      console.log('item', item)
       if (!item){
         console.log(`no local photo for ${id}`)
         return;
       } 
-      console.log('item', item.image_name)
       const {truck_image, image_name} = item;
       setLocalPhoto(truck_image)
 
@@ -91,8 +86,6 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
     try {
       const res = await axios.post('http://localhost:8080', fd)
       const {data} = res
-      // console.log('data', data)
-      // setImageName(data)
       return data
     } catch (err) {
       console.log('error converting', err.message)
@@ -103,11 +96,9 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
     const file = e.target.files[0];
     try {
       if (file) {
-        // console.log('file', file)
         const data = await convertToBase64(file)
         setPhoto(data)
         const imageName = await convertForSubmit(file)
-        // const id = crypto.randomUUID()
         const object = {
           id: delivery_detail_id,
           user: username,
@@ -121,22 +112,17 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
         
         
         const notif = addToDB(object)
-        // console.log('test', notif)
 
         function convertToBuffer(data) {
           const b = Buffer.from(data, 'base64');
           return b
         }
 
-        // const truck_image = convertToBuffer(data)
-
-        console.log('image name', imageName)
 
         const photo = {
           truck_id: selectedTruck, truck_image: imageName
         }
 
-        // console.log('photo', photo)
 
         setPhotoSubmitted(true)
         setTruckPhoto(photo)
@@ -153,9 +139,8 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
     try {
       const result = await submitTruckImage(truck_id, user_id, truck_image)
       setPhotoUploaded(true)
-      // handleClose()
       assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
-      deleteItemByID(id)
+      deleteByID(id)
       onCloseModal()
     } catch (err) {
       console.log('error submitting', err.payload)
@@ -164,22 +149,12 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
     }
   }
     
-  // async function handleClose() {
-  //   if (!photoUploaded) return 'photo upload needed'
-
-  //   assignContainer({order_number, cont_name, orgCode, selectedTruck, userID})
-  //   onCloseModal()
-  // }
 
 
   return (
     <>
     {scanning && <ScanTruckBarcode onClose={() =>setScanning(false)} />}
     {!scanning && <div className="w-250">
-      {/* <button onClick={handleDelete}>delete db</button>
-      <br></br>
-      <button onClick={handleRetrieveFromIndex}>get photos</button>
-      <botton onClick={handleCreate}>create database</botton> */}
       <h1>Container Loading Confirmation</h1>
       <br>
       </br>
@@ -224,11 +199,9 @@ function TruckIDSubmit({id, onCloseModal, assignContainer}) {
           <div className="grid ">
           <label className="relative 
            self-center col-start-1">Take/upload a Photo:</label>
-          {/* <span className="w-5"></span> */}
           <input className="relative self-center hover:cursor-pointer" id="camera-input" type="file" accept="image/" capture='environment' onChange={handleCapture} />
           </div>
           <img className="w-20 h-10 col-start-3 row-start-2" src={localPhoto || photo} />
-          {/* <span className="w-200"></span> */}
           {photoSubmitted && <Button type='secondary'  onClick={() => handleSubmit(truckPhoto)}>Confirm</Button>}
         </div>
 

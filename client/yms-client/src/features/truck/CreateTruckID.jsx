@@ -1,13 +1,14 @@
-import Loader from "../ui/Loader"
+import Loader from "../../ui/Loader"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { addTruckID } from "../features/truck/truckSlice"
+import { addTruckID } from "./truckSlice"
+import { getScacCodes } from "../../utils/apiFunctions"
 
 function CreateTruckID() {
   const [scacCodes, setScacCodes] = useState([])
   useEffect(() => {
     async function getScac() {
-      const response = await axios.get('http://localhost:8080/api/scaccodes')
+      const response = await getScacCodes()
       const {data} = response;
       setScacCodes(data)
     }

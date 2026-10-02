@@ -1,20 +1,16 @@
 import { useSelector, useDispatch } from "react-redux"
-import { useEffect, useState, useCallback, useRef } from "react";
-import { setTruckIDs, setSelectedTruck, getTruckIDs, getOrg, getSelectedTruck } from "./truckSlice";
-import { getOrderNumber, setOrderNumber } from "../order/orderSlice";
+import { useEffect, useState } from "react";
+import { setTruckIDs, setSelectedTruck } from "./truckSlice";
+import { setOrderNumber } from "../order/orderSlice";
 import {updateOrgCode} from '../user/userSlice'
-import { setScannedTruck } from "../pictures/pictureSlice";
 import { setScreen } from "../appLayout/layoutSlice";
 import CreateTruck from "./CreateTruck";
-import axios from 'axios'
-import Button from "../../ui/Button";
+import Button from "../../components/Button";
 import BarcodeScanner from "../../components/BarcodeScanner";
-import TruckFooter from "../../ui/TruckFooter";
 import qrlogo from '../../assets/QrCode.png'
 import { verifyOrder, getTrucks } from "../../utils/apiFunctions";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
 
 
 
@@ -25,14 +21,9 @@ import { useNavigate } from "react-router-dom";
 function TruckSelection() {
   const [createTruck, setCreateTruck] = useState(false)
   const [error, setError] = useState('')
-  const [imgSrc, setImgSrc] = useState(null)
   const [result, setResult] = useState('')
-  const [videoRef, setVideoRef] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [footer, setFooter] = useState(true)
   const [scanQR, setScanQR] = useState(false)
-  const generatedTruck = useSelector((state) => state.truck.generatedTruck)
-  const scannedQRCode = useSelector((state) => state.picture.scannedQRCode)
   const orgCode = useSelector((state) => state.user.orgCode)
   const selectedTruck = useSelector((state) => state.truck.selectedTruck)
   const orderNumber = useSelector((state) => state.order.orderNumber)
@@ -41,7 +32,6 @@ function TruckSelection() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    let array = [];
     setIsLoading(true);
     dispatch(setScreen('TruckSelection'))
     async function truckList() {

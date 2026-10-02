@@ -300,6 +300,19 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
     TYPE appversion IS TABLE OF g_app_version_record
         INDEX BY BINARY_INTEGER;
 
+------------------
+/*
+Name: xxbbna_warehouse_user_id
+Returns UserID of user based on email address
+*/
+PROCEDURE xxbbna_warehouse_user_id(p_email_address IN VARCHAR2, x_user_info OUT SYS_REFCURSOR);
+--------------------
+/*
+Returns users name based on User ID
+*/
+
+FUNCTION xxbbna_warehouse_user_name(p_user_id IN NUMBER) RETURN VARCHAR2;
+
 ----------------------------------------------------------------------------------------------------------------------
 --      Name: xxbbna_get_operating_unit_id
 --
@@ -309,8 +322,15 @@ TYPE ld_txn_answer_table IS TABLE OF g_ld_txn_answer_record
 --      Functions: This Function returns the org id for the particuler org code
 --
 ----------------------------------------------------------------------------------------------------------------------
+
     FUNCTION xxbbna_get_operating_unit_id(p_org_code VARCHAR2)
         RETURN NUMBER;
+------------------
+/*
+Returns names of users who have loaded container by truckID
+*/
+PROCEDURE xxbbna_warehouse_order_loaded_by(p_truck_id IN VARCHAR2, x_loader_name OUT SYS_REFCURSOR); 
+
 ----------------------------------------------------------------------------------------------------------------------
     --      Name: XXBBNA_WAREHOUSE_SCAC_CODE
     --
